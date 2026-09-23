@@ -1,0 +1,30 @@
+{
+  "package_version": 2,
+  "name": "base-component-menu",
+  "version": "1.0.0",
+  "description": "快速创建基础组件节点",
+  "main": "./dist/main.js",
+  "author": "RPGCore",
+  "editor": ">=3.4.2",
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "@types/node": "^16.0.1",
+    "typescript": "^4.3.4"
+  },
+  "contributions": {
+    "hierarchy": {
+      "menu": {
+        "methods": "./dist/hierarchy-menu.js",
+        "createMenu": "onCreateMenu"
+      }
+    },
+    "messages": {
+      "create-component-node": {
+        "methods": ["createComponentNode"]
+      }
+    }
+  }
+}

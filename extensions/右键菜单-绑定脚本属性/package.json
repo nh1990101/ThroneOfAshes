@@ -1,0 +1,80 @@
+{
+  "package_version": 2,
+  "version": "1.0.0",
+  "name": "menu-test",
+  "description": "i18n:menu-test.description",
+  "main": "./dist/main.js",
+  "devDependencies": {
+    "@types/node": "^16.0.1",
+    "typescript": "^4.3.4"
+  },
+  "author": "Cocos Creator",
+  "editor": ">=3.4.2",
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -w"
+  },
+  "panels": {
+    "setPathPanel": {
+      "title": "设置脚本生成路径",
+      "main": "./panel/panel.js",
+      "size": {
+        "width": 600,
+        "height": 500
+      }
+    }
+  },
+  "contributions": {
+    "hierarchy": {
+      "menu": {
+        "methods": "./dist/hierarchy-menu.js",
+        "createMenu": "onCreateMenu"
+      }
+    },
+    "menu": [
+      {
+        "path": "组件化工具",
+        "label": "生成脚本绑定",
+        "message": "createScript"
+      },
+      {
+        "path": "组件化工具",
+        "label": "绑定组件属性/绑定节点",
+        "message": "bindNodeProperty"
+      },
+      {
+        "path": "组件化工具",
+        "label": "绑定组件属性/绑定组件",
+        "message": "bindProperty"
+      },
+      {
+        "path": "组件化工具",
+        "label": "设置脚本路径",
+        "message": "setScriptPath"
+      }
+    ],
+    "messages": {
+      "createScript": {
+        "methods": [
+          "createScript"
+        ]
+      },
+      "bindProperty": {
+        "methods": [
+          "bindProperty"
+        ]
+      },
+      "bindNodeProperty": {
+        "methods": [
+          "bindNodeProperty"
+        ]
+      },
+      "setScriptPath": {
+        "methods": [
+          "setScriptPath"
+        ]
+      }
+    }
+  },
+  "_storeId": "05ae6b2b03c7a510ecfa292868a0fb49"
+}

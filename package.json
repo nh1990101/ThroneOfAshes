@@ -1,0 +1,10 @@
+{
+  "name": "RPGCore",
+  "uuid": "3d97537b-cc62-486c-bca6-b14e7a95324e",
+  "creator": {
+    "version": "3.8.6"
+  },
+  "dependencies": {
+    "jszip": "^3.10.2"
+  }
+}
