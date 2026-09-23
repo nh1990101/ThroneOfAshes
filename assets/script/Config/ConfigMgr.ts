@@ -1,6 +1,8 @@
 import { _decorator, Asset, Component, JsonAsset, loader, Node, resources } from 'cc';
 import { DEBUG } from 'cc/env';
 import { AssetMgr } from '../Common/AssetMgr';
+import { IStringChTbl } from './Typings/string_ch_tbl';
+import { IFunctionPropTbl } from './Typings/function_prop_tbl';
 const { ccclass, property } = _decorator;
 
 
@@ -8,6 +10,10 @@ const { ccclass, property } = _decorator;
 export class ConfigMgr {
     private zip: JSZip = null;
     private static _instance: ConfigMgr;
+
+    public string_ch_tbl = new Map<number, IStringChTbl>();
+    public string_ch_tb2 = new Map<number, IStringChTbl>();
+    public function_prop_tbl = new Map<number, IFunctionPropTbl>();
     /**主键调整表 
     * 表名：主键字符串
    */
@@ -22,6 +28,7 @@ export class ConfigMgr {
         }
         return this._instance;
     }
+
     async loadConfigZip() {
         return new Promise<void>(async (resolve, reject) => {
             try {
