@@ -14,6 +14,10 @@ export class MainCity extends BaseWin {
     BaseBtn: BaseBtn = null!;
     public initEvent(): void {
         super.initEvent();
+
+    }
+    OnClickBattle() {
+
     }
 
 }

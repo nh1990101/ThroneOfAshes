@@ -3,6 +3,7 @@ import { DEBUG } from 'cc/env';
 import { AssetMgr } from '../Common/AssetMgr';
 import { IStringChTbl } from './Typings/string_ch_tbl';
 import { IFunctionPropTbl } from './Typings/function_prop_tbl';
+import { IUnitData } from './Typings/UnitData';
 const { ccclass, property } = _decorator;
 
 
@@ -14,11 +15,13 @@ export class ConfigMgr {
     public string_ch_tbl = new Map<number, IStringChTbl>();
     public string_ch_tb2 = new Map<number, IStringChTbl>();
     public function_prop_tbl = new Map<number, IFunctionPropTbl>();
+    public UnitData = new Map<number, IUnitData>();
     /**主键调整表 
     * 表名：主键字符串
    */
     TABLE_PRIMARY_KEYS: Record<string, string> = {
         function_prop_tbl: "ID",
+        unitData_tbl: "id",
         // 其他表...
     };
 

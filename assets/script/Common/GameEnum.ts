@@ -6,4 +6,7 @@ export enum GameEvent {
     Connect = "Connect",
 }
 
+export enum ResUrl {
+    UnitAtlasUrl = "Res/Battle/UnitResAtlas/"
+}
 

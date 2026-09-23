@@ -14,7 +14,9 @@ export class BaseWin extends BaseComp {
 
     protected animTime = 0.2
 
-
+    RegisterUIEvent() {
+        
+    }
 
     showWin(...param) {
         this.node.active = true;
@@ -24,7 +26,7 @@ export class BaseWin extends BaseComp {
             this.winBg.setScale(0.1, 0.1, 1);
             tween(this.winBg).to(this.animTime, { x: 1, y: 1, z: 1 }).start();
         }
- 
+
         this.CheckAndRegister();
     }
     closeWin() {
