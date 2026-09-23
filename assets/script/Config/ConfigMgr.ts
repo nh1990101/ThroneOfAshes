@@ -12,6 +12,7 @@ export class ConfigMgr {
     private static _instance: ConfigMgr;
 
     public string_ch_tbl = new Map<number, IStringChTbl>();
+    public string_ch_tb2 = new Map<number, IStringChTbl>();
     public function_prop_tbl = new Map<number, IFunctionPropTbl>();
     /**主键调整表 
     * 表名：主键字符串
