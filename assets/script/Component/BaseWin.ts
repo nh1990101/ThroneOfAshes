@@ -14,13 +14,6 @@ export class BaseWin extends BaseComp {
 
     protected animTime = 0.2
 
-    RegisterUIEvent() {
-
-    }
-    start(): void {
-        super.start();
-        this.CheckAndRegister();
-    }
     showWin(...param) {
         this.node.active = true;
         Tools.setNodeTopLayer(this.node)
@@ -34,6 +27,13 @@ export class BaseWin extends BaseComp {
     closeWin() {
         this.node.active = false;
         this.unRegisterEvent();
+    }
+    public initEvent(): void {
+        super.initEvent();
+        var btnClose = this["btn_close"];
+        if (btnClose) {
+            this.addNodeEvent(btnClose.node, Node.EventType.TOUCH_END, this.closeWin);
+        }
     }
 
 

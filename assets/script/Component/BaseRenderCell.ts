@@ -7,9 +7,7 @@ export class BaseRenderCell<T = any> extends BaseComp {
     protected _data: T;
     protected _isSelected: boolean = false;
 
-    start() {
-        super.start();
-    }
+
     
 
     setData(data: T): void {

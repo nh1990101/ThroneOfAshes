@@ -18,7 +18,16 @@ export class BaseComp extends Component {
     protected nodeEvents: NodeEventData[] = []
     protected isInitEvent: boolean;
     protected isInit: boolean;
+    protected isInitComponent: boolean;
+
+    protected onLoad(): void {
+        this.init();
+    }
     start() {
+        this.isInitComponent = true;
+        this.CheckAndRegister();
+    }
+    public init() {
         this.isInit = true;
     }
     public initEvent() {

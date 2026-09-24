@@ -144,7 +144,7 @@ export class ScrollList extends ScrollView {
                 this.addItemClickHandler(pNode)
             }
         }
-        pNode.getComponent(BaseRenderCell)?.CheckAndRegister();
+       
         // 创建时立即设置选中状态
         this.itemRender(pNode, index);
         Tools.insertArr(this._itemArr, pNode)
