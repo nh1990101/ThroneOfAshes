@@ -8,16 +8,19 @@ const { ccclass, property } = _decorator;
 @ccclass('BaseWin')
 export class BaseWin extends BaseComp {
 
-    @property()
+    @property(Node)
     winBg: Node = null;
 
 
     protected animTime = 0.2
 
     RegisterUIEvent() {
-        
-    }
 
+    }
+    start(): void {
+        super.start();
+        this.CheckAndRegister();
+    }
     showWin(...param) {
         this.node.active = true;
         Tools.setNodeTopLayer(this.node)
@@ -27,7 +30,6 @@ export class BaseWin extends BaseComp {
             tween(this.winBg).to(this.animTime, { x: 1, y: 1, z: 1 }).start();
         }
 
-        this.CheckAndRegister();
     }
     closeWin() {
         this.node.active = false;

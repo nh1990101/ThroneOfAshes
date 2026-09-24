@@ -1,4 +1,4 @@
-import { _decorator, Component, EventTouch, Node, Prefab, ScrollView, UITransform, Vec2 } from 'cc';
+import { _decorator, CCFloat, Component, EventTouch, Node, Prefab, ScrollView, UITransform, Vec2 } from 'cc';
 import { BaseRenderCell } from '../BaseRenderCell';
 import { Tools } from '../../Common/Tools';
 import { AssetMgr } from '../../Common/AssetMgr';
@@ -14,7 +14,7 @@ export class ScrollList extends ScrollView {
     @property({ type: Prefab, tooltip: "item子节点预制体" })
     itemPrefab: Prefab = null;
 
-    @property({ type: Number, tooltip: "上下左右的元素位置偏移值" })
+    @property({ type: CCFloat, tooltip: "上下左右的元素位置偏移值" })
     offSetPos: number = 0;
 
     /**单条记录高度*/

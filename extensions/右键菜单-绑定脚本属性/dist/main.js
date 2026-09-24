@@ -74,7 +74,7 @@ export class ${nodeName} extends Component {
             }
             //获取属性需要添加的具体内容;
             function getPropText(comps, nodeName, nodeUuid) {
-                var _a, _b;
+                var _a;
                 console.log(`处理节点: ${nodeName}, 组件数量: ${comps.length}`);
                 //绑定属性内容的text；
                 let propStr = null;
@@ -93,65 +93,67 @@ export class ${nodeName} extends Component {
                     console.log(`${nodeName} 只有 UITransform，绑定为 Node`);
                     return { propStr, type: 'cc.Node', pUuid: nodeUuid, imType: 'Node' };
                 }
+                // 优先查找自定义组件（如 BaseBtn）
                 for (let i = 0; i < len; i++) {
                     const type = comps[i].type;
-                    console.log(`  组件 ${i}: ${type}`);
-                    if (type != 'cc.UITransform') {
-                        switch (type) {
-                            case 'cc.Label':
-                            case 'cc.Sprite':
-                            case 'cc.ProgressBar':
-                            case 'cc.Button':
-                            case 'cc.Mask':
-                            case 'cc.ScrollView':
-                            case 'cc.Camera':
-                                const proType = type.substring(3, type.length);
-                                propStr = `
-
-    @property(${proType})
-    ${nodeName}: ${proType} = null!;`;
-                                pType = type;
-                                componentUuid = comps[i].value.uuid.value;
-                                importType = proType;
-                                console.log(`  -> 识别为内置组件: ${proType}`);
-                                break;
-                            case 'sp.Skeleton':
-                                propStr = `
-
-    @property(sp.Skeleton)
-    ${nodeName}: sp.Skeleton = null!;`;
-                                pType = type;
-                                componentUuid = comps[i].value.uuid.value;
-                                importType = type.split('.')[0];
-                                console.log(`  -> 识别为 Spine 组件`);
-                                break;
-                            case 'dragonBones.ArmatureDisplay':
-                                propStr = `
-
-    @property(dragonBones.ArmatureDisplay)
-    ${nodeName}: dragonBones.ArmatureDisplay = null!;`;
-                                pType = type;
-                                componentUuid = comps[i].value.uuid.value;
-                                importType = type.split('.')[0];
-                                console.log(`  -> 识别为 DragonBones 组件`);
-                                break;
-                            default:
-                                // 自定义脚本组件
-                                console.log(`  -> 检查是否为自定义组件...`);
-                                console.log(`     type.startsWith('cc.'): ${type.startsWith('cc.')}`);
-                                console.log(`     有 __scriptAsset: ${!!((_a = comps[i].value) === null || _a === void 0 ? void 0 : _a.__scriptAsset)}`);
-                                if (!type.startsWith('cc.') && ((_b = comps[i].value) === null || _b === void 0 ? void 0 : _b.__scriptAsset)) {
-                                    const customType = type;
-                                    propStr = `
+                    if (type !== 'cc.UITransform' && !type.startsWith('cc.') && ((_a = comps[i].value) === null || _a === void 0 ? void 0 : _a.__scriptAsset)) {
+                        const customType = type;
+                        propStr = `
 
     @property(${customType})
     ${nodeName}: ${customType} = null!;`;
+                        pType = type;
+                        componentUuid = comps[i].value.uuid.value;
+                        importType = null; // 自定义组件不需要 import
+                        console.log(`  -> 优先识别为自定义组件: ${customType} (不需要import)`);
+                        break; // 找到自定义组件就停止
+                    }
+                }
+                // 如果没有找到自定义组件，再查找内置组件
+                if (!propStr) {
+                    for (let i = 0; i < len; i++) {
+                        const type = comps[i].type;
+                        console.log(`  组件 ${i}: ${type}`);
+                        if (type != 'cc.UITransform') {
+                            switch (type) {
+                                case 'cc.Label':
+                                case 'cc.Sprite':
+                                case 'cc.ProgressBar':
+                                case 'cc.Button':
+                                case 'cc.Mask':
+                                case 'cc.ScrollView':
+                                case 'cc.Camera':
+                                    const proType = type.substring(3, type.length);
+                                    propStr = `
+
+    @property(${proType})
+    ${nodeName}: ${proType} = null!;`;
                                     pType = type;
                                     componentUuid = comps[i].value.uuid.value;
-                                    importType = null; // 自定义组件不需要 import
-                                    console.log(`  -> 识别为自定义组件: ${customType} (不需要import)`);
-                                }
-                                break;
+                                    importType = proType;
+                                    console.log(`  -> 识别为内置组件: ${proType}`);
+                                    break;
+                                case 'sp.Skeleton':
+                                    propStr = `
+
+    @property(sp.Skeleton)
+    ${nodeName}: sp.Skeleton = null!;`;
+                                    pType = type;
+                                    componentUuid = comps[i].value.uuid.value;
+                                    importType = type.split('.')[0];
+                                    console.log(`  -> 识别为 Spine 组件`);
+                                    break;
+                                case 'dragonBones.ArmatureDisplay':
+                                    propStr = `
+
+    @property(dragonBones.ArmatureDisplay)
+    ${nodeName}: dragonBones.ArmatureDisplay = null!;`;
+                                    pType = type;
+                                    componentUuid = comps[i].value.uuid.value;
+                                    importType = type.split('.')[0];
+                                    console.log(`  -> 识别为 DragonBones 组件`);
+                                    break;
+                            }
                         }
                     }
                 }

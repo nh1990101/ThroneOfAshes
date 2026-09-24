@@ -5,7 +5,7 @@ import { BaseWin } from './BaseWin';
 
 const { ccclass, property } = _decorator;
 
-export const WIN_NAMES = ["FlyNotice", "MainCity"] as const
+export const WIN_NAMES = ["FlyNotice", "MainCity", "BattleWin"] as const
 type WIN_NAMES<S extends string> = S
 
 @ccclass('UIMananger')
@@ -18,7 +18,7 @@ export class UIMananger extends Component {
     @property(Node)
     winLoading: Node = null;
 
-    onEnable() {
+    onLoad() {
         this.win = new Map<string, BaseWin>();
         UIMananger.instance = this;
         this.parentTemp = this.node;
@@ -45,7 +45,7 @@ export class UIMananger extends Component {
                     var win = winNode.getComponent(BaseWin)
                     if (win != null) {
                         UIMananger.instance.win.set(winName, win);
-                        win.showWin(...params)
+                        win.showWin(...params);
                         this.winLoading.active = false;
                     } else {
                         log(`该窗口没有挂载脚本${winName}`)
