@@ -8,11 +8,14 @@ export class BaseRenderCell<T = any> extends BaseComp {
     protected _isSelected: boolean = false;
 
 
-    
+
 
     setData(data: T): void {
         this._data = data;
-        this.onDataUpdated();
+        if (this.isInitComponent) {
+            this.CheckAndRegister();
+            this.onDataUpdated();
+        }
     }
 
     getData(): T {
@@ -27,10 +30,13 @@ export class BaseRenderCell<T = any> extends BaseComp {
     isSelected(): boolean {
         return this._isSelected;
     }
-
+    public initEvent(): void {
+        super.initEvent();
+        this.onDataUpdated();
+    }
     protected onDataUpdated(): void {
         // 子类可以覆盖这个方法
-       
+
     }
 
     protected onSelectionChanged(): void {

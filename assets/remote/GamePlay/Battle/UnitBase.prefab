@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "UnitCom",
+    "_name": "UnitBase",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "UnitCom",
+    "_name": "UnitBase",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -275,6 +275,7 @@
       "__id__": 0
     },
     "fileId": "091JLfZfdEIatGwmOGhNK/",
+    "instance": null,
     "targetOverrides": null
   }
 ]

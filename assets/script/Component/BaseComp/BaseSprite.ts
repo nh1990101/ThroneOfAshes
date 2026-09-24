@@ -1,5 +1,6 @@
 import { _decorator, Color, Sprite, SpriteFrame, SpriteAtlas } from 'cc';
 import { AssetMgr } from '../../Common/AssetMgr';
+import { GameUrl } from '../../Common/GameUrl';
 const { ccclass, property } = _decorator;
 
 @ccclass('BaseSprite')
@@ -20,7 +21,7 @@ export class BaseSprite extends Sprite {
         this.type = Sprite.Type.SIMPLE;
 
         // 设置默认尺寸模式为自定义
-        this.sizeMode = Sprite.SizeMode.CUSTOM;
+        this.sizeMode = Sprite.SizeMode.TRIMMED;
 
         // 设置默认不裁剪
         this.trim = false;
@@ -32,7 +33,7 @@ export class BaseSprite extends Sprite {
      * @param atlasName 图集路径，默认为 "ui/commonUI"
      * @returns Promise<void>
      */
-    public async setSpriteFromAtlas(resName: string, atlasName: string = "ui/commonUI"): Promise<void> {
+    public async setSpriteFromAtlas(resName: string, atlasName: string = GameUrl.Atlas_Common): Promise<void> {
         try {
             // 释放之前的资源
             this.releaseSprite();

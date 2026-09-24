@@ -17,13 +17,14 @@ export class BattleUnit extends UnitBase {
      * 服务器数据
      */
     protected m_data: any;
-    
+
     initEvent(): void {
         super.initEvent();
 
     }
     public SetHp(curHp: number, maxHp?: number) {
-
+        this.HpBar.progress = curHp / maxHp;
+        this.lb_Hp.string = `${curHp}/${maxHp}`;
     }
 
 }

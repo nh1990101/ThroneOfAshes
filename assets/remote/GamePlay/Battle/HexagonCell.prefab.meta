@@ -2,12 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "c9f17a7f-914a-4d63-9c9f-24c23da098eb",
+  "uuid": "2d801a9a-411f-40e5-98d0-c1041c81e134",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "UnitCom"
+    "syncNodeName": "HexagonCell"
   }
 }

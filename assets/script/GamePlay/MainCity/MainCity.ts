@@ -21,7 +21,9 @@ export class MainCity extends BaseWin {
     OnClickBattle() {
         UIMananger.instance.showWin("BattleWin");
     }
-
+    OnRefreshUI(): void {
+        super.OnRefreshUI();
+    }
 }
 
 

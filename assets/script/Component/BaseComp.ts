@@ -21,15 +21,22 @@ export class BaseComp extends Component {
     protected isInitComponent: boolean;
 
     protected onLoad(): void {
-        this.init();
+
     }
     start() {
         this.isInitComponent = true;
+        this.init();
         this.CheckAndRegister();
     }
+    /**
+     * 实例化后执行，只执行一次
+     */
     public init() {
         this.isInit = true;
     }
+    /**
+     * 节点加载完毕后，只执行一次
+     */
     public initEvent() {
         this.isInitEvent = true;
     }
@@ -40,8 +47,10 @@ export class BaseComp extends Component {
         this.eventRegister();
     }
     protected onDestroy(): void {
+        super.onDestroy();
         this.unRegisterEvent();
         this.unRegisterNodeEvents();
+
     }
     public eventRegister() {
         if (this.events) {
@@ -56,7 +65,6 @@ export class BaseComp extends Component {
                 EventManager.Instance.removeListener(event.eventName, event.call, event.callThm)
             })
         }
-        this.isInitEvent = false;
     }
     protected addEvent(eventName: string, call: Function, thm: any) {
         Tools.insertArr(this.events, { eventName: eventName, call: call, callThm: thm })

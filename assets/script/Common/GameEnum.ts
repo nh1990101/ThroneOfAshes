@@ -7,9 +7,6 @@ export enum GameEvent {
     Connect = "Connect",
 }
 
-export enum ResUrl {
-    UnitAtlasUrl = "Res/Battle/UnitResAtlas/"
-}
 /**
  * 普通单位动作类型
  */
