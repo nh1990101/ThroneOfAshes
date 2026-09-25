@@ -12,7 +12,10 @@ export enum HexDirection {
     SOUTHWEST = 4,  // 左下 (西南)
     SOUTHEAST = 5   // 右下 (东南)
 }
-
+export interface HexagonPos {
+    q: number;
+    r: number;
+}
 /**
  * 六边形轴坐标数据结构（尖顶六边形）
  * 使用轴坐标系统 (q, r)
@@ -20,10 +23,10 @@ export enum HexDirection {
 @ccclass('HexagonData')
 export class HexagonData {
     // ==================== 坐标属性 ====================
-    /** q 轴坐标（向右偏下方向） */
+    /** q 轴坐标（水平向右方向，列） */
     public q: number = 0;
 
-    /** r 轴坐标（垂直向下方向） */
+    /** r 轴坐标（斜向右下方向，行） */
     public r: number = 0;
 
     // ==================== 基础属性 ====================
@@ -43,14 +46,34 @@ export class HexagonData {
     /** 是否高亮显示 */
     public highlighted: boolean = false;
 
-    // ==================== 六边形方向偏移量（尖顶） ====================
-    private static readonly DIRECTIONS: Array<[number, number]> = [
+    // ==================== 六边形尺寸常量 ====================
+    /** 六边形宽度（像素） - 可通过UpdateGridPixelSize修改 */
+    public static widthPx: number = 98;
+
+    /** 六边形高度（像素） - 可通过UpdateGridPixelSize修改 */
+    public static heightPx: number = 86;
+
+    public pos: HexagonPos;
+
+    // ==================== 六边形方向偏移量（尖顶，偏移坐标） ====================
+    // 偶数行的方向偏移
+    private static readonly DIRECTIONS_EVEN: Array<[number, number]> = [
+        [+1, 0],   // EAST - 右 (东)
+        [0, -1],   // NORTHEAST - 右上 (东北)
+        [-1, -1],  // NORTHWEST - 左上 (西北)
+        [-1, 0],   // WEST - 左 (西)
+        [-1, +1],  // SOUTHWEST - 左下 (西南)
+        [0, +1]    // SOUTHEAST - 右下 (东南)
+    ];
+
+    // 奇数行的方向偏移
+    private static readonly DIRECTIONS_ODD: Array<[number, number]> = [
         [+1, 0],   // EAST - 右 (东)
         [+1, -1],  // NORTHEAST - 右上 (东北)
         [0, -1],   // NORTHWEST - 左上 (西北)
         [-1, 0],   // WEST - 左 (西)
-        [-1, +1],  // SOUTHWEST - 左下 (西南)
-        [0, +1]    // SOUTHEAST - 右下 (东南)
+        [0, +1],   // SOUTHWEST - 左下 (西南)
+        [+1, +1]   // SOUTHEAST - 右下 (东南)
     ];
 
     // ==================== 构造函数 ====================
@@ -63,6 +86,7 @@ export class HexagonData {
     constructor(q: number = 0, r: number = 0, walkable: boolean = true) {
         this.q = q;
         this.r = r;
+        this.pos = { q: q, r: r };
         this.walkable = walkable;
     }
 
@@ -78,6 +102,13 @@ export class HexagonData {
         this.highlighted = false;
     }
 
+    /**
+     * 设置六边形实际像素宽高（静态方法，全局设置）
+     */
+    public static UpdateGridPixelSize(width: number, height: number) {
+        HexagonData.widthPx = width;
+        HexagonData.heightPx = height;
+    }
     // ==================== 坐标系统 ====================
     /**
      * 获取立方体坐标的 s 值
@@ -97,29 +128,25 @@ export class HexagonData {
 
     /**
      * 转换为世界坐标（像素坐标）
-     * @param hexWidth 六边形宽度（左右两边的距离，默认98）
-     * @param hexHeight 六边形高度（上下顶点的距离，默认86）
      * @returns 世界坐标 Vec2
      */
-    public toPixel(hexWidth: number = 98, hexHeight: number = 86): Vec2 {
+    public toPixel(): Vec2 {
         // 对于尖顶六边形的偏移坐标系统（奇数行偏移）：
-        // - 横向：每列间距 hexWidth，奇数行向右偏移 hexWidth/2
-        // - 纵向：每行间距 hexHeight * 3/4（因为相邻行重叠 1/4）
+        // - 横向：每列间距 widthPx，奇数行向右偏移 widthPx/2
+        // - 纵向：每行间距 heightPx * 3/4（因为相邻行重叠 1/4）
 
-        const x = hexWidth * this.q + (this.r % 2) * (hexWidth / 2);
-        const y = (hexHeight * 3 / 4) * this.r;
+        const x = HexagonData.widthPx * this.q + (this.r % 2) * (HexagonData.widthPx / 2);
+        const y = (HexagonData.heightPx * 3 / 4) * this.r;
 
         return new Vec2(x, y);
     }
 
     /**
      * 转换为世界坐标 Vec3
-     * @param hexWidth 六边形宽度（左右两边的距离，默认98）
-     * @param hexHeight 六边形高度（上下顶点的距离，默认86）
      * @param z z 轴坐标
      */
-    public toPixel3D(hexWidth: number = 98, hexHeight: number = 86, z: number = 0): Vec3 {
-        const pixel = this.toPixel(hexWidth, hexHeight);
+    public toPixel3D(z: number = 0): Vec3 {
+        const pixel = this.toPixel();
         return new Vec3(pixel.x, pixel.y, z);
     }
 
@@ -127,19 +154,34 @@ export class HexagonData {
      * 从世界坐标创建六边形数据
      * @param x 世界坐标 x
      * @param y 世界坐标 y
-     * @param hexWidth 六边形宽度（左右两边的距离，默认98）
-     * @param hexHeight 六边形高度（上下顶点的距离，默认86）
      * @returns 新的 HexagonData
      */
-    public static fromPixel(x: number, y: number, hexWidth: number = 98, hexHeight: number = 86): HexagonData {
+    public static fromPixel(x: number, y: number): HexagonData {
         // 先计算行（r）
-        const r = Math.round(y / (hexHeight * 3 / 4));
+        const r = Math.round(y / (HexagonData.heightPx * 3 / 4));
 
         // 根据行的奇偶性计算列（q）
-        const offsetX = (r % 2) * (hexWidth / 2);
-        const q = Math.round((x - offsetX) / hexWidth);
+        const offsetX = (r % 2) * (HexagonData.widthPx / 2);
+        const q = Math.round((x - offsetX) / HexagonData.widthPx);
 
         return new HexagonData(q, r);
+    }
+
+    /**
+     * 从世界坐标计算六边形坐标（不创建实例，性能更好）
+     * @param x 世界坐标 x
+     * @param y 世界坐标 y
+     * @returns 六边形坐标 {q, r}
+     */
+    public static pixelToCoord(x: number, y: number): { q: number, r: number } {
+        // 先计算行（r）
+        const r = Math.round(y / (HexagonData.heightPx * 3 / 4));
+
+        // 根据行的奇偶性计算列（q）
+        const offsetX = (r % 2) * (HexagonData.widthPx / 2);
+        const q = Math.round((x - offsetX) / HexagonData.widthPx);
+
+        return { q, r };
     }
 
     /**
@@ -185,7 +227,9 @@ export class HexagonData {
      * @returns 邻居六边形数据
      */
     public getNeighborAt(direction: number | HexDirection): HexagonData {
-        const offset = HexagonData.DIRECTIONS[direction];
+        // 根据当前行的奇偶性选择对应的偏移表
+        const directions = (this.r % 2 === 0) ? HexagonData.DIRECTIONS_EVEN : HexagonData.DIRECTIONS_ODD;
+        const offset = directions[direction];
         return new HexagonData(
             this.q + offset[0],
             this.r + offset[1],
@@ -210,8 +254,11 @@ export class HexagonData {
         const dq = other.q - this.q;
         const dr = other.r - this.r;
 
+        // 根据当前行的奇偶性选择对应的偏移表
+        const directions = (this.r % 2 === 0) ? HexagonData.DIRECTIONS_EVEN : HexagonData.DIRECTIONS_ODD;
+
         for (let dir = 0; dir < 6; dir++) {
-            const offset = HexagonData.DIRECTIONS[dir];
+            const offset = directions[dir];
             if (offset[0] === dq && offset[1] === dr) {
                 return dir;
             }

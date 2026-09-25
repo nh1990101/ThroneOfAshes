@@ -1,8 +1,9 @@
-import { _decorator, Component, Node, Prefab, instantiate, Vec2 } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, Vec2, Vec3 } from 'cc';
 import { BaseMgr } from '../../Common/BaseMgr';
-import { HexagonData } from './HexagonData';
+import { HexagonData, HexagonPos } from './HexagonData';
 import { HexagonCell } from './HexagonCell';
 import { AssetMgr } from '../../Common/AssetMgr';
+import { PathFindingMgr } from '../../Common/PathFindingMgr';
 const { ccclass, property } = _decorator;
 
 /**
@@ -54,7 +55,7 @@ export class BattleMapMgr extends BaseMgr {
 
         // 调整容器位置使地图居中显示
         this.centerMapContainer();
-
+        PathFindingMgr.getInstance().UpdateMapGrid(this._hexDataMap);
         console.log(`地图初始化完成: ${this._hexDataMap.size} 个六边形格子`);
     }
 
@@ -68,10 +69,10 @@ export class BattleMapMgr extends BaseMgr {
         const centerQ = (BattleMapMgr.MAP_WIDTH - 1) / 2;
         const centerR = (BattleMapMgr.MAP_HEIGHT - 1) / 2;
         const centerData = new HexagonData(centerQ, centerR);
-        const centerPos = centerData.toPixel(HexagonCell.HEX_WIDTH, HexagonCell.HEX_HEIGHT);
+        const centerPos = centerData.toPixel();
 
         // 将容器位置设置为负的中心点坐标，使地图居中
-        this.mapContainer.setPosition(-centerPos.x + HexagonCell.HEX_WIDTH * 0.5, -centerPos.y, 0);
+        this.mapContainer.setPosition(-centerPos.x + HexagonData.widthPx * 0.5, -centerPos.y, 0);
     }
 
     /**
@@ -114,6 +115,11 @@ export class BattleMapMgr extends BaseMgr {
         return this._hexDataMap.get(key) || null;
     }
 
+    public getHexDataFromPos(pos: HexagonPos): HexagonData | null {
+        const key = `${pos.q},${pos.r}`;
+        return this._hexDataMap.get(key) || null;
+    }
+
     /**
      * 根据坐标获取六边形格子
      */
@@ -134,6 +140,16 @@ export class BattleMapMgr extends BaseMgr {
      */
     public getAllHexCells(): HexagonCell[] {
         return Array.from(this._hexCellMap.values());
+    }
+
+    /**
+     * 根据HexagonData获取世界坐标
+     * @param hexData 六边形数据
+     * @returns 世界坐标，如果不存在返回null
+     */
+    public getHexWorldPos(hexData: HexagonData): Vec3 | null {
+        const cell = this.getHexCell(hexData.q, hexData.r);
+        return cell ? cell.GetWorldPos() : null;
     }
 
     /**
