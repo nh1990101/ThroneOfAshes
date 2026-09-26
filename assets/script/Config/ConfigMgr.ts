@@ -4,6 +4,7 @@ import { AssetMgr } from '../Common/AssetMgr';
 import { IStringChTbl } from './Typings/string_ch_tbl';
 import { IFunctionPropTbl } from './Typings/function_prop_tbl';
 import { IUnitData } from './Typings/UnitData';
+import { BattleMapConfig } from '../GamePlay/Battle/BattleMapConfig';
 const { ccclass, property } = _decorator;
 
 
@@ -11,6 +12,7 @@ const { ccclass, property } = _decorator;
 export class ConfigMgr {
     private zip: JSZip = null;
     private static _instance: ConfigMgr;
+    public battleMapConfig: BattleMapConfig;
 
     public string_ch_tbl = new Map<number, IStringChTbl>();
     public string_ch_tb2 = new Map<number, IStringChTbl>();
@@ -31,7 +33,28 @@ export class ConfigMgr {
         }
         return this._instance;
     }
+    /**加载战斗地图配置 */
+    async loadBattleMapConfig() {
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                let file: JsonAsset;
 
+                if (DEBUG) {
+                    // await this.loadGuideConfig();
+
+                    file = await this.loadResourceFile<JsonAsset>("MapConfig/BattleMapConfig");
+                } else {
+                    file = await AssetMgr.getRemoteResByUrl(AssetMgr.getBattleConfigUrl(), JsonAsset, ".json");
+                }
+                const obj = file.json;
+                this.battleMapConfig = obj as BattleMapConfig;
+                resolve();
+            } catch (error) {
+                console.error("Config load failed:", error);
+                reject(error);
+            }
+        });
+    }
     async loadConfigZip() {
         return new Promise<void>(async (resolve, reject) => {
             try {
@@ -54,9 +77,9 @@ export class ConfigMgr {
         });
     }
 
-    async loadResourceFile(path: string): Promise<Asset> {
+    async loadResourceFile<T extends Asset>(path: string): Promise<T> {
         return new Promise((resolve, reject) => {
-            resources.load(path, Asset, (err, asset) => {
+            resources.load(path, Asset, (err, asset: T) => {
                 if (err) {
                     reject(err);
                 } else {

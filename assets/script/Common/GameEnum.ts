@@ -5,6 +5,11 @@ const { ccclass, property } = _decorator;
 
 export enum GameEvent {
     Connect = "Connect",
+
+    //选中战斗单位（移动操作）
+    Select_Grid_Battle_Unit = "Select_Grid_Unit",
+    //清空选中单位
+    Clear_Battle_Select_Unit = "Clear_Battle_Select_Unit",
 }
 
 /**

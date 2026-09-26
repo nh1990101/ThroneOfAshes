@@ -23,7 +23,10 @@ export class Loading extends Component {
     async start() {
         // if (!CondictionMgr.getInstance().config) {
         this.setPro(0.1, "正在加载游戏配置")
-        await ConfigMgr.instance.loadConfigZip()
+        await ConfigMgr.instance.loadConfigZip();
+
+        this.setPro(0.1, "正在加载地图配置")
+        await ConfigMgr.instance.loadBattleMapConfig();
 
         this.setPro(0.3, "正在加载资源包")
         await AssetMgr.preloadBundle()
@@ -58,7 +61,7 @@ export class Loading extends Component {
     onLoad() {
         // 动态加载JSZip
         (window as any).JSZip = JSZip; // 全局挂载
-       
+
 
     }
 

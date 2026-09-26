@@ -2,6 +2,7 @@ import { _decorator, Button, Component, Label, Node, Vec3 } from 'cc';
 import { BaseComp } from '../../Component/BaseComp';
 import { BaseSprite } from '../../Component/BaseComp/BaseSprite';
 import { HexagonData } from './HexagonData';
+import { GameUrl } from '../../Common/GameUrl';
 const { ccclass, property } = _decorator;
 
 /**
@@ -11,8 +12,10 @@ const { ccclass, property } = _decorator;
 export class HexagonCell extends BaseComp {
     @property(Label)
     lb_pos: Label;
+
+    protected m_data: HexagonData;
+
     private _sp_hexagon: BaseSprite;
-    private _data: HexagonData;
     private _touch: Button;
 
     /** 六边形宽度 */
@@ -38,22 +41,25 @@ export class HexagonCell extends BaseComp {
 
 
     public SetData(data: HexagonData) {
-        this._data = data;
+        this.m_data = data;
+        if (this.isInit) {
+            this.SetNormal();
+        }
         this.UpdatePos();
         this.UpdatePosLabel();
     }
 
     public GetData(): HexagonData {
-        return this._data;
+        return this.m_data;
     }
 
     /**
      * 根据轴坐标更新位置
      */
     public UpdatePos() {
-        if (!this._data) return;
+        if (!this.m_data) return;
 
-        const pos = this._data.toPixel();
+        const pos = this.m_data.toPixel();
         this.node.setPosition(new Vec3(pos.x, pos.y, 0));
 
         // 打印坐标信息
@@ -73,8 +79,42 @@ export class HexagonCell extends BaseComp {
     }
     private UpdatePosLabel() {
         if (this.lb_pos) {
-            this.lb_pos.string = `${this._data.q}_${this._data.r}`;
+            this.lb_pos.string = `${this.m_data.q}_${this.m_data.r}`;
         }
+    }
+    public ShowPosLabel(bolShow: boolean) {
+        this.lb_pos.node.active = bolShow;
+    }
+    /**
+     * 
+     * @param data 更新后的格子状态
+     */
+    public UpdateData(data: HexagonData) {
+        this.m_data = data;
+        this.UpdateShowStatus();
+    }
+    /**更新显示状态 */
+    public UpdateShowStatus() {
+        //如果是高亮状态下（即检测状态），根据格子是否可移动来显示颜色
+        if (this.m_data.highlighted) {
+            if (this.m_data.isWalkable() && this.m_data.isEmpty()) {
+                this.SetGreen();
+            } else {
+                this.SetRed();
+            }
+        } else {
+            this.SetNormal();
+        }
+    }
+    public SetNormal() {
+        this._sp_hexagon.setSpriteFromAtlas("ui_battle_select_frame", GameUrl.Atlas_Battle);
+    }
+    public SetRed() {
+        this._sp_hexagon.setSpriteFromAtlas("ui_battle_select_frame_red", GameUrl.Atlas_Battle);
+    }
+
+    public SetGreen() {
+        this._sp_hexagon.setSpriteFromAtlas("ui_battle_select_frame_green", GameUrl.Atlas_Battle);
     }
 }
 

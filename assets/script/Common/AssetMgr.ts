@@ -36,6 +36,10 @@ export class AssetMgr extends Component {
     public static getConfigUrl(): string {
         return path.join(this.getUrl(), "ConfigForClient.zip")
     }
+    /**游戏配置路径 */
+    public static getBattleConfigUrl(): string {
+        return path.join(this.getUrl(), "BattleMapConfig.json")
+    }
     /**字体路径 */
     public static getFontUrl(): string {
         return path.join(this.getUrl(), "ChillRoundFBold")
@@ -114,6 +118,10 @@ export class AssetMgr extends Component {
             }
             if (!isInitPool && arrRemove && arrRemove.length > 0) {
                 node = arrRemove.shift();
+                // 确保节点已经有 _prefabName 属性
+                if (!node['_prefabName']) {
+                    node['_prefabName'] = prefabName;
+                }
                 if (arrActive.indexOf(node) < 0) {
                     Tools.insertArr(arrActive, node)
                     // arrActive.push(node)
@@ -130,6 +138,8 @@ export class AssetMgr extends Component {
                 resolve(node)
             } else {
                 this.createPrefab(url, pos, parent).then((node: Node) => {
+                    // 存储预制体名字到节点上
+                    node['_prefabName'] = prefabName;
 
                     if (isInitPool) {
                         if (!arrRemove) {
@@ -151,12 +161,39 @@ export class AssetMgr extends Component {
 
 
     }
-    /**移除对象 */
-    public static removeNode(node: Node, prefabName: string) {
+    /**查找节点对应的预制体名字（兜底方案） */
+    private static findPrefabNameByNode(node: Node): string | null {
+        for (let [name, nodes] of this._poolActive) {
+            if (nodes.indexOf(node) > -1) {
+                return name;
+            }
+        }
+        return null;
+    }
+    /**移除对象 
+     * 使用该方法的话需要从对象池创建，即createPrefabFromPool,不然不会进入池化
+    */
+    public static removeNode(node: Node, prefabName?: string) {
         node.active = false;
         // node.setPosition(AssetMgr.REMOVE_POS)
 
         // node.removeFromParent();
+
+        // 如果没有传 prefabName，就从 node 上获取
+        if (!prefabName) {
+            prefabName = node['_prefabName'];
+        }
+
+        // 如果还是没有，则尝试遍历查找（兜底方案）
+        if (!prefabName) {
+            prefabName = this.findPrefabNameByNode(node);
+        }
+
+        if (!prefabName) {
+            console.warn('无法找到节点对应的预制体名字');
+            return;
+        }
+
         var arrActive = this._poolActive.get(prefabName)
         if (arrActive) {
             var idx = arrActive.indexOf(node)

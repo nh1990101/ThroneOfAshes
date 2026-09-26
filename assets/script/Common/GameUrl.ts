@@ -43,6 +43,10 @@ export class GameUrl {
      * 主城图集
      */
     static Atlas_MainCity = "Res/Atlas/MainCity";
+    /**
+     * 战斗预制体
+     */
+    static Battle_Prefab = new UrlTemplate("GamePlay/Battle/{0}");
 }
 
 

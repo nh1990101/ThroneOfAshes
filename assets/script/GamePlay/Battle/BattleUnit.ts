@@ -1,9 +1,12 @@
-import { _decorator, Component, Node, ProgressBar, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, Node, ProgressBar, v3, Vec2, Vec3 } from 'cc';
 import { UnitBase } from './UnitBase';
 import { BaseLabel } from '../../Component/BaseComp/BaseLabel';
 import { HexagonData, HexagonPos } from './HexagonData';
 import { UNIT_ACTION } from '../../Common/GameEnum';
 import { BattleMapMgr } from './BattleMapMgr';
+import { BattleUnitData } from './BattleUnitData';
+import { ConfigMgr } from '../../Config/ConfigMgr';
+import { AssetMgr } from '../../Common/AssetMgr';
 const { ccclass, property } = _decorator;
 /**
  * 战斗场景单位基础类
@@ -16,11 +19,11 @@ export class BattleUnit extends UnitBase {
     lb_Hp: BaseLabel;
 
     /**移速每秒多少像素 */
-    private _moveSpeed: number = 100;
+    private _moveSpeed: number = 200;
     /**
      * 服务器数据
      */
-    protected m_data: any;
+    protected m_data: BattleUnitData;
 
     /**当前移动路径（世界坐标） */
     private _movePathWorldPos: Vec3[] = [];
@@ -34,10 +37,36 @@ export class BattleUnit extends UnitBase {
     private _arriveThreshold: number = 2;
     /**地图格子坐标 */
     private _pos: HexagonPos;
+    /**移动过程的临时变量位置 */
+    private _moveNewPos: Vec3;
+    /**计算方向临时变量 */
+    private _dirTemp: Vec3;
 
     initEvent(): void {
         super.initEvent();
+        if (!this._moveNewPos) {
+            this._moveNewPos = v3();
+        }
+        if (!this._dirTemp) {
+            this._dirTemp = v3();
+        }
+    }
+    public SetData(data: BattleUnitData) {
+        this.m_data = data;
+        this.SetHp(data.hp, 100);
 
+        //设置朝向 敌人的话相反朝向
+        this.SetFlipX(data.IsEnemy());
+        return this.SetUnitId(data.Id);
+    }
+    public GetData() {
+        return this.m_data;
+    }
+    /**单位配置 */
+    public getCfg() {
+        if (this.m_data) {
+            return ConfigMgr.instance.UnitData.get(this.m_data.Id);
+        }
     }
     public SetHp(curHp: number, maxHp?: number) {
         this.HpBar.progress = curHp / maxHp;
@@ -58,10 +87,15 @@ export class BattleUnit extends UnitBase {
         if (cell) {
             this.SetWorldPos(cell.GetWorldPos());
         }
+        this.UpdateBattleMapPos();
     }
     public SetPos(q: number, r: number) {
         this._pos.q = q;
         this._pos.r = r;
+    }
+    /**更新战斗地图自身占位数据 */
+    public UpdateBattleMapPos() {
+        BattleMapMgr.getInstance().SetHexUnitId(this._pos.q, this._pos.r, this.m_data.uId);
     }
     public GetMapPos() {
         return this._pos;
@@ -149,9 +183,17 @@ export class BattleUnit extends UnitBase {
         const currentPos = this.node.getWorldPosition();
 
         // 计算到目标点的距离
-        const direction = new Vec3();
-        Vec3.subtract(direction, targetPos, currentPos);
-        const distance = direction.length();
+        // const direction = new Vec3();
+        Vec3.subtract(this._dirTemp, targetPos, currentPos);
+        const distance = this._dirTemp.length();
+
+        // 根据移动方向判断是否需要翻转
+        // x > 0 朝右不翻转，x < 0 朝左翻转
+        if (this._dirTemp.x < 0) {
+            this.SetFlipX(true);
+        } else if (this._dirTemp.x > 0) {
+            this.SetFlipX(false);
+        }
 
         // 如果距离小于阈值，认为已到达当前目标点
         if (distance <= this._arriveThreshold) {
@@ -192,11 +234,11 @@ export class BattleUnit extends UnitBase {
             this._currentPathIndex++;
         } else {
             // 标准化方向向量
-            direction.normalize();
+            this._dirTemp.normalize();
             // 计算新位置
-            const newPos = new Vec3();
-            Vec3.scaleAndAdd(newPos, currentPos, direction, moveDistance);
-            this.node.setWorldPosition(newPos);
+            // const newPos = new Vec3();
+            Vec3.scaleAndAdd(this._moveNewPos, currentPos, this._dirTemp, moveDistance);
+            this.node.setWorldPosition(this._moveNewPos);
         }
     }
 
@@ -207,6 +249,29 @@ export class BattleUnit extends UnitBase {
         // 子类可以重写此方法来处理移动完成事件
         console.log('BattleUnit move complete');
         this.PlayAction(UNIT_ACTION.IDLE, true);
+        this.UpdateBattleMapPos();
+    }
+    /**
+     * 设置水平翻转
+     * @param isFlip true为翻转，false为正常
+     */
+    public SetFlipX(isFlip: boolean) {
+        if (this.animation && this.animation.node) {
+            const scaleX = isFlip ? -1 : 1;
+            const currentScale = this.animation.node.scale;
+            this.animation.node.setScale(scaleX, currentScale.y, currentScale.z);
+        }
+    }
+
+    /**
+     * 移除自身并清除数据
+     */
+    public Clear() {
+        this.StopMove();
+        this.m_data = null;
+        this.lb_Hp.string = "";
+        this.HpBar.progress = 0;
+        AssetMgr.removeNode(this.node);
     }
 }
 

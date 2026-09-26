@@ -32,10 +32,11 @@ export class HexagonData {
     // ==================== 基础属性 ====================
     /** 是否可移动 */
     public walkable: boolean = true;
-
+    /**是否布阵位置 */
+    public isDeployment: boolean = false;
     // ==================== 游戏状态 ====================
     /** 占据该格子的单位ID（null表示空） */
-    public occupiedUnitId: string | null = null;
+    public occupiedUnitId: number | null = null;
 
     /** 是否可见（战争迷雾） */
     public visible: boolean = true;
@@ -83,11 +84,12 @@ export class HexagonData {
      * @param r 轴坐标 r
      * @param walkable 是否可移动
      */
-    constructor(q: number = 0, r: number = 0, walkable: boolean = true) {
+    constructor(q: number = 0, r: number = 0, walkable: boolean = true, isDeployment: boolean = false) {
         this.q = q;
         this.r = r;
         this.pos = { q: q, r: r };
         this.walkable = walkable;
+        this.isDeployment = isDeployment;
     }
 
     // ==================== 初始化和重置 ====================
@@ -321,14 +323,14 @@ export class HexagonData {
     /**
      * 设置占据的单位
      */
-    public setOccupiedUnit(unitId: string | null): void {
+    public setOccupiedUnit(unitId: number | null): void {
         this.occupiedUnitId = unitId;
     }
 
     /**
      * 获取占据的单位ID
      */
-    public getOccupiedUnit(): string | null {
+    public getOccupiedUnit(): number | null {
         return this.occupiedUnitId;
     }
 
@@ -415,8 +417,8 @@ export class HexagonData {
 
         const results: HexagonData[] = [];
         let hex = new HexagonData(
-            center.q + HexagonData.DIRECTIONS[4][0] * radius,
-            center.r + HexagonData.DIRECTIONS[4][1] * radius
+            center.q + HexagonData.DIRECTIONS_ODD[4][0] * radius,
+            center.r + HexagonData.DIRECTIONS_ODD[4][1] * radius
         );
 
         for (let dir = 0; dir < 6; dir++) {

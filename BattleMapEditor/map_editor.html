@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六边形地图编辑器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #2c3e50;
+            color: #ecf0f1;
+            overflow: hidden;
+        }
+        #container {
+            display: flex;
+            height: 100vh;
+        }
+        #canvas-container {
+            flex: 1;
+            position: relative;
+            overflow: auto;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #mapCanvas {
+            display: block;
+            cursor: crosshair;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        #sidebar {
+            width: 320px;
+            background: #34495e;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+        }
+        h1 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #2c3e50;
+            border-radius: 8px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #e74c3c;
+        }
+        .info-item {
+            margin: 8px 0;
+            font-size: 13px;
+        }
+        .info-label {
+            color: #95a5a6;
+            display: inline-block;
+            width: 100px;
+        }
+        .info-value {
+            color: #ecf0f1;
+            font-weight: bold;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+        }
+        .mode-toggle button {
+            flex: 1;
+        }
+        .mode-toggle button.active {
+            background: #27ae60;
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #95a5a6;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .file-label:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        .grid-size {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .grid-size input {
+            flex: 1;
+            padding: 6px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            font-size: 12px;
+            width: 60px;
+        }
+        .offset-group {
+            margin-top: 12px;
+        }
+        .offset-label {
+            font-size: 12px;
+            margin-bottom: 6px;
+            color: #95a5a6;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-walkable {
+            background: #27ae60;
+        }
+        .status-unwalkable {
+            background: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="canvas-container">
+            <canvas id="mapCanvas"></canvas>
+        </div>
+        <div id="sidebar">
+            <h1>🗺️ 六边形地图编辑器</h1>
+
+            <div class="section">
+                <div class="section-title">📊 地图信息</div>
+                <div class="info-item">
+                    <span class="info-label">网格宽度:</span>
+                    <span class="info-value" id="gridWidth">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">网格高度:</span>
+                    <span class="info-value" id="gridHeight">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">已选格子:</span>
+                    <span class="info-value" id="selectedCount">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">可移动:</span>
+                    <span class="info-value" id="walkableCount">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">不可移动:</span>
+                    <span class="info-value" id="unwalkableCount">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">布阵位置:</span>
+                    <span class="info-value" id="deploymentCount">0</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🎨 编辑模式</div>
+                <div class="mode-toggle">
+                    <button class="btn-primary active" id="btnModeSelect">选择</button>
+                    <button class="btn-primary" id="btnModeWalkable">可移动</button>
+                    <button class="btn-primary" id="btnModeUnwalkable">不可移动</button>
+                </div>
+                <div class="mode-toggle" style="margin-top: 8px;">
+                    <button class="btn-primary" id="btnModeDeployment">布阵位置</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔧 地图设置</div>
+                <div class="grid-size">
+                    <input type="number" id="inputCols" min="5" max="20" value="10" placeholder="列数">
+                    <input type="number" id="inputRows" min="5" max="20" value="10" placeholder="行数">
+                </div>
+                <button class="btn-warning" id="btnResize">调整网格大小</button>
+
+                <div class="offset-group">
+                    <div class="offset-label">起始坐标偏移:</div>
+                    <div class="grid-size">
+                        <input type="number" id="inputOffsetX" value="0" placeholder="X">
+                        <input type="number" id="inputOffsetY" value="0" placeholder="Y">
+                    </div>
+                    <button class="btn-warning" id="btnApplyOffset">应用偏移</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">💾 地图操作</div>
+                <button class="btn-success" id="btnExport">导出地图配置</button>
+                <label for="fileImport" class="file-label">📁 导入地图配置</label>
+                <input type="file" id="fileImport" accept=".json">
+                <button class="btn-danger" id="btnClear">清空所有选择</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">ℹ️ 当前选中</div>
+                <div class="info-item">
+                    <span class="info-label">坐标:</span>
+                    <span class="info-value" id="currentCoord">未选中</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">状态:</span>
+                    <span class="info-value" id="currentStatus">-</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📖 使用说明</div>
+                <div style="font-size: 12px; line-height: 1.8; color: #bdc3c7;">
+                    <p><strong>选择模式:</strong> 点击格子选中/取消选中</p>
+                    <p><strong>可移动模式:</strong> 绿色，可通行区域</p>
+                    <p><strong>不可移动:</strong> 红色，障碍区域</p>
+                    <p><strong>布阵位置:</strong> 蓝色+★，只能设置在可移动格子上</p>
+                    <p><strong>坐标系统:</strong> 屏幕中心为原点，r=0在底部</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 六边形地图编辑器
+        class HexMapEditor {
+            constructor() {
+                // Canvas相关
+                this.canvas = document.getElementById('mapCanvas');
+                this.ctx = this.canvas.getContext('2d');
+
+                // 六边形尺寸（与游戏中保持一致）
+                this.HEX_WIDTH = 98;
+                this.HEX_HEIGHT = 86;
+
+                // 网格尺寸
+                this.gridCols = 10;
+                this.gridRows = 10;
+
+                // 起始坐标偏移
+                this.offsetX = 0;
+                this.offsetY = 0;
+
+                // 编辑模式: 'select', 'walkable', 'unwalkable', 'deployment'
+                this.editMode = 'select';
+
+                // 地图数据：存储选中的格子
+                this.mapData = new Map(); // key: "q,r", value: {q, r, walkable}
+
+                // 资源
+                this.bgImage = null;
+                this.hexImage = null;
+                this.resourcesLoaded = false;
+
+                // 当前鼠标悬停的格子
+                this.hoverCell = null;
+
+                this.init();
+            }
+
+            async init() {
+                await this.loadResources();
+                this.setupCanvas();  // 资源加载后再设置画布大小
+                this.bindEvents();
+                this.updateStats();
+                this.render();
+            }
+
+            async loadResources() {
+                // 加载背景图片
+                this.bgImage = await this.loadImage('../assets/remote/Res/SingleImage/Battle/ui_battle_bg.jpg');
+                // 加载六边形图片
+                this.hexImage = await this.loadImage('ui_battle_select_frame.png');
+                this.resourcesLoaded = true;
+                console.log('资源加载完成');
+                console.log('背景图片尺寸:', this.bgImage.width, 'x', this.bgImage.height);
+            }
+
+            loadImage(src) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        console.log('成功加载图片:', src);
+                        resolve(img);
+                    };
+                    img.onerror = (e) => {
+                        console.error('加载图片失败:', src, e);
+                        reject(e);
+                    };
+                    img.src = src;
+                });
+            }
+
+            setupCanvas() {
+                // 根据背景图片大小设置画布，确保能显示完整背景
+                if (this.bgImage) {
+                    this.canvas.width = this.bgImage.width;
+                    this.canvas.height = this.bgImage.height;
+                } else {
+                    // 默认使用游戏设计分辨率
+                    this.canvas.width = 720;
+                    this.canvas.height = 1280;
+                }
+            }
+
+            bindEvents() {
+                // Canvas点击事件
+                this.canvas.addEventListener('click', (e) => this.handleClick(e));
+                this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+
+                // 模式切换按钮
+                document.getElementById('btnModeSelect').addEventListener('click', () => this.setMode('select'));
+                document.getElementById('btnModeWalkable').addEventListener('click', () => this.setMode('walkable'));
+                document.getElementById('btnModeUnwalkable').addEventListener('click', () => this.setMode('unwalkable'));
+                document.getElementById('btnModeDeployment').addEventListener('click', () => this.setMode('deployment'));
+
+                // 功能按钮
+                document.getElementById('btnExport').addEventListener('click', () => this.exportMap());
+                document.getElementById('btnClear').addEventListener('click', () => this.clearMap());
+                document.getElementById('btnResize').addEventListener('click', () => this.resizeGrid());
+                document.getElementById('btnApplyOffset').addEventListener('click', () => this.applyOffset());
+                document.getElementById('fileImport').addEventListener('change', (e) => this.importMap(e));
+            }
+
+            setMode(mode) {
+                this.editMode = mode;
+
+                // 更新按钮状态
+                document.querySelectorAll('.mode-toggle button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                if (mode === 'select') {
+                    document.getElementById('btnModeSelect').classList.add('active');
+                } else if (mode === 'walkable') {
+                    document.getElementById('btnModeWalkable').classList.add('active');
+                } else if (mode === 'unwalkable') {
+                    document.getElementById('btnModeUnwalkable').classList.add('active');
+                } else if (mode === 'deployment') {
+                    document.getElementById('btnModeDeployment').classList.add('active');
+                }
+            }
+
+            handleClick(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                const canvasX = (e.clientX - rect.left) * scaleX;
+                const canvasY = (e.clientY - rect.top) * scaleY;
+
+                const coord = this.pixelToHex(canvasX, canvasY);
+                console.log('点击位置:', canvasX, canvasY, '转换坐标:', coord);
+
+                if (!coord || !this.isInGrid(coord.q, coord.r)) {
+                    console.log('坐标超出网格范围');
+                    return;
+                }
+
+                const key = `${coord.q},${coord.r}`;
+
+                if (this.editMode === 'select') {
+                    // 选择模式：切换选中状态
+                    if (this.mapData.has(key)) {
+                        this.mapData.delete(key);
+                    } else {
+                        this.mapData.set(key, {q: coord.q, r: coord.r, walkable: true, isDeployment: false});
+                    }
+                } else if (this.editMode === 'walkable') {
+                    // 可移动模式：设置为可移动
+                    const existingCell = this.mapData.get(key);
+                    this.mapData.set(key, {q: coord.q, r: coord.r, walkable: true, isDeployment: existingCell?.isDeployment || false});
+                } else if (this.editMode === 'unwalkable') {
+                    // 不可移动模式：设置为不可移动
+                    this.mapData.set(key, {q: coord.q, r: coord.r, walkable: false, isDeployment: false});
+                } else if (this.editMode === 'deployment') {
+                    // 布阵位置模式：只能在可移动的格子上设置
+                    if (this.mapData.has(key)) {
+                        const cell = this.mapData.get(key);
+                        if (cell.walkable) {
+                            // 切换布阵位置状态
+                            cell.isDeployment = !cell.isDeployment;
+                            this.mapData.set(key, cell);
+                        } else {
+                            console.log('只能在可移动的格子上设置布阵位置');
+                        }
+                    } else {
+                        console.log('请先选中格子并设置为可移动');
+                    }
+                }
+
+                this.updateStats();
+                this.render();
+            }
+
+            handleMouseMove(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                const canvasX = (e.clientX - rect.left) * scaleX;
+                const canvasY = (e.clientY - rect.top) * scaleY;
+
+                const coord = this.pixelToHex(canvasX, canvasY);
+
+                if (!coord || !this.isInGrid(coord.q, coord.r)) {
+                    this.hoverCell = null;
+                    document.getElementById('currentCoord').textContent = '未选中';
+                    document.getElementById('currentStatus').textContent = '-';
+                } else {
+                    this.hoverCell = coord;
+                    document.getElementById('currentCoord').textContent = `(${coord.q}, ${coord.r})`;
+
+                    const key = `${coord.q},${coord.r}`;
+                    if (this.mapData.has(key)) {
+                        const cell = this.mapData.get(key);
+                        let status = cell.walkable ? '可移动' : '不可移动';
+                        let color = cell.walkable ? '#27ae60' : '#e74c3c';
+
+                        if (cell.isDeployment) {
+                            status += ' + 布阵位置';
+                            color = '#3498db';
+                        }
+
+                        document.getElementById('currentStatus').innerHTML =
+                            `<span class="status-indicator" style="background:${color}"></span>${status}`;
+                    } else {
+                        document.getElementById('currentStatus').textContent = '未选中';
+                    }
+                }
+
+                this.render();
+            }
+
+            isInGrid(q, r) {
+                return q >= 0 && q < this.gridCols && r >= 0 && r < this.gridRows;
+            }
+
+            // 像素坐标转六边形坐标（Cocos坐标系：屏幕中心为原点，Y轴向上）
+            pixelToHex(x, y) {
+                // 转换为Cocos坐标系（屏幕中心为原点）
+                const cocosX = x - this.canvas.width / 2;
+                const cocosY = this.canvas.height / 2 - y;
+
+                // 应用偏移量
+                const adjustedX = cocosX - this.offsetX;
+                const adjustedY = cocosY - this.offsetY;
+
+                // 先计算行（r）
+                const r = Math.round(adjustedY / (this.HEX_HEIGHT * 3 / 4));
+
+                // 根据行的奇偶性计算列（q）
+                const offsetX = (r % 2) * (this.HEX_WIDTH / 2);
+                const q = Math.round((adjustedX - offsetX) / this.HEX_WIDTH);
+
+                return {q, r};
+            }
+
+            // 六边形坐标转像素坐标（Cocos坐标系：屏幕中心为原点，Y轴向上）
+            hexToPixel(q, r) {
+                // 计算六边形在Cocos坐标系中的位置
+                const cocosX = this.HEX_WIDTH * q + (r % 2) * (this.HEX_WIDTH / 2) + this.offsetX;
+                const cocosY = (this.HEX_HEIGHT * 3 / 4) * r + this.offsetY;
+
+                // 转换为Canvas坐标系（左上角为原点）
+                const x = cocosX + this.canvas.width / 2;
+                const y = this.canvas.height / 2 - cocosY;
+
+                return {x, y};
+            }
+
+            render() {
+                if (!this.resourcesLoaded) {
+                    console.log('等待资源加载...');
+                    return;
+                }
+
+                // 清空画布
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // 绘制背景（完整显示）
+                if (this.bgImage) {
+                    this.ctx.drawImage(this.bgImage, 0, 0);
+                }
+
+                // 绘制所有可能的网格（半透明，用于辅助）
+                this.ctx.save();
+                this.ctx.globalAlpha = 0.2;
+                for (let q = 0; q < this.gridCols; q++) {
+                    for (let r = 0; r < this.gridRows; r++) {
+                        const pos = this.hexToPixel(q, r);
+                        this.drawHexImage(pos.x, pos.y, null, 0.2);
+                    }
+                }
+                this.ctx.restore();
+
+                // 绘制已选中的格子
+                this.ctx.save();
+                this.mapData.forEach((cell) => {
+                    const pos = this.hexToPixel(cell.q, cell.r);
+                    let tint = cell.walkable ? 'rgba(39, 174, 96, 0.6)' : 'rgba(231, 76, 60, 0.6)';
+
+                    // 如果是布阵位置，使用蓝色
+                    if (cell.isDeployment) {
+                        tint = 'rgba(52, 152, 219, 0.7)';
+                    }
+
+                    // 绘制六边形
+                    this.drawHexImage(pos.x, pos.y, tint, 1.0);
+
+                    // 绘制坐标文字
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.font = 'bold 14px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+                    this.ctx.strokeStyle = 'black';
+                    this.ctx.lineWidth = 3;
+                    this.ctx.strokeText(`${cell.q},${cell.r}`, pos.x, pos.y);
+                    this.ctx.fillText(`${cell.q},${cell.r}`, pos.x, pos.y);
+
+                    // 如果是布阵位置，绘制标记
+                    if (cell.isDeployment) {
+                        this.ctx.fillStyle = 'yellow';
+                        this.ctx.font = 'bold 24px Arial';
+                        this.ctx.strokeStyle = 'black';
+                        this.ctx.lineWidth = 4;
+                        this.ctx.strokeText('★', pos.x, pos.y - 15);
+                        this.ctx.fillText('★', pos.x, pos.y - 15);
+                    }
+                });
+                this.ctx.restore();
+
+                // 绘制悬停高亮
+                if (this.hoverCell && this.isInGrid(this.hoverCell.q, this.hoverCell.r)) {
+                    const pos = this.hexToPixel(this.hoverCell.q, this.hoverCell.r);
+                    this.ctx.strokeStyle = '#f39c12';
+                    this.ctx.lineWidth = 3;
+                    this.drawHexOutline(pos.x, pos.y);
+                }
+            }
+
+            drawHexImage(x, y, tintColor, alpha = 1.0) {
+                if (!this.hexImage) return;
+
+                this.ctx.save();
+                this.ctx.globalAlpha = alpha;
+
+                // 绘制六边形图片
+                const drawX = x - this.HEX_WIDTH / 2;
+                const drawY = y - this.HEX_HEIGHT / 2;
+                this.ctx.drawImage(this.hexImage, drawX, drawY, this.HEX_WIDTH, this.HEX_HEIGHT);
+
+                // 如果有颜色叠加，绘制半透明颜色层
+                if (tintColor) {
+                    this.ctx.fillStyle = tintColor;
+                    this.ctx.fillRect(drawX, drawY, this.HEX_WIDTH, this.HEX_HEIGHT);
+                }
+
+                this.ctx.restore();
+            }
+
+            drawHexOutline(x, y) {
+                const size = this.HEX_HEIGHT / 2;
+                this.ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angle = Math.PI / 180 * (60 * i + 30);
+                    const hx = x + size * Math.cos(angle);
+                    const hy = y + size * Math.sin(angle);
+                    if (i === 0) {
+                        this.ctx.moveTo(hx, hy);
+                    } else {
+                        this.ctx.lineTo(hx, hy);
+                    }
+                }
+                this.ctx.closePath();
+                this.ctx.stroke();
+            }
+
+            updateStats() {
+                document.getElementById('gridWidth').textContent = this.gridCols;
+                document.getElementById('gridHeight').textContent = this.gridRows;
+                document.getElementById('selectedCount').textContent = this.mapData.size;
+
+                let walkableCount = 0;
+                let unwalkableCount = 0;
+                let deploymentCount = 0;
+                this.mapData.forEach(cell => {
+                    if (cell.walkable) walkableCount++;
+                    else unwalkableCount++;
+                    if (cell.isDeployment) deploymentCount++;
+                });
+
+                document.getElementById('walkableCount').textContent = walkableCount;
+                document.getElementById('unwalkableCount').textContent = unwalkableCount;
+                document.getElementById('deploymentCount').textContent = deploymentCount;
+            }
+
+            exportMap() {
+                const mapConfig = {
+                    version: "1.0",
+                    width: this.gridCols,
+                    height: this.gridRows,
+                    hexWidth: this.HEX_WIDTH,
+                    hexHeight: this.HEX_HEIGHT,
+                    offsetX: this.offsetX,
+                    offsetY: this.offsetY,
+                    cells: Array.from(this.mapData.values())
+                };
+
+                const jsonStr = JSON.stringify(mapConfig, null, 2);
+                const blob = new Blob([jsonStr], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `map_${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                alert('地图配置已导出！');
+            }
+
+            importMap(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const mapConfig = JSON.parse(event.target.result);
+
+                        // 恢复网格大小
+                        this.gridCols = mapConfig.width;
+                        this.gridRows = mapConfig.height;
+                        document.getElementById('inputCols').value = this.gridCols;
+                        document.getElementById('inputRows').value = this.gridRows;
+
+                        // 恢复偏移量
+                        this.offsetX = mapConfig.offsetX || 0;
+                        this.offsetY = mapConfig.offsetY || 0;
+                        document.getElementById('inputOffsetX').value = this.offsetX;
+                        document.getElementById('inputOffsetY').value = this.offsetY;
+
+                        // 恢复地图数据
+                        this.mapData.clear();
+                        mapConfig.cells.forEach(cell => {
+                            const key = `${cell.q},${cell.r}`;
+                            this.mapData.set(key, cell);
+                        });
+
+                        this.updateStats();
+                        this.render();
+                        alert('地图配置已导入！');
+                    } catch (error) {
+                        alert('导入失败：' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            clearMap() {
+                if (confirm('确定要清空所有选择吗？')) {
+                    this.mapData.clear();
+                    this.updateStats();
+                    this.render();
+                }
+            }
+
+            resizeGrid() {
+                const cols = parseInt(document.getElementById('inputCols').value);
+                const rows = parseInt(document.getElementById('inputRows').value);
+
+                if (cols < 5 || cols > 20 || rows < 5 || rows > 20) {
+                    alert('网格大小必须在 5-20 之间！');
+                    return;
+                }
+
+                this.gridCols = cols;
+                this.gridRows = rows;
+
+                // 移除超出范围的格子
+                const toRemove = [];
+                this.mapData.forEach((cell, key) => {
+                    if (!this.isInGrid(cell.q, cell.r)) {
+                        toRemove.push(key);
+                    }
+                });
+                toRemove.forEach(key => this.mapData.delete(key));
+
+                this.updateStats();
+                this.render();
+            }
+
+            applyOffset() {
+                const offsetX = parseInt(document.getElementById('inputOffsetX').value) || 0;
+                const offsetY = parseInt(document.getElementById('inputOffsetY').value) || 0;
+
+                this.offsetX = offsetX;
+                this.offsetY = offsetY;
+
+                this.render();
+            }
+        }
+
+        // 启动编辑器
+        window.addEventListener('load', () => {
+            new HexMapEditor();
+        });
+    </script>
+</body>
+</html>
