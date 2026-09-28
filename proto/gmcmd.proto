@@ -1,0 +1,33 @@
+syntax = "proto3";
+package pb;
+option  go_package = ".;pb";
+// gm指令描述
+message GMCMDDesc {
+    // 指令分类，给客户端展示
+    string category = 1;
+    // 描述做什么功能
+    string desc = 2;
+    // 指令的协议，服务器依据这个判断要执行哪个指令
+    string cmd = 3;
+    // 每个参数的描述
+    repeated string args = 4;
+}
+
+// gm指令初始化
+message NtfGMCMDInit {
+    bool               enabled = 1;  // 是否开启GM
+    repeated GMCMDDesc cmds    = 2;
+}
+
+// 使用gm指令
+message UseGMCMDReq {
+    // 指令，等于CommandDesc.cmd
+    string cmd = 1;
+    // 具体的参数值
+    repeated string args = 2;
+}
+
+message UseGMCMDResp {
+    // 提示信息，如果为空就不展示
+    string msg = 1;
+}

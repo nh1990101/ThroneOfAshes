@@ -57,8 +57,9 @@ export class BattleMapMgr extends BaseMgr {
             // 创建六边形格子视图
             this.createHexCell(hexData);
         })
+        this.mapContainer.setPosition(config.offsetX, config.offsetY, 0);
         // 调整容器位置使地图居中显示
-        this.centerMapContainer();
+        // this.centerMapContainer();
         PathFindingMgr.getInstance().UpdateMapGrid(this._hexDataMap);
         console.log(`地图初始化完成: ${this._hexDataMap.size} 个六边形格子`);
     }

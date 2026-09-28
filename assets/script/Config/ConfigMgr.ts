@@ -42,7 +42,7 @@ export class ConfigMgr {
                 if (DEBUG) {
                     // await this.loadGuideConfig();
 
-                    file = await this.loadResourceFile<JsonAsset>("MapConfig/BattleMapConfig");
+                    file = await this.loadResourceFile<JsonAsset>("MapConfig/BattleMapConfig2");
                 } else {
                     file = await AssetMgr.getRemoteResByUrl(AssetMgr.getBattleConfigUrl(), JsonAsset, ".json");
                 }

@@ -2,9 +2,19 @@
   "name": "RPGCore",
   "uuid": "3d97537b-cc62-486c-bca6-b14e7a95324e",
   "creator": {
-    "version": "3.8.6"
+    "version": "3.8.8"
+  },
+  "scripts": {
+    "proto": "node proto/auto-compile.js",
+    "proto:watch": "node proto/auto-compile.js --watch",
+    "proto:gmcmd": "cd proto && pbjs -t static-module -w commonjs -o gmcmd.js gmcmd.proto && pbts -o gmcmd.d.ts gmcmd.js"
   },
   "dependencies": {
-    "jszip": "^3.10.2"
+    "jszip": "^3.10.2",
+    "protobufjs": "^8.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "protobufjs-cli": "^2.7.0"
   }
 }

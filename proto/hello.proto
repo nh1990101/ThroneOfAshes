@@ -1,0 +1,12 @@
+syntax = "proto3";
+package pb;
+option  go_package = ".;pb";
+
+message HelloReq {
+    string content = 1;
+}
+
+message HelloResp {
+    string content    = 1;
+    int64  serverTime = 2;  // 服务器时间
+}

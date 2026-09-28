@@ -1,11 +1,11 @@
 {
   "version": "1.0",
   "width": 7,
-  "height": 7,
+  "height": 10,
   "hexWidth": 98,
   "hexHeight": 86,
   "offsetX": -300,
-  "offsetY": -200,
+  "offsetY": -220,
   "cells": [
     {
       "q": 2,
@@ -280,6 +280,84 @@
     {
       "q": 6,
       "r": 0,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 3,
+      "r": 7,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 5,
+      "r": 7,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 4,
+      "r": 7,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 2,
+      "r": 7,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 1,
+      "r": 7,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 0,
+      "r": 7,
+      "walkable": true,
+      "isDeployment": true
+    },
+    {
+      "q": 5,
+      "r": 8,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 4,
+      "r": 8,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 2,
+      "r": 8,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 1,
+      "r": 8,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 0,
+      "r": 8,
+      "walkable": true,
+      "isDeployment": true
+    },
+    {
+      "q": 3,
+      "r": 8,
+      "walkable": true,
+      "isDeployment": false
+    },
+    {
+      "q": 6,
+      "r": 8,
       "walkable": true,
       "isDeployment": false
     }
