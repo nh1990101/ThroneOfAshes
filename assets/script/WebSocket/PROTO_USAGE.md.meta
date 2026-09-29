@@ -1,11 +1,9 @@
 {
-  "ver": "1.0.1",
-  "importer": "text",
+  "ver": "4.0.23",
+  "importer": "markdown",
   "imported": true,
-  "uuid": "0d21ba9c-ca5a-4ff8-811e-e02dec6b70bb",
-  "files": [
-    ".json"
-  ],
+  "uuid": "e5f6a7b8-c9d0-4e12-f3a4-b5c6d7e8f9a0",
+  "files": {},
   "subMetas": {},
   "userData": {}
 }
