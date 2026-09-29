@@ -1,9 +1,1 @@
-{
-  /* Base configuration. Do not edit this field. */
-  "extends": "./temp/tsconfig.cocos.json",
-
-  /* Add your custom configuration here. */
-  "compilerOptions": {
-    "strict": false
-  }
-}
+{"extends":"./temp/tsconfig.cocos.json","compilerOptions":{"strict":false,"esModuleInterop":true}}

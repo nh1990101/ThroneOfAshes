@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "jszip": "^3.10.2",
-    "protobufjs": "^8.8.0"
+    "protobufjs": "^7.2.5"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
-    "protobufjs-cli": "^2.7.0"
+    "protobufjs-cli": "^1.1.2"
   }
 }

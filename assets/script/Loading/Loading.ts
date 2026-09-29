@@ -4,6 +4,7 @@ import { AssetMgr } from '../Common/AssetMgr';
 import { GlobalData } from '../Common/GlobalData';
 import { GameWebSocket } from '../WebSocket/GameWebSocket';
 import { UIMananger } from '../Component/UIMananger';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('Loading')
