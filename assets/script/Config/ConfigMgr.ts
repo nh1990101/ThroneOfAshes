@@ -8,6 +8,7 @@ import { BattleMapConfig } from '../GamePlay/Battle/BattleMapConfig';
 const { ccclass, property } = _decorator;
 
 
+;
 
 export class ConfigMgr {
     private zip: JSZip = null;

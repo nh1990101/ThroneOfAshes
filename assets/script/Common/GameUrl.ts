@@ -1,4 +1,5 @@
 import { _decorator, Component, Node } from 'cc';
+import { pb } from '../WebSocket/proto/ProtoDefined';
 const { ccclass, property } = _decorator;
 
 /**

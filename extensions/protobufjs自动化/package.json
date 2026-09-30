@@ -1,0 +1,107 @@
+{
+  "package_version": 2,
+  "name": "cc-plugin-protobufjs",
+  "version": "0.0.1",
+  "description": "插件模板",
+  "author": "_muzzik",
+  "main": "./cc-plugin-protobufjs/src/main.js",
+  "scripts": {
+    "build": "cc-plugin-cli c -p cc-plugin-protobufjs"
+  },
+  "contributions": {
+    "scene": {
+      "script": "./cc-plugin-protobufjs/src/scene.js"
+    },
+    "menu": [
+      {
+        "path": "i18n:menu.extension/protobufjs",
+        "label": "构建",
+        "message": "build"
+      },
+      {
+        "path": "i18n:menu.extension/protobufjs",
+        "label": "强制构建",
+        "message": "force_build"
+      },
+      {
+        "path": "i18n:menu.extension/protobufjs/安装",
+        "label": "NPM 方式",
+        "message": "install_from_npm"
+      },
+      {
+        "path": "i18n:menu.extension/protobufjs/安装",
+        "label": "导入文件方式",
+        "message": "install_from_file"
+      },
+      {
+        "path": "i18n:menu.extension/protobufjs/安装",
+        "label": "使用说明",
+        "message": "install_instructions"
+      },
+      {
+        "path": "i18n:menu.extension/protobufjs",
+        "label": "使用说明",
+        "message": "instructions_for_use"
+      }
+    ],
+    "messages": {
+      "build": {
+        "methods": [
+          "build"
+        ]
+      },
+      "force_build": {
+        "methods": [
+          "force_build"
+        ]
+      },
+      "instructions_for_use": {
+        "methods": [
+          "instructions_for_use"
+        ]
+      },
+      "install_from_npm": {
+        "methods": [
+          "install_from_npm"
+        ]
+      },
+      "install_from_file": {
+        "methods": [
+          "install_from_file"
+        ]
+      },
+      "install_instructions": {
+        "methods": [
+          "install_instructions"
+        ]
+      },
+      "listen_build": {
+        "methods": [
+          "listen_build"
+        ]
+      },
+      "unlisten": {
+        "methods": [
+          "unlisten"
+        ]
+      },
+      "automation_instructions": {
+        "methods": [
+          "automation_instructions"
+        ]
+      }
+    },
+    "shortcuts": []
+  },
+  "panels": {},
+  "dependencies": {
+    "cjson": "^0.5.0",
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "@types/cjson": "^0.5.3",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^17.0.31"
+  },
+  "_storeId": "6842e6850db164dab4916b5945a49287"
+}

@@ -1,257 +1,224 @@
-import { _decorator, Component, director, isValid, log, macro, Node, Scheduler, sys, warn } from 'cc';
-import { getDeviceUUID } from '../Common/fn';
-import { GlobalData } from '../Common/GlobalData';
+import { _decorator, Component } from 'cc';
+import { ProtoNetworkMgr } from './ProtoNetworkMgr';
+import { ProtoConfig } from './ProtoConfig';
+import { pb } from './proto/ProtoDefined';
+import type { pb as pbType } from './proto/ProtoDefined.d';
+import { ProtoRequestType, ProtoServerMessageType } from './ProtoMessageType';
+import { BaseMgr } from '../Common/BaseMgr';
 import { EventManager } from '../Common/EventManager';
+
+
+
+
 const { ccclass, property } = _decorator;
 
+/**
+ * Protobuf网络示例
+ * 演示如何使用ProtoNetworkMgr进行网络通信
+ */
 @ccclass('GameWebSocket')
-export class GameWebSocket extends EventTarget {
-    private static _instance: GameWebSocket;
-    static get instance(): GameWebSocket {
-        if (!this._instance) {
-            this._instance = new GameWebSocket();
-        }
-        return this._instance
+export class GameWebSocket extends BaseMgr {
+    private network: ProtoNetworkMgr = null!;
+
+    public initEvent(): void {
+        super.initEvent();
+        this.network = ProtoNetworkMgr.instance;
+        // 监听连接事件
+
+        this.addEvent(ProtoNetworkMgr.EventType.CONNECTED, this.onConnected, this);
+        this.addEvent(ProtoNetworkMgr.EventType.DISCONNECTED, this.onDisconnected, this);
+        this.addEvent(ProtoNetworkMgr.EventType.RECONNECTING, this.onReconnecting, this);
+        this.addEvent(ProtoNetworkMgr.EventType.ERROR, this.onError, this);
+
+        // 监听服务器推送消息
+        this.network.addEventListener(ProtoServerMessageType.NtfGMCMDInit, this.onGMCMDInit.bind(this));
     }
-    static EventType = {
-        error: "error",
-        onclose: "onclose"
-    }
-
-    /* 连接地址 */
-    url = "ws://1.117.60.180:17001/ws"
-    // url = `ws://117.50.201.88/38080`
-
-    token = ""
-
-    ws: WebSocket = null
-
-    /**是否主动断开连接 */
-    isDiscnnect: boolean = false;
-    // 是否正重连中
-    private isReconnecting: boolean = false;
-    /**重连次数 */
-    reconnectTimeoutCnt: number = 0;
-    reconnectMaxCnt: number = 3;
-
-
-    /* 定时器 */
-    schedule(callback: (dt?: number) => void, interval: number, repeat?, delay?) {
-
-        var scheduler = director.getScheduler();
-        Scheduler.enableForTarget(scheduler)
-
-        interval = interval || 0;
-        repeat = isNaN(repeat) ? macro.REPEAT_FOREVER : repeat;
-        delay = delay || 0;
-
-        var paused = scheduler.isTargetPaused(scheduler);
-
-        scheduler.schedule(callback, scheduler, interval, repeat, delay, paused);
-    }
-    /* 定时器 */
-    scheduleOnce(callback: (dt?: number) => void, delay: number) {
-        this.schedule(callback, 0, 0, delay);
-    }
-    /* 取消定时器 */
-    unschedule(callback_fn: Function) {
-        if (!callback_fn)
-            return;
-        var scheduler = director.getScheduler();
-        Scheduler.enableForTarget(scheduler)
-        scheduler.unschedule(callback_fn, scheduler);
+    start() {
+        // this.initNetwork();
     }
 
-    /* 异步函数，定时检查, 直到满足条件 */
-    until(until: Function, interval?: number, timeout?) {
-        return new Promise(callback => {
-            let ret = until()
-            if (ret) {
-                callback(ret)
-                return
-            }
-            let begin = sys.now()
-            let _callback = null
-            _callback = () => {
-                if (timeout) {
-                    if (sys.now() - begin >= timeout * 1000) {
-                        callback(false)
-                        return
-                    }
-                }
-                let ret = until()
-                if (ret) {
-                    this.unschedule(_callback)
-                    callback(ret)
-                }
-            }
-            this.schedule(_callback, interval || 0.3)
-        })
-    }
+    /**
+     * 初始化网络连接
+     */
+    async initNetwork() {
 
-    /* 异步函数，一旦事件触发 */
-    forOnce(target, evtName, timeout?) {
-        return new Promise(callback => {
-            if (timeout) {
-                this.scheduleOnce(callback, timeout)
-            }
-            target.once(evtName, callback, this)
-        })
-    }
+        // 应用配置
+        const config = ProtoConfig.getConfig('test');
+        this.network.setReconnectConfig(config.reconnectMaxCount, config.reconnectDelay);
+        this.network.setHeartbeatConfig(config.heartbeatInterval);
 
-    /* 异步函数，延迟调用 */
-    delay(interval) {
-        return new Promise(callback => {
-            this.scheduleOnce(callback, interval)
-        })
-    }
 
-    // on<T extends EventListenerOrEventListenerObject>(event:any, callback:T, target?:any):EventListenerOrEventListenerObject{
-    //     if (!target) {
-    //         return super.addEventListener(event, callback, target)
-    //     }
-    //     super.on(event, (...args)=>{
-    //         if (isValid(target)) {
-    //             callback.apply(target, args)
-    //         }
-    //     }, target)
-    //     return callback
-    // }
+        // 连接服务器
+        console.log('正在连接服务器:', config.serverUrl);
+        const connected = await this.network.connect(config.serverUrl);
 
-    connect() {
-        return new Promise(resolve => {
-            let ws = new WebSocket(this.url)
-            // }
-            log("connect", this.url)
-            ws.binaryType = 'arraybuffer';
-            this.ws = ws
-            ws.onopen = () => {
-                log("onopen", this)
-                this.schedule(this.keepHeart, 5)
-                resolve(true)
-            }
-            ws.onerror = () => {
-                log("error", this)
-            }
-            ws.onmessage = (event: MessageEvent) => {
-                // cc.log("onmessage", data)
-                this._onMessage(event)
-            }
-            ws.onclose = (ev) => {
-                log("onclose", this)
-                if (!this.isDiscnnect) {
-                    this.dispatchEvent(new Event(GameWebSocket.EventType.onclose))
-                }
-                this.unschedule(this.keepHeart)
-                if (this.ws) {
-                    this.ws.onopen = null
-                    this.ws.onclose = null
-                    this.ws.onerror = null
-                    this.ws.onmessage = null
-                    this.ws = null
-                }
-                resolve(false)
-            }
-        })
-    }
-    async login(token = "") {
-        if (this.ws) {
-            var uiid = getDeviceUUID()
-            if (token) {
-                uiid = token;
-            }
-            console.log("uuid=" + uiid)
-            // uiid = "96678587-7145-48c4-9075-b4b20edad690"
-            // todo 对接后重新对接协议
-            // let loginRet = await this.sendMsg(CmdLogin, <LoginReq>{ login_token: uiid, login_type: "guest" })
-            // log("loginRet", loginRet)
-        }
-    }
-
-    keepHeart() {
-        // console.cc.log("keepHeart = ", this.url);
-        // todo 对接后重新对接协议
-        // this.sendMsg(CmdHeartbeat, { ts: GlobalData.serverDate.getTime() })
-    }
-    // 重连状态函数
-    clearReconnectingState() {
-        this.isReconnecting = false;
-    }
-    SetReconnectingState() {
-        this.isReconnecting = true;
-    }
-    getReconnecting() {
-        return this.isReconnecting;
-    }
-    // 手动断开网络
-    discnnect() {
-        if (this.ws) {
-            this.reconnectTimeoutCnt = 0;
-            this.isDiscnnect = true;
-            this.ws.close();
+        if (connected) {
+            console.log('连接服务器成功');
+            // 连接成功后可以发送消息
+            this.testHelloMessage();
         } else {
-            console.log("---------- this.ws is null ---------");
+            console.error('连接服务器失败');
         }
     }
+  
+    /**
+     * 测试Hello消息
+     */
+    testHelloMessage() {
+        console.log('发送Hello请求...');
 
-    async sendMsg(msgName: string, msg: any, code: number | string = 0): Promise<any> {
-        return new Promise((resolve, reject) => {
-            // log("sendMsg", msgName, msg)
-            let data = {
-                cmd: msgName,
-                data: msg,
-                code: code,
-            }
-            this.ws.send(JSON.stringify(data));
+        const req: pbType.IHelloReq = {
+            content: 'Hello from Cocos Creator client!'
+        };
 
-            const handler = (event: Event) => {
-                const customEvent = event as CustomEvent;
-                const data = customEvent.detail?.data;
-                const code = customEvent.detail?.code;
-                let cmd = msgName
-                if (data) {
-                    if (resolve) {
-                        resolve(data)
-                    }
-                } else {
-                    warn("error", code, this.ws.url, msgName);
-                    // app.showServiceTips(code, param);
-                    if (reject) {
-                        reject({ cmd, code });
-                    }
+        // 先监听响应
+        EventManager.Instance.addListener(ProtoServerMessageType.HelloResp, (event: any) => {
+            const resp = event.detail;
+            console.log('收到服务器响应:');
+            console.log('  内容:', resp.content);
+            console.log('  服务器时间:', resp.serverTime);
+        }, this);
+
+        // 发送请求
+        this.network.send<pbType.IHelloReq>(ProtoRequestType.HelloReq, req);
+    }
+
+    /**
+     * 测试GM命令
+     */
+    testGMCommand(cmd: string, ...args: string[]): void {
+        console.log(`发送GM命令: ${cmd}`, args);
+
+        const req: pbType.IUseGMCMDReq = {
+            cmd: cmd,
+            args: args
+        };
+
+        // 先监听响应
+        EventManager.Instance.addListener(ProtoServerMessageType.UseGMCMDResp, (event: any) => {
+            const resp = event.detail;
+            console.log('GM命令结果:', resp.msg);
+        }, this);
+
+        // 发送请求
+        this.network.send<pbType.IUseGMCMDReq>(ProtoRequestType.UseGMCMDReq, req);
+    }
+
+    /**
+     * 连接成功事件
+     */
+    private onConnected(event: CustomEvent) {
+        console.log('[网络事件] 连接成功');
+    }
+
+    /**
+     * 连接断开事件
+     */
+    private onDisconnected(event: CustomEvent) {
+        console.log('[网络事件] 连接断开');
+        // 可以显示断线提示UI
+    }
+
+    /**
+     * 重连中事件
+     */
+    private onReconnecting(event: CustomEvent) {
+        const data = event.detail as { attempt: number, maxAttempts: number };
+        console.log(`[网络事件] 正在重连... (${data.attempt}/${data.maxAttempts})`);
+        // 可以显示重连进度UI
+    }
+
+    /**
+     * 错误事件
+     */
+    private onError(event: CustomEvent) {
+        const error = event.detail;
+        console.error('[网络事件] 发生错误:', error);
+    }
+
+    /**
+     * GM命令初始化通知
+     */
+    private onGMCMDInit(event: CustomEvent) {
+        const data = event.detail as pbType.INtfGMCMDInit;
+        console.log('[服务器推送] 收到GM命令列表:');
+
+        if (data.cmds && data.cmds.length > 0) {
+            // 按分类整理命令
+            const cmdsByCategory = new Map<string, pbType.IGMCMDDesc[]>();
+
+            for (const cmd of data.cmds) {
+                const category = cmd.category || '其他';
+                if (!cmdsByCategory.has(category)) {
+                    cmdsByCategory.set(category, []);
                 }
-                this.removeEventListener(msgName, handler);
-            };
-            this.addEventListener(msgName, handler, { once: true });
-        })
-    }
+                cmdsByCategory.get(category)!.push(cmd);
+            }
 
-    private _onMessage(event: MessageEvent) {
-        let reply = JSON.parse(event.data);
-        let cmd = reply.cmd
-        let code = reply.code
-        if (code != 0) {
-            throw new Error(`cmd:${cmd} code:${code}`)
+            // 打印命令列表
+            for (const [category, cmds] of cmdsByCategory.entries()) {
+                console.log(`\n=== ${category} ===`);
+                for (const cmd of cmds) {
+                    console.log(`  ${cmd.cmd}: ${cmd.desc}`);
+                }
+            }
         }
-        let data = reply.data
-        this.dispatchEvent(new CustomEvent(cmd, { detail: { data, code } }))
-
-        //todo 对接后重新对错误提示
-        // if (code != CodeSuccess) {
-        //     var serverNotice = LangManager.instance.getStringById(1000 + code)
-        //     if (!serverNotice) {
-        //         serverNotice = "错误码：" + code
-        //     }
-        //     // UIMananger.instance.showFlyNotice(serverNotice ? serverNotice : code)
-        //     UIMananger.instance.showWin("NoticeWin", serverNotice)
-        // }
-        EventManager.Instance.dispatch(cmd, data, code)
     }
 
-    isOnline() {
-        return this.ws && this.ws.readyState
+    /**
+     * 清理
+     */
+    unRegistorEvent() {
+        super.unRegistorEvent();
+        // 断开连接
+        this.network.disconnect();
     }
 
+    // ==================== 以下是可以在其他地方调用的公开方法示例 ====================
+
+    /**
+     * 发送简单的Hello消息（可以在按钮点击等地方调用）
+     * 如需接收响应，请监听 ProtoServerMessageType.HelloResp 事件
+     */
+    public sendHello(content: string): void {
+        const req: pbType.IHelloReq = { content };
+        this.network.send<pbType.IHelloReq>(ProtoRequestType.HelloReq, req);
+    }
+
+    /**
+     * 执行GM命令（可以在调试界面调用）
+     * 如需接收结果，请监听 ProtoServerMessageType.UseGMCMDResp 事件
+     */
+    public executeGM(command: string, ...params: string[]): void {
+        this.testGMCommand(command, ...params);
+    }
+
+    /**
+     * 获取网络连接状态
+     */
+    public isConnected(): boolean {
+        return this.network && this.network.isOnline();
+    }
+
+    /**
+     * 手动重连
+     */
+    public async reconnect(): Promise<boolean> {
+        if (this.network) {
+            const config = ProtoConfig.getConfig('test');
+            return await this.network.connect(config.serverUrl);
+        }
+        return false;
+    }
+
+    /**
+     * 断开连接
+     */
+    public disconnect() {
+        if (this.network) {
+            this.network.disconnect();
+        }
+
+    }
+  
 }
-
-
