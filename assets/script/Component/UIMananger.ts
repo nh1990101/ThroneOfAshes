@@ -5,7 +5,7 @@ import { BaseWin } from './BaseWin';
 
 const { ccclass, property } = _decorator;
 
-export const WIN_NAMES = ["FlyNotice", "MainCity", "BattleWin"] as const
+export const WIN_NAMES = ["FlyNotice", "MainCity", "BattleWin","WildMapWin"] as const
 type WIN_NAMES<S extends string> = S
 
 @ccclass('UIMananger')

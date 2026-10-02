@@ -4,6 +4,7 @@ import { MainMgr } from '../GamePlay/MainCity/MainMgr';
 import { BattleMapMgr } from '../GamePlay/Battle/BattleMapMgr';
 import { BattleMgr } from '../GamePlay/Battle/BattleMgr';
 import { PathFindingMgr } from './PathFindingMgr';
+import { MapMgr } from '../GamePlay/WildMap/MapMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('GlobalData')
@@ -15,7 +16,7 @@ export class GlobalData {
 
     public static initData() {
 
-        this.mgrList = [MainMgr, BattleMapMgr, BattleMgr, PathFindingMgr]
+        this.mgrList = [MainMgr, BattleMapMgr, BattleMgr, PathFindingMgr, MapMgr]
         this.serverDate = new Date();
         this.mgrList.forEach(cls => {
             const instance = cls.getInstance();

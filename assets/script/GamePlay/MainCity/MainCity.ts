@@ -9,6 +9,9 @@ const { ccclass, property } = _decorator;
 export class MainCity extends BaseWin {
 
     @property(BaseBtn)
+    btn_wild: BaseBtn = null!;
+
+    @property(BaseBtn)
     btn_battle: BaseBtn = null!;
 
 
@@ -17,9 +20,13 @@ export class MainCity extends BaseWin {
         super.initEvent();
 
         this.addNodeEvent(this.btn_battle.node, Node.EventType.TOUCH_END, this.OnClickBattle);
+        this.addNodeEvent(this.btn_wild.node, Node.EventType.TOUCH_END, this.OnClickWild);
     }
     OnClickBattle() {
         UIMananger.instance.showWin("BattleWin");
+    }
+    OnClickWild() {
+        UIMananger.instance.showWin("WildMapWin", 1);
     }
     OnRefreshUI(): void {
         super.OnRefreshUI();

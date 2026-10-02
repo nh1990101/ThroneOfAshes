@@ -31,7 +31,7 @@ export class GameUrl {
      * 单位帧动画图集
      * 使用方式: ResUrl.UnitAtlasUrl.format(id)
      */
-    static UnitAtlasUrl = new UrlTemplate("Res/Battle/UnitResAtlas/{0}/{0}");
+    static UnitAtlasUrl = new UrlTemplate("Res/Battle/UnitResAtlas/{0}");
     /**
      * 公共图集
      */
@@ -48,6 +48,10 @@ export class GameUrl {
      * 战斗预制体
      */
     static Battle_Prefab = new UrlTemplate("GamePlay/Battle/{0}");
+    /**野外地图地图块 */
+    static WildMapBlockUrl = new UrlTemplate("Res/Map/MapGrid/Map{0}/{1}_{2}");
+    /**野外地图配置 */
+    static WildMapConfig = new UrlTemplate("Res/Config/WildMap/map{0}");
 }
 
 

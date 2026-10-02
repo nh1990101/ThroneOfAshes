@@ -5,6 +5,8 @@ import { IStringChTbl } from './Typings/string_ch_tbl';
 import { IFunctionPropTbl } from './Typings/function_prop_tbl';
 import { IUnitData } from './Typings/UnitData';
 import { BattleMapConfig } from '../GamePlay/Battle/BattleMapConfig';
+import { GameUrl } from '../Common/GameUrl';
+import { IMapConfig, MapConfig } from '../GamePlay/WildMap/MapConfig';
 const { ccclass, property } = _decorator;
 
 
@@ -14,6 +16,7 @@ export class ConfigMgr {
     private zip: JSZip = null;
     private static _instance: ConfigMgr;
     public battleMapConfig: BattleMapConfig;
+    public wildMapConfig: Map<number, MapConfig>;
 
     public string_ch_tbl = new Map<number, IStringChTbl>();
     public string_ch_tb2 = new Map<number, IStringChTbl>();
@@ -50,6 +53,30 @@ export class ConfigMgr {
                 const obj = file.json;
                 this.battleMapConfig = obj as BattleMapConfig;
                 resolve();
+            } catch (error) {
+                console.error("Config load failed:", error);
+                reject(error);
+            }
+        });
+    }
+    /**
+    *加载野外地图
+    **/
+    async loadWildMapConfig(mapId: number) {
+        return new Promise<void>((resolve, reject) => {
+            try {
+                if (!this.wildMapConfig) {
+                    this.wildMapConfig = new Map<number, MapConfig>();
+                }
+                if (!this.wildMapConfig.get(mapId)) {
+                    AssetMgr.getResByBundle(GameUrl.WildMapConfig.format(mapId), JsonAsset).then((file: JsonAsset) => {
+                        const obj = file.json;
+                        this.wildMapConfig.set(mapId, new MapConfig(obj as IMapConfig));
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
             } catch (error) {
                 console.error("Config load failed:", error);
                 reject(error);
