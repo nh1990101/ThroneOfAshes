@@ -43,7 +43,9 @@ export class UnitBase extends BaseComp {
             this.m_ActionData.set(UNIT_ACTION.MOVE, { frameStart: 6, frameEnd: 8, frameRate: 10 });
             this.m_ActionData.set(UNIT_ACTION.BE_HIT, { frameStart: 9, frameEnd: 10, frameRate: 10 });
             this.m_ActionData.set(UNIT_ACTION.DEAD, { frameStart: 11, frameEnd: 13, frameRate: 10 });
-            this.m_ActionData.set(UNIT_ACTION.ATTACK, { frameStart: 14, frameEnd: this._data.attack, frameRate: 10 });
+
+            var attackFrameNum = this.animation.getTotalFrames() - 14;
+            this.m_ActionData.set(UNIT_ACTION.ATTACK, { frameStart: 14, frameEnd: 13 + attackFrameNum, frameRate: 10 });
         }
     }
     /**
@@ -54,6 +56,8 @@ export class UnitBase extends BaseComp {
         var cfg = ConfigMgr.instance.UnitData.get(id)
         if (cfg) {
             return this.SetConfigData(cfg);
+        } else {
+            console.log(`无效单位配置ID：${id}`)
         }
     }
     /**
@@ -63,8 +67,13 @@ export class UnitBase extends BaseComp {
      */
     public SetConfigData(data: IUnitData): Promise<void> {
         this._data = data;
-        this.SetActionFrame();
-        return this.animation.loadFramesFromAtlas(GameUrl.UnitAtlasUrl.format(data.id), "");
+        return new Promise(resolve => {
+
+            this.animation.loadFramesFromAtlas(GameUrl.UnitAtlasUrl.format(data.id), "").then(() => {
+                this.SetActionFrame();
+                resolve(null);
+            })
+        })
     }
 
     /**
@@ -95,7 +104,7 @@ export class UnitBase extends BaseComp {
         }
 
     }
-  
+
 }
 
 

@@ -21,5 +21,6 @@ export enum UNIT_ACTION {
     BE_HIT,//受击
     DEAD,//死亡
     ATTACK,//攻击
+    MAX,//动作边界判断
 }
 
