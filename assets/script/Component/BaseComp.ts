@@ -20,9 +20,9 @@ export class BaseComp extends Component {
     protected isInit: boolean;
     protected isInitComponent: boolean;
 
-    protected onLoad(): void {
+    // protected onLoad(): void {
 
-    }
+    // }
     start() {
         this.init();
         this.CheckAndRegister();

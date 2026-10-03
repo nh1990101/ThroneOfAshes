@@ -8,25 +8,27 @@ import { BattleMapMgr } from './BattleMapMgr';
 import { HexagonData } from './HexagonData';
 import { HexagonCell } from './HexagonCell';
 import { PathFindingMgr } from '../../Common/PathFindingMgr';
+import { child, comp } from '../../Common/Decorator';
 const { ccclass, property } = _decorator;
 
 @ccclass('BattleWin')
 export class BattleWin extends BaseWin {
 
-    @property(BaseBtn)
+    @comp(BaseBtn)
     btn_HideGrid: BaseBtn = null!;
 
-    @property(BaseBtn)
+    @comp(BaseBtn)
     btn_showGridLb: BaseBtn = null!;
 
-    @property(Node)
-    mapContainer: Node = null;
-
-    @property(Node)
-    unitContainer: Node = null;
-
-    @property(BaseBtn)
+    @comp(BaseBtn)
     btn_close: BaseBtn = null!;
+
+    @child()
+    unitContainer: Node = null!;
+
+    @child()
+    mapContainer: Node = null!;
+
 
     /**选中可操作的单位 */
     selectUnit: BattleUnit = null;
@@ -35,6 +37,7 @@ export class BattleWin extends BaseWin {
     private _beginDragUnit: BattleUnit = null;
     private _beginDragPos: Vec2;
     private _lastMovingGrid: HexagonCell;
+
 
     public initEvent(): void {
 
@@ -55,7 +58,6 @@ export class BattleWin extends BaseWin {
     }
     async OnRefreshUI() {
         super.OnRefreshUI();
-
 
         //战斗地图初始化
         var mapMgr = BattleMapMgr.getInstance();

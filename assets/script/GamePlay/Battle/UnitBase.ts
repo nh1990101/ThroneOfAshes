@@ -5,6 +5,7 @@ import { IUnitData } from '../../Config/Typings/UnitData';
 import { UNIT_ACTION } from '../../Common/GameEnum';
 import { ConfigMgr } from '../../Config/ConfigMgr';
 import { GameUrl } from '../../Common/GameUrl';
+import { comp } from '../../Common/Decorator';
 const { ccclass, property } = _decorator;
 export interface IActionData {
     frameStart: number;
@@ -19,8 +20,10 @@ export interface IActionData {
  */
 @ccclass('UnitBase')
 export class UnitBase extends BaseComp {
-    @property(AnimationCom)
-    animation: AnimationCom;
+    @comp(AnimationCom)
+    animation: AnimationCom = null!;
+
+
 
     protected m_ActionData: Map<UNIT_ACTION, IActionData>;
 

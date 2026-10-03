@@ -3,6 +3,7 @@ import { BaseComp } from '../../Component/BaseComp';
 import { BaseSprite } from '../../Component/BaseComp/BaseSprite';
 import { HexagonData } from './HexagonData';
 import { GameUrl } from '../../Common/GameUrl';
+import { comp } from '../../Common/Decorator';
 const { ccclass, property } = _decorator;
 
 /**
@@ -10,8 +11,9 @@ const { ccclass, property } = _decorator;
  */
 @ccclass('HexagonCell')
 export class HexagonCell extends BaseComp {
-    @property(Label)
-    lb_pos: Label;
+    @comp(Label)
+    lb_pos: Label = null!;
+
 
     protected m_data: HexagonData;
 

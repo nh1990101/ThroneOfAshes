@@ -45,8 +45,20 @@ export function child($opt?: ParamType): PropertyDecorator {
         if (!$target.hasOwnProperty('onLoad')) {
             const oldOnLoad: () => void = $target.onLoad || undefined;//$target.onLoad也可以拿到父类的实现
             $target.onLoad = function () {
-                const currentCache = this.constructor.prototype[KeyChild] || [];
-                currentCache.forEach($vo => this[$vo.propertyKey] = searchChild(this.node, $vo.childName));
+                // 处理 @child 装饰器
+                const childCache = this.constructor.prototype[KeyChild] || [];
+                childCache.forEach($vo => this[$vo.propertyKey] = searchChild(this.node, $vo.childName));
+
+                // 处理 @comp 装饰器
+                const compCache = this.constructor.prototype[KeyComp] || [];
+                compCache.forEach($vo => {
+                    const node = ($vo.childName ? searchChild(this.node, $vo.childName) : this.node);
+                    if (!node) {
+                        throw new Error(`comp装饰器没有找到适合的node节点：class：${this.constructor.name}，组件：${$vo.compClass.name}，childName：${$vo.childName}`);
+                    }
+                    this[$vo.propertyKey] = node.getComponent($vo.compClass) || node.addComponent($vo.compClass);
+                });
+
                 oldOnLoad && oldOnLoad.apply(this);
             };
         }
@@ -81,22 +93,28 @@ export function comp($compoentClass: INewable<Component>, $childName?: string, $
             return;
         }
 
-        // 只在首次装饰器时重写 onLoad
+        // 只在首次装饰器时重写 onLoad（现在已经在 @child 中统一处理了）
         if (!$target.hasOwnProperty('onLoad')) {
             const oldOnLoad: () => void = $target.onLoad || undefined;//$target.onLoad也可以拿到父类的实现
             $target.onLoad = function () {
-                const currentCache = this.constructor.prototype[KeyComp] || [];
-                currentCache.forEach($vo => {
+                // 处理 @child 装饰器
+                const childCache = this.constructor.prototype[KeyChild] || [];
+                childCache.forEach($vo => this[$vo.propertyKey] = searchChild(this.node, $vo.childName));
+
+                // 处理 @comp 装饰器
+                const compCache = this.constructor.prototype[KeyComp] || [];
+                compCache.forEach($vo => {
                     const node = ($vo.childName ? searchChild(this.node, $vo.childName) : this.node);
                     if (!node) {
                         if (!$mute) {
-                            throw new Error(`comp装饰器没有找到适合的node节点：class：${$target.name}，组件：${$vo.compClass.name}，childName：${$vo.childName}`);
+                            throw new Error(`comp装饰器没有找到适合的node节点：class：${this.constructor.name}，组件：${$vo.compClass.name}，childName：${$vo.childName}`);
                         } else {
                             return;
                         }
                     }
                     this[$vo.propertyKey] = node.getComponent($vo.compClass) || node.addComponent($vo.compClass);
                 });
+
                 oldOnLoad && oldOnLoad.apply(this);
             };
         }

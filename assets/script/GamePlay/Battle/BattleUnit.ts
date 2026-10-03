@@ -7,16 +7,20 @@ import { BattleMapMgr } from './BattleMapMgr';
 import { BattleUnitData } from './BattleUnitData';
 import { ConfigMgr } from '../../Config/ConfigMgr';
 import { AssetMgr } from '../../Common/AssetMgr';
+import { comp } from '../../Common/Decorator';
 const { ccclass, property } = _decorator;
 /**
  * 战斗场景单位基础类
  */
 @ccclass('BattleUnit')
 export class BattleUnit extends UnitBase {
-    @property(ProgressBar)
-    HpBar: ProgressBar;
-    @property(BaseLabel)
-    lb_Hp: BaseLabel;
+    @comp(ProgressBar)
+    HpBar: ProgressBar = null!;
+
+    @comp(BaseLabel)
+    lb_Hp: BaseLabel = null!;
+
+
 
     /**移速每秒多少像素 */
     private _moveSpeed: number = 200;
