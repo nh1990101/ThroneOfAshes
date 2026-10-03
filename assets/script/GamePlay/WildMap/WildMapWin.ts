@@ -1,13 +1,19 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Camera, Component, Node } from 'cc';
 import { BaseWin } from '../../Component/BaseWin';
 import { MapMgr } from './MapMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('WildMapWin')
 export class WildMapWin extends BaseWin {
-    protected mapId: number;
+    /**地图块容器 */
+    protected mapContainer: Node = null;
+    protected mapId: number = null;
+    /**地图摄像机 */
+    protected mapCamera: Camera = null;
     public init(): void {
         super.init();
+        this.mapContainer = this.node.getChildByName("mapContainer");
+        this.mapCamera = this.getComponentInChildren(Camera);
     }
     showWin(mapId: number): void {
         super.showWin(mapId);

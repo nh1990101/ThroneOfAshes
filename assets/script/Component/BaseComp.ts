@@ -24,9 +24,9 @@ export class BaseComp extends Component {
 
     }
     start() {
-        this.isInitComponent = true;
         this.init();
         this.CheckAndRegister();
+        this.isInitComponent = true;
     }
     /**
      * 实例化后执行，只执行一次
@@ -39,6 +39,7 @@ export class BaseComp extends Component {
      */
     public initEvent() {
         this.isInitEvent = true;
+        this.OnRefreshUI();
     }
     public CheckAndRegister() {
         if (!this.isInitEvent) {
@@ -48,15 +49,47 @@ export class BaseComp extends Component {
     }
     protected onDestroy(): void {
         super.onDestroy();
-        this.unRegisterEvent();
-        this.unRegisterNodeEvents();
+        this.clear();
 
     }
+    protected onDisable(): void {
+        this.clear();
+    }
+    public clear() {
+        this.unRegisterEvent();
+    }
+    protected onEnable(): void {
+        //二次激活才会执行这里的逻辑（对象池拿出对象激活）
+        if (this.isInitComponent) {
+            this.CheckAndRegister();
+
+        }
+    }
+
+
+    /**可操作UI节点更新界面 */
+    public OnRefreshUI() {
+
+    }
+    /**需要外部手动调用更新*/
+    public OnCheckRefreshUI() {
+        if (this.isInitComponent) {
+            this.OnRefreshUI();
+        }
+    }
+
     public eventRegister() {
         if (this.events) {
             this.events.forEach(event => {
                 EventManager.Instance.addListener(event.eventName, event.call, event.callThm)
             })
+        }
+        if (this.nodeEvents) {
+            this.nodeEvents.forEach(event => {
+                if (event.target && event.target.isValid) {
+                    event.target.on(event.eventType, event.callback, event.thisArg);
+                }
+            });
         }
     }
     public unRegisterEvent() {
@@ -64,6 +97,14 @@ export class BaseComp extends Component {
             this.events.forEach(event => {
                 EventManager.Instance.removeListener(event.eventName, event.call, event.callThm)
             })
+        }
+        if (this.nodeEvents && this.nodeEvents.length > 0) {
+            this.nodeEvents.forEach(event => {
+                if (event.target && event.target.isValid) {
+                    event.target.off(event.eventType, event.callback, event.thisArg);
+                }
+            });
+
         }
     }
     protected addEvent(eventName: string, call: Function, thm: any) {
@@ -95,25 +136,9 @@ export class BaseComp extends Component {
             thisArg: ctx
         };
 
-        // 给节点添加事件监听
-        target.on(finalEventType, callback, ctx);
 
         // 保存到列表，用于后续清理
         this.nodeEvents.push(eventData);
-    }
-
-    /**
-     * 清理所有注册的节点事件
-     */
-    private unRegisterNodeEvents() {
-        if (this.nodeEvents && this.nodeEvents.length > 0) {
-            this.nodeEvents.forEach(event => {
-                if (event.target && event.target.isValid) {
-                    event.target.off(event.eventType, event.callback, event.thisArg);
-                }
-            });
-            this.nodeEvents = [];
-        }
     }
 
 

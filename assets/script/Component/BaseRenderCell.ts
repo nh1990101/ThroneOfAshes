@@ -12,10 +12,7 @@ export class BaseRenderCell<T = any> extends BaseComp {
 
     setData(data: T): void {
         this._data = data;
-        if (this.isInitComponent) {
-            this.CheckAndRegister();
-            this.onDataUpdated();
-        }
+        this.OnCheckRefreshUI();
     }
 
     getData(): T {
@@ -30,14 +27,7 @@ export class BaseRenderCell<T = any> extends BaseComp {
     isSelected(): boolean {
         return this._isSelected;
     }
-    public initEvent(): void {
-        super.initEvent();
-        this.onDataUpdated();
-    }
-    protected onDataUpdated(): void {
-        // 子类可以覆盖这个方法
 
-    }
 
     protected onSelectionChanged(): void {
         // 子类可以覆盖这个方法来处理选中状态变化

@@ -105,13 +105,38 @@ export class AssetMgr extends Component {
     public static getActPrefab(prefabName: string): Node[] {
         return this._poolActive.get(prefabName);
     }
+    /**从预制体实例化对象 */
+    public static createPrefabFromPoolByPrefab(prefab: Prefab) {
+        var prefabName = prefab.name;
+        var arrRemove = this._poolRemoveNode.get(prefabName);
+        var node: Node;
+
+        var arrActive = this.getActPrefab(prefabName);
+        if (!arrActive) {
+            arrActive = []
+            this._poolActive.set(prefabName, arrActive);
+        }
+        if (arrRemove && arrRemove.length > 0) {
+            node = arrRemove.shift();
+        } else {
+            node = this.instantiate(prefab);
+        }
+        if (!node['_prefabName']) {
+            node['_prefabName'] = prefabName;
+        }
+        if (arrActive.indexOf(node) < 0) {
+            Tools.insertArr(arrActive, node)
+        }
+
+        return node;
+    }
     /**创建预制体对象（对象池） */
     public static async createPrefabFromPool(url: string, pos: Vec2, parent: Node, keepWorldTransform: boolean = true, isInitPool?: boolean) {
         return new Promise<Node>((resolve, reject) => {
             var prefabName = Tools.getPrefabName(url)
             var arrRemove = this._poolRemoveNode.get(prefabName);
             var node: Node;
-            var arrActive = this._poolActive.get(prefabName);
+            var arrActive = this.getActPrefab(prefabName);
             if (!arrActive) {
                 arrActive = []
                 this._poolActive.set(prefabName, arrActive);
@@ -159,8 +184,8 @@ export class AssetMgr extends Component {
             }
         })
 
-
     }
+
     /**查找节点对应的预制体名字（兜底方案） */
     private static findPrefabNameByNode(node: Node): string | null {
         for (let [name, nodes] of this._poolActive) {

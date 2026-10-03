@@ -42,13 +42,15 @@ export class HexagonCell extends BaseComp {
 
     public SetData(data: HexagonData) {
         this.m_data = data;
-        if (this.isInit) {
-            this.SetNormal();
-        }
+        this.OnCheckRefreshUI();
+
+    }
+    public OnRefreshUI(): void {
+        super.OnRefreshUI();
+        this.SetNormal();
         this.UpdatePos();
         this.UpdatePosLabel();
     }
-
     public GetData(): HexagonData {
         return this.m_data;
     }

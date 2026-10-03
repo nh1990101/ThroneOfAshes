@@ -27,22 +27,12 @@ export class BaseWin extends BaseComp {
             this.winBg.setScale(0.1, 0.1, 1);
             tween(this.winBg).to(this.animTime, { x: 1, y: 1, z: 1 }).start();
         }
-
-        //第二次打开窗口才会执行这里的逻辑
-        if (this.isInitComponent) {
-            this.CheckAndRegister();
-            this.OnRefreshUI();
-        }
+        this.OnCheckRefreshUI();
     }
-    /**
-     * 打开面板后界面的逻辑处理
-     */
-    OnRefreshUI() {
 
-    }
     closeWin() {
         this.node.active = false;
-        this.unRegisterEvent();
+
     }
     public initEvent(): void {
         super.initEvent();
@@ -51,7 +41,7 @@ export class BaseWin extends BaseComp {
         if (btnClose) {
             this.addNodeEvent(btnClose.node, Node.EventType.TOUCH_END, this.closeWin);
         }
-        this.OnRefreshUI();
+
     }
 
     // 设置数据（不显示）

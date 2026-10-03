@@ -138,13 +138,13 @@ export class ScrollList extends ScrollView {
             pNode = this.pools.shift();
             pNode.parent = this.content;
         } else {
-            pNode = AssetMgr.instantiate(this.itemPrefab);
+            pNode = AssetMgr.createPrefabFromPoolByPrefab(this.itemPrefab);
             pNode.parent = this.content;
             if (this._selectFunc) {
                 this.addItemClickHandler(pNode)
             }
         }
-       
+
         // 创建时立即设置选中状态
         this.itemRender(pNode, index);
         Tools.insertArr(this._itemArr, pNode)
@@ -157,15 +157,17 @@ export class ScrollList extends ScrollView {
         let _showSize = nodeUIT.height;//.height;
         //获得预制体的高度
         if (!this._itemSize) {
-            let pNode = AssetMgr.instantiate(this.itemPrefab).getComponent(UITransform) //this.createCell(0);
+            let pNode = AssetMgr.createPrefabFromPoolByPrefab(this.itemPrefab);
+            let pUIT = pNode.getComponent(UITransform) //this.createCell(0);
             if (this._direction == SCROLL_HORIZONTAL) {
-                this._itemSize = pNode.width;
+                this._itemSize = pUIT.width;
                 _showSize = nodeUIT.width;
             }
             else {
-                this._itemSize = pNode.height;
+                this._itemSize = pUIT.height;
             }
-            pNode.destroy();
+            AssetMgr.removeNode(pNode);
+            // pNode.destroy();
         }
 
         //可视范围，对应可以创建多少个实体单例item
