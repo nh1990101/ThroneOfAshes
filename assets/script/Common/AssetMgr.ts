@@ -105,135 +105,206 @@ export class AssetMgr extends Component {
     public static getActPrefab(prefabName: string): Node[] {
         return this._poolActive.get(prefabName);
     }
-    /**从预制体实例化对象 */
-    public static createPrefabFromPoolByPrefab(prefab: Prefab) {
-        var prefabName = prefab.name;
-        var arrRemove = this._poolRemoveNode.get(prefabName);
-        var node: Node;
+    /**从预制体实例化对象 - 带泛型支持 */
+    public static createPrefabFromPoolByPrefab<T extends Component = Component>(prefab: Prefab, componentType?: new () => T) {
+        const prefabName = prefab.name;
+        // 如果指定了组件类型，pool key 加上组件名称
+        const poolKey = componentType ? `${prefabName}_${componentType.name}` : prefabName;
 
-        var arrActive = this.getActPrefab(prefabName);
+        let arrRemove = this._poolRemoveNode.get(poolKey);
+        let node: Node;
+
+        let arrActive = this._poolActive.get(poolKey);
         if (!arrActive) {
-            arrActive = []
-            this._poolActive.set(prefabName, arrActive);
+            arrActive = [];
+            this._poolActive.set(poolKey, arrActive);
         }
+
         if (arrRemove && arrRemove.length > 0) {
             node = arrRemove.shift();
         } else {
             node = this.instantiate(prefab);
         }
+
         if (!node['_prefabName']) {
             node['_prefabName'] = prefabName;
         }
+        if (!node['_poolKey']) {
+            node['_poolKey'] = poolKey;
+        }
+
         if (arrActive.indexOf(node) < 0) {
-            Tools.insertArr(arrActive, node)
+            Tools.insertArr(arrActive, node);
+        }
+
+        // 如果指定了组件类型，确保组件存在
+        if (componentType) {
+            let comp = node.getComponent(componentType);
+            if (!comp) {
+                comp = node.addComponent(componentType);
+            }
+            // return comp;
         }
 
         return node;
     }
-    /**创建预制体对象（对象池） */
-    public static async createPrefabFromPool(url: string, pos: Vec2, parent: Node, keepWorldTransform: boolean = true, isInitPool?: boolean) {
-        return new Promise<Node>((resolve, reject) => {
-            var prefabName = Tools.getPrefabName(url)
-            var arrRemove = this._poolRemoveNode.get(prefabName);
-            var node: Node;
-            var arrActive = this.getActPrefab(prefabName);
+    /**创建预制体对象（对象池）- 泛型自动推断版本 */
+    public static async createPrefabFromPool<T extends Component>(
+        url: string,
+        pos: Vec2,
+        parent: Node,
+        componentType: new () => T,
+        keepWorldTransform?: boolean,
+        isInitPool?: boolean
+    ): Promise<T>;
+    /**创建预制体对象（对象池）- 不需要组件版本 */
+    public static async createPrefabFromPool(
+        url: string,
+        pos: Vec2,
+        parent: Node,
+        componentType?: undefined,
+        keepWorldTransform?: boolean,
+        isInitPool?: boolean
+    ): Promise<Node>;
+    /**创建预制体对象（对象池）- 实现 */
+    public static async createPrefabFromPool<T extends Component>(
+        url: string,
+        pos: Vec2,
+        parent: Node,
+        componentType?: (new () => T) | undefined,
+        keepWorldTransform: boolean = true,
+        isInitPool?: boolean
+    ): Promise<T | Node> {
+        return new Promise<T | Node>((resolve, reject) => {
+            const prefabName = Tools.getPrefabName(url);
+            // 如果指定了组件类型，pool key 加上组件名称
+            const poolKey = componentType ? `${prefabName}_${componentType.name}` : prefabName;
+
+            let arrRemove = this._poolRemoveNode.get(poolKey);
+            let node: Node;
+            let arrActive = this._poolActive.get(poolKey);
+
             if (!arrActive) {
-                arrActive = []
-                this._poolActive.set(prefabName, arrActive);
+                arrActive = [];
+                this._poolActive.set(poolKey, arrActive);
             }
+
             if (!isInitPool && arrRemove && arrRemove.length > 0) {
                 node = arrRemove.shift();
-                // 确保节点已经有 _prefabName 属性
+                // 确保节点已经有 _prefabName 和 _poolKey 属性
                 if (!node['_prefabName']) {
                     node['_prefabName'] = prefabName;
                 }
+                if (!node['_poolKey']) {
+                    node['_poolKey'] = poolKey;
+                }
                 if (arrActive.indexOf(node) < 0) {
-                    Tools.insertArr(arrActive, node)
-                    // arrActive.push(node)
+                    Tools.insertArr(arrActive, node);
                 }
                 const uiOpacity = node.getComponent(UIOpacity);
                 if (uiOpacity) uiOpacity.opacity = 255;
                 node.active = true;
                 if (node.parent != parent) {
-                    node.setParent(parent)
+                    node.setParent(parent);
                 }
+                node.setPosition(pos.toVec3());
 
-                node.setPosition(pos.toVec3())
-
-                resolve(node)
+                // 返回组件或节点
+                if (componentType) {
+                    let comp = node.getComponent(componentType);
+                    if (!comp) {
+                        comp = node.addComponent(componentType);
+                    }
+                    resolve(comp);
+                } else {
+                    resolve(node);
+                }
             } else {
                 this.createPrefab(url, pos, parent).then((node: Node) => {
-                    // 存储预制体名字到节点上
+                    // 存储预制体名字和 pool key 到节点上
                     node['_prefabName'] = prefabName;
+                    node['_poolKey'] = poolKey;
+
+                    // 如果指定了组件类型，确保组件存在
+                    if (componentType) {
+                        let comp = node.getComponent(componentType);
+                        if (!comp) {
+                            comp = node.addComponent(componentType);
+                        }
+                    }
 
                     if (isInitPool) {
                         if (!arrRemove) {
                             arrRemove = [];
-                            this._poolRemoveNode.set(prefabName, arrRemove)
+                            this._poolRemoveNode.set(poolKey, arrRemove);
                         }
-                        Tools.insertArr(arrRemove, node)
+                        Tools.insertArr(arrRemove, node);
                     } else {
                         if (arrActive.indexOf(node) < 0) {
-                            // arrActive.push(node)
-                            Tools.insertArr(arrActive, node)
+                            Tools.insertArr(arrActive, node);
                         }
                     }
 
-                    resolve(node)
-                })
+                    // 返回组件或节点
+                    if (componentType) {
+                        const comp = node.getComponent(componentType);
+                        resolve(comp);
+                    } else {
+                        resolve(node);
+                    }
+                });
             }
-        })
-
+        });
     }
 
-    /**查找节点对应的预制体名字（兜底方案） */
-    private static findPrefabNameByNode(node: Node): string | null {
-        for (let [name, nodes] of this._poolActive) {
+    /**查找节点对应的对象池 key（兜底方案） */
+    private static findPoolKeyByNode(node: Node): string | null {
+        for (let [poolKey, nodes] of this._poolActive) {
             if (nodes.indexOf(node) > -1) {
-                return name;
+                return poolKey;
             }
         }
         return null;
     }
-    /**移除对象 
+    /**移除对象
      * 使用该方法的话需要从对象池创建，即createPrefabFromPool,不然不会进入池化
     */
-    public static removeNode(node: Node, prefabName?: string) {
+    public static removeNode(node: Node, poolKey?: string) {
         node.active = false;
         // node.setPosition(AssetMgr.REMOVE_POS)
 
         // node.removeFromParent();
 
-        // 如果没有传 prefabName，就从 node 上获取
-        if (!prefabName) {
-            prefabName = node['_prefabName'];
+        // 优先使用 _poolKey（支持泛型区分），其次使用 _prefabName（向后兼容）
+        if (!poolKey) {
+            poolKey = node['_poolKey'] || node['_prefabName'];
         }
 
         // 如果还是没有，则尝试遍历查找（兜底方案）
-        if (!prefabName) {
-            prefabName = this.findPrefabNameByNode(node);
+        if (!poolKey) {
+            poolKey = this.findPoolKeyByNode(node);
         }
 
-        if (!prefabName) {
-            console.warn('无法找到节点对应的预制体名字');
+        if (!poolKey) {
+            console.warn('无法找到节点对应的对象池 key');
             return;
         }
 
-        var arrActive = this._poolActive.get(prefabName)
+        var arrActive = this._poolActive.get(poolKey);
         if (arrActive) {
-            var idx = arrActive.indexOf(node)
+            var idx = arrActive.indexOf(node);
             if (idx > -1) {
-                arrActive.splice(idx, 1)
+                arrActive.splice(idx, 1);
             }
         }
-        var arrRemove = this._poolRemoveNode.get(prefabName)
+        var arrRemove = this._poolRemoveNode.get(poolKey);
         if (!arrRemove) {
             arrRemove = [];
-            this._poolRemoveNode.set(prefabName, arrRemove)
+            this._poolRemoveNode.set(poolKey, arrRemove);
         }
         if (arrRemove.indexOf(node) < 0) {
             // arrRemove.push(node)
-            Tools.insertArr(arrRemove, node)
+            Tools.insertArr(arrRemove, node);
         }
     }
     public static removeAllByType(prefabName: string, callFunc?: Function) {

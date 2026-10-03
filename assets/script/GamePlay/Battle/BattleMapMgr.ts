@@ -90,15 +90,9 @@ export class BattleMapMgr extends BaseMgr {
         }
 
         try {
-            // 使用 AssetMgr 创建预制体
-            const cellNode = await AssetMgr.createPrefabFromPool(
-                BattleMapMgr.HEX_CELL_PREFAB_PATH,
-                Vec2.ZERO,
-                this.mapContainer
-            ) as Node;
 
             // 获取 HexagonCell 组件
-            const hexCell = cellNode.getComponent(HexagonCell);
+            const hexCell = await AssetMgr.createPrefabFromPool(BattleMapMgr.HEX_CELL_PREFAB_PATH, Vec2.ZERO, this.mapContainer, HexagonCell);
             if (hexCell) {
                 hexCell.SetData(hexData);
                 // 存储到 Map

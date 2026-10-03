@@ -1,0 +1,36 @@
+{
+  "package_version": 2,
+  "name": "copy-node-variable",
+  "version": "1.0.0",
+  "description": "一键复制节点变量装饰器代码",
+  "author": "Cocos Creator",
+  "editor": ">=3.0.0",
+  "main": "./dist/main.js",
+  "panels": {},
+  "contributions": {
+    "menu": [
+      {
+        "path": "Develop",
+        "label": "复制节点变量",
+        "message": "copy-variable"
+      }
+    ],
+    "shortcuts": [
+      {
+        "message": "copy-variable",
+        "win": "`",
+        "mac": "`"
+      }
+    ],
+    "messages": {
+      "copy-variable": {
+        "methods": ["copyVariable"]
+      }
+    }
+  },
+  "devDependencies": {
+    "@cocos/creator-types": "^3.8.8",
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2"
+  }
+}

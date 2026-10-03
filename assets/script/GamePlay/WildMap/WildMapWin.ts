@@ -22,6 +22,19 @@ export class WildMapWin extends BaseWin {
     }
     initMap() {
         var cfg = MapMgr.getInstance().getMapCfg();
+        this.createMapBock();
+    }
+    /**创建地图块 */
+    createMapBock() {
+
+    }
+    /**初始化角色位置 */
+    initRolePos() {
+        this.updateCameraPos();
+    }
+    /**更新摄像机位置，跟随角色 */
+    updateCameraPos() {
+
     }
     get Mgr() {
         return MapMgr.getInstance();

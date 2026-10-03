@@ -1,0 +1,15 @@
+{
+  "name": "copy-node-variable-extension",
+  "version": "1.0.0",
+  "description": "Cocos Creator extension for copying node variables",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "@cocos/creator-types": "^3.8.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

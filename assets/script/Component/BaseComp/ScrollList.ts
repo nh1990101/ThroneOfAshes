@@ -40,6 +40,9 @@ export class ScrollList extends ScrollView {
     /**间隙 0=开始边框，1=结束边框，2=间隙*/
     private _gapNum: number[];
 
+    /**item组件类型*/
+    private _itemClass: new () => BaseRenderCell;
+
     /**选中回调 */
     private _selectFunc: Function;
 
@@ -78,11 +81,13 @@ export class ScrollList extends ScrollView {
         this.stopAutoScroll();
     }
     /**设置数据
+     * @param itemClass : item组件类型
      * @param dataArr : 数据源
      * @param direction : 滚动方向，默认上下
      * @param gap : [开始边框距离，结束边框距离，每个之间空隙]
     */
-    public setDataList(dataArr: any[], direction: number = SCROLL_VERTICAL, gap?: number[]) {
+    public setDataList(itemClass: new () => BaseRenderCell, dataArr: any[], direction: number = SCROLL_VERTICAL, gap?: number[]) {
+        this._itemClass = itemClass;
         this._dataArr = dataArr;
         this._direction = direction;
         this._gapNum = gap;
@@ -138,7 +143,7 @@ export class ScrollList extends ScrollView {
             pNode = this.pools.shift();
             pNode.parent = this.content;
         } else {
-            pNode = AssetMgr.createPrefabFromPoolByPrefab(this.itemPrefab);
+            pNode = AssetMgr.createPrefabFromPoolByPrefab(this.itemPrefab, this._itemClass);
             pNode.parent = this.content;
             if (this._selectFunc) {
                 this.addItemClickHandler(pNode)

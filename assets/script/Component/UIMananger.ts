@@ -5,7 +5,7 @@ import { BaseWin } from './BaseWin';
 
 const { ccclass, property } = _decorator;
 
-export const WIN_NAMES = ["FlyNotice", "MainCity", "BattleWin","WildMapWin"] as const
+export const WIN_NAMES = ["FlyNotice", "MainCity", "BattleWin", "WildMapWin"] as const
 type WIN_NAMES<S extends string> = S
 
 @ccclass('UIMananger')
@@ -31,29 +31,32 @@ export class UIMananger extends Component {
 
     }
 
-    public showWin(winName: WIN_NAMES<typeof WIN_NAMES[number]>, ...params) {
-        return new Promise((resolve, reject) => {
+    public showWin(winClass: new () => BaseWin, ...params): Promise<BaseWin> {
+        return new Promise<BaseWin>((resolve, reject) => {
             this.winLoading.active = true;
-            Tools.setNodeTopLayer(this.winLoading)
+            Tools.setNodeTopLayer(this.winLoading);
+
+            // 从类构造函数获取类名作为 winName
+            const winName = winClass.name;
+
             var win = this.win.get(winName);
             if (win) {
-                win.showWin(...params)
+                win.showWin(...params);
                 this.winLoading.active = false;
                 resolve(win);
             } else {
-                AssetMgr.createPrefab(`Windows/${winName}`, Vec2.ZERO, this.node).then((winNode: Node) => {
-                    var win = winNode.getComponent(BaseWin)
+                AssetMgr.createPrefabFromPool(`Windows/${winName}`, Vec2.ZERO, this.node, winClass).then((win: BaseWin) => {
                     if (win != null) {
                         UIMananger.instance.win.set(winName, win);
                         win.showWin(...params);
                         this.winLoading.active = false;
                     } else {
-                        log(`该窗口没有挂载脚本${winName}`)
+                        log(`创建窗口失败${winName}`);
                     }
                     resolve(win);
-                })
+                });
             }
-        })
+        });
     }
     public checkWinIsOpen(winName: WIN_NAMES<typeof WIN_NAMES[number]>): boolean {
         var win = this.getWinByName(winName);
@@ -63,7 +66,7 @@ export class UIMananger extends Component {
         return false;
     }
     public showFlyNotice(content: string) {
-        this.showWin("FlyNotice", content)
+        // this.showWin("FlyNotice", content)
     }
     public getWinByName(name: string): BaseWin {
         return this.win.get(name)

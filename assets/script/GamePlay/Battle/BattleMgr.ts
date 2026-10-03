@@ -61,11 +61,8 @@ export class BattleMgr extends BaseMgr {
     public CreateBattleUnit(battleData: BattleUnitData, Pos: HexagonPos) {
         return new Promise(resolve => {
             //创建战斗单位并赋值
-            AssetMgr.createPrefabFromPool(GameUrl.Battle_Prefab.format("BattleUnit"), Vec2.ZERO, this._battleUnitContainer).then((unitNode: Node) => {
-                var battleUnit = unitNode.getComponent(BattleUnit);
-
+            AssetMgr.createPrefabFromPool(GameUrl.Battle_Prefab.format("BattleUnit"), Vec2.ZERO, this._battleUnitContainer,BattleUnit).then((battleUnit) => {
                 this._mapMyUnit.set(battleData.uId, battleUnit);
-
                 //设置服务器数据并设置位置和默认动作（待机）
                 battleUnit.SetData(battleData).then(() => {
                     battleUnit.SetMapGridPos(Pos);
