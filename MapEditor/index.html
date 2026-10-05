@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG地图编辑器</title>
+    <!-- SheetJS库用于读取Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            overflow: hidden;
+            background: #2b2b2b;
+            color: #fff;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 顶部工具栏 */
+        #toolbar {
+            background: #1e1e1e;
+            border-bottom: 1px solid #3c3c3c;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            z-index: 100;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding: 5px 10px;
+            background: #2b2b2b;
+            border-radius: 4px;
+        }
+
+        .toolbar-group label {
+            font-size: 12px;
+            color: #aaa;
+            margin-right: 5px;
+        }
+
+        button {
+            padding: 6px 12px;
+            background: #007acc;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        button:hover {
+            background: #005a9e;
+        }
+
+        button.danger {
+            background: #d9534f;
+        }
+
+        button.danger:hover {
+            background: #c9302c;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            padding: 5px 8px;
+            background: #3c3c3c;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* 主内容区 */
+        #main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 左侧资源面板 */
+        #resource-panel {
+            width: 200px;
+            background: #252526;
+            border-right: 1px solid #3c3c3c;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        #resource-panel h3 {
+            padding: 10px;
+            background: #1e1e1e;
+            font-size: 14px;
+            border-bottom: 1px solid #3c3c3c;
+        }
+
+        .resource-list {
+            padding: 10px;
+        }
+
+        .resource-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 8px;
+            background: #1e1e1e;
+            border-radius: 4px;
+            cursor: move;
+            border: 2px solid transparent;
+        }
+
+        .resource-item:hover {
+            border-color: #007acc;
+        }
+
+        .resource-item img {
+            max-width: 100%;
+            max-height: 80px;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+
+        .resource-item span {
+            font-size: 11px;
+            text-align: center;
+            color: #ccc;
+            word-break: break-all;
+        }
+
+        /* 画布区域 */
+        #canvas-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: #1e1e1e;
+        }
+
+        #map-canvas {
+            position: absolute;
+            cursor: grab;
+            image-rendering: pixelated;
+        }
+
+        #map-canvas:active {
+            cursor: grabbing;
+        }
+
+        #grid-canvas {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        #marker-canvas {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        #object-canvas {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        /* 右侧属性面板 */
+        #property-panel {
+            width: 250px;
+            background: #252526;
+            border-left: 1px solid #3c3c3c;
+            padding: 15px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        #property-panel.active {
+            display: block;
+        }
+
+        #property-panel h3 {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #007acc;
+        }
+
+        .property-field {
+            margin-bottom: 12px;
+        }
+
+        .property-field label {
+            display: block;
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+
+        .property-field input,
+        .property-field select {
+            width: 100%;
+        }
+
+        /* 弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #2b2b2b;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #007acc;
+        }
+
+        .modal-field {
+            margin-bottom: 15px;
+        }
+
+        .modal-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .modal-field input,
+        .modal-field select {
+            width: 100%;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* 信息提示 */
+        #info-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1e1e1e;
+            border-top: 1px solid #3c3c3c;
+            padding: 5px 10px;
+            font-size: 12px;
+            color: #aaa;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px 40px;
+            border-radius: 8px;
+            z-index: 2000;
+            display: none;
+        }
+
+        .loading.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 顶部工具栏 -->
+        <div id="toolbar">
+            <!-- 文件操作 -->
+            <div class="toolbar-group">
+                <button id="btn-new-map">新建地图</button>
+                <button id="btn-load-map">加载地图</button>
+                <button id="btn-save-map">保存地图</button>
+            </div>
+
+            <!-- 标记模式 -->
+            <div class="toolbar-group">
+                <label>标记模式:</label>
+                <select id="mark-mode">
+                    <option value="none">无</option>
+                    <option value="block">不可移动点</option>
+                    <option value="resource">资源刷新点</option>
+                    <option value="spawn">出生点</option>
+                </select>
+            </div>
+
+            <!-- 不可移动点参数 -->
+            <div class="toolbar-group" id="block-params" style="display:none;">
+                <label>移动性:</label>
+                <select id="block-movable">
+                    <option value="0">不可移动</option>
+                    <option value="1">可移动</option>
+                </select>
+            </div>
+
+            <!-- 资源刷新点参数 -->
+            <div class="toolbar-group" id="resource-params" style="display:none;">
+                <label>资源ID:</label>
+                <select id="resource-id-select" style="width: 150px;">
+                    <option value="">请先加载Excel表</option>
+                </select>
+                <label id="resource-stats" style="color: #4CAF50; font-weight: bold;">格子:0, 数量:0</label>
+                <label>刷新数量:</label>
+                <input type="number" id="resource-min-count" value="1" min="1" style="width: 50px;" placeholder="最小">
+                <span>-</span>
+                <input type="number" id="resource-max-count" value="1" min="1" style="width: 50px;" placeholder="最大">
+            </div>
+
+            <!-- 操作模式 - 已移除，统一为长按操作 -->
+
+            <!-- 缩放 -->
+            <div class="toolbar-group">
+                <label>缩放:</label>
+                <span id="zoom-level">100%</span>
+            </div>
+
+            <!-- 显示控制 -->
+            <div class="toolbar-group">
+                <label>
+                    <input type="checkbox" id="hide-markers" />
+                    隐藏标记
+                </label>
+            </div>
+
+            <!-- Excel和资源目录 -->
+            <div class="toolbar-group">
+                <button id="btn-select-dir">选择资源目录</button>
+                <span id="current-dir" style="font-size: 11px; color: #aaa;"></span>
+            </div>
+
+            <div class="toolbar-group">
+                <button id="btn-load-resources">加载资源</button>
+                <button id="btn-load-excel">加载Excel表</button>
+                <input type="file" id="input-excel-file" accept=".xlsx,.xls" style="display:none;" />
+                <button id="btn-random-generate">随机生成物件</button>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div id="main-content">
+            <!-- 左侧资源面板 -->
+            <div id="resource-panel">
+                <h3>地图物体</h3>
+                <div class="resource-list" id="resource-list">
+                    <!-- 资源列表将动态加载 -->
+                </div>
+            </div>
+
+            <!-- 画布容器 -->
+            <div id="canvas-container">
+                <canvas id="map-canvas"></canvas>
+                <canvas id="grid-canvas"></canvas>
+                <canvas id="marker-canvas"></canvas>
+                <canvas id="object-canvas"></canvas>
+            </div>
+
+            <!-- 右侧属性面板 -->
+            <div id="property-panel">
+                <h3>物体属性</h3>
+                <div class="property-field">
+                    <label>类型 (Type):</label>
+                    <input type="text" id="prop-type" />
+                </div>
+                <div class="property-field">
+                    <label>位置格子 X:</label>
+                    <input type="number" id="prop-pos-x" readonly style="background: #2a2a2a; color: #888;" />
+                </div>
+                <div class="property-field">
+                    <label>位置格子 Y:</label>
+                    <input type="number" id="prop-pos-y" readonly style="background: #2a2a2a; color: #888;" />
+                </div>
+                <div class="property-field">
+                    <label>占据格子 X:</label>
+                    <input type="number" id="prop-grid-x" min="1" value="1" />
+                </div>
+                <div class="property-field">
+                    <label>占据格子 Y:</label>
+                    <input type="number" id="prop-grid-y" min="1" value="1" />
+                </div>
+                <div class="property-field">
+                    <label>偏移像素 X:</label>
+                    <input type="number" id="prop-offset-x" value="0" />
+                </div>
+                <div class="property-field">
+                    <label>偏移像素 Y:</label>
+                    <input type="number" id="prop-offset-y" value="0" />
+                </div>
+                <div class="property-field">
+                    <label>类型参数:</label>
+                    <input type="text" id="prop-params" />
+                </div>
+                <div class="property-field" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="prop-walkable" style="width: auto; margin-right: 8px;" />
+                    <label style="margin: 0; cursor: pointer;" for="prop-walkable">可行走</label>
+                </div>
+                <button id="btn-delete-object" class="danger" style="width: 100%; margin-top: 10px;">删除物体</button>
+            </div>
+        </div>
+
+        <!-- 底部信息栏 -->
+        <div id="info-bar">
+            <span id="info-position">位置: -</span>
+            <span id="info-grid">格子: -</span>
+            <span id="info-map-size">地图: -</span>
+            <span id="info-status">就绪</span>
+        </div>
+    </div>
+
+    <!-- 新建地图弹窗 -->
+    <div id="modal-new-map" class="modal">
+        <div class="modal-content">
+            <h2>新建地图配置</h2>
+            <div class="modal-field">
+                <label>地图ID:</label>
+                <input type="text" id="new-map-id" placeholder="例如: Map1" />
+            </div>
+            <div class="modal-field">
+                <label>地图名称:</label>
+                <input type="text" id="new-map-name" placeholder="例如: 新手村" />
+            </div>
+            <div class="modal-field">
+                <label>逻辑格子宽度 (像素):</label>
+                <input type="number" id="new-grid-width" value="32" min="1" />
+            </div>
+            <div class="modal-field">
+                <label>逻辑格子高度 (像素):</label>
+                <input type="number" id="new-grid-height" value="32" min="1" />
+            </div>
+            <div class="modal-field">
+                <label>地图像素宽度:</label>
+                <input type="number" id="new-map-width" placeholder="手动填写或选择JPG自动获取" min="1" />
+            </div>
+            <div class="modal-field">
+                <label>地图像素高度:</label>
+                <input type="number" id="new-map-height" placeholder="手动填写或选择JPG自动获取" min="1" />
+            </div>
+            <div class="modal-field">
+                <label>地图资源类型:</label>
+                <select id="new-map-source-type">
+                    <option value="image">大地图JPG文件</option>
+                    <option value="tiles">已切割的地图块目录</option>
+                </select>
+            </div>
+            <div class="modal-field" id="field-source-image">
+                <label>选择大地图JPG:</label>
+                <button id="btn-select-image">选择文件</button>
+                <input type="file" id="input-source-image" accept="image/jpeg,image/jpg,image/png" />
+                <div id="selected-image-name" style="margin-top: 5px; font-size: 12px; color: #aaa;"></div>
+            </div>
+            <div class="modal-field" id="field-source-tiles" style="display:none;">
+                <label>地图块目录路径:</label>
+                <button id="btn-select-tiles-dir" type="button">选择目录</button>
+                <input type="text" id="input-tiles-path" placeholder="选择的目录路径将显示在这里" readonly style="margin-top: 5px;" />
+            </div>
+            <div class="modal-buttons">
+                <button id="btn-create-map">创建</button>
+                <button id="btn-cancel-new" class="danger">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载地图弹窗 -->
+    <div id="modal-load-map" class="modal">
+        <div class="modal-content">
+            <h2>加载地图配置</h2>
+            <div class="modal-field">
+                <label>选择配置文件:</label>
+                <button id="btn-select-config">选择JSON文件</button>
+                <input type="file" id="input-config-file" accept="application/json" />
+                <div id="selected-config-name" style="margin-top: 5px; font-size: 12px; color: #aaa;"></div>
+            </div>
+            <div class="modal-buttons">
+                <button id="btn-load-config">加载</button>
+                <button id="btn-cancel-load" class="danger">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载提示 -->
+    <div id="loading" class="loading">
+        <div>处理中...</div>
+    </div>
+
+    <script src="js/fsAccess.js"></script>
+    <script src="js/excelParser.js"></script>
+    <script src="js/resourceLoader.js"></script>
+    <script src="js/util.js"></script>
+    <script src="mapEditor.js"></script>
+</body>
+</html>

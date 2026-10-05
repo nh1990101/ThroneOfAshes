@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图编辑器启动器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .section p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .feature h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .feature p {
+            color: #777;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .alert-title {
+            color: #856404;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .alert-content {
+            color: #856404;
+            font-size: 14px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .requirements {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .requirements h3 {
+            color: #004085;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .requirements ul {
+            margin-left: 20px;
+            color: #004085;
+        }
+
+        .requirements li {
+            margin-bottom: 5px;
+        }
+
+        .check-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .status-ok {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-error {
+            background: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ RPG地图编辑器</h1>
+        <p class="subtitle">独立的HTML5游戏地图编辑工具</p>
+
+        <div class="alert">
+            <div class="alert-title">⚠️ 浏览器要求</div>
+            <div class="alert-content">
+                本编辑器需要使用 Chrome 86+ 或 Edge 86+ 浏览器，因为使用了 File System Access API。
+            </div>
+        </div>
+
+        <div id="browser-check" class="section">
+            <h2>系统检查</h2>
+            <div class="check-status">
+                <div class="status-icon" id="api-status">?</div>
+                <span id="api-text">检查中...</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>主要功能</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>🖼️ 地图切割</h3>
+                    <p>自动切割大地图为512×512小块</p>
+                </div>
+                <div class="feature">
+                    <h3>📍 地图标记</h3>
+                    <p>标记不可移动点和资源刷新点</p>
+                </div>
+                <div class="feature">
+                    <h3>🎨 物体拖放</h3>
+                    <p>从资源库拖放物体到地图</p>
+                </div>
+                <div class="feature">
+                    <h3>🎲 随机生成</h3>
+                    <p>根据Excel配置随机生成物件</p>
+                </div>
+                <div class="feature">
+                    <h3>🔍 地图缩放</h3>
+                    <p>鼠标滚轮自由缩放视图</p>
+                </div>
+                <div class="feature">
+                    <h3>💾 配置保存</h3>
+                    <p>保存和加载地图配置文件</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="requirements">
+            <h3>使用前准备</h3>
+            <ul>
+                <li>准备好地图资源图片（JPG/PNG格式）</li>
+                <li>准备好地图物体资源（放在 MapObject 目录）</li>
+                <li>准备好地图表Excel文件（可选，用于随机生成）</li>
+                <li>确保使用Chrome或Edge浏览器</li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-primary" onclick="openEditor()">启动编辑器</button>
+            <button class="btn-secondary" onclick="openReadme()">查看使用说明</button>
+        </div>
+    </div>
+
+    <script>
+        // 检查浏览器支持
+        window.addEventListener('DOMContentLoaded', () => {
+            const apiStatus = document.getElementById('api-status');
+            const apiText = document.getElementById('api-text');
+
+            if (typeof window.showDirectoryPicker === 'function') {
+                apiStatus.textContent = '✓';
+                apiStatus.className = 'status-icon status-ok';
+                apiText.textContent = '浏览器支持 File System Access API';
+                apiText.style.color = '#28a745';
+            } else {
+                apiStatus.textContent = '✗';
+                apiStatus.className = 'status-icon status-error';
+                apiText.textContent = '浏览器不支持 File System Access API，请使用 Chrome 或 Edge 浏览器';
+                apiText.style.color = '#dc3545';
+            }
+        });
+
+        function openEditor() {
+            window.location.href = 'index.html';
+        }
+
+        function openReadme() {
+            window.open('README.md', '_blank');
+        }
+    </script>
+</body>
+</html>

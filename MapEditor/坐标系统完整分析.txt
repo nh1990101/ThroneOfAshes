@@ -1,0 +1,195 @@
+坐标系统完整分析
+═══════════════════════════════════════════
+
+问题1：像素坐标显示错误
+───────────────────────────────────────────
+当前代码（第1108-1110行）：
+  const worldPos = this.gridToWorld(grid.x, grid.y);
+  显示: `像素: (${worldPos.x}, ${worldPos.y})`
+
+问题：
+  - gridToWorld返回的是Canvas坐标（Y轴反转后的）
+  - 用户期望看到的是Cocos坐标（左下角为原点，Y向上）
+  - 格子(0,0)在左下角 → 应该显示像素(0,0)
+  - 但gridToWorld(0,0)返回的是Canvas底部坐标：(0, mapHeight-gridHeight)
+
+问题2：点击物体位置不准
+───────────────────────────────────────────
+物体渲染流程：
+
+1. screenToGrid(鼠标坐标) → 格子坐标
+   gridY = (mapPixelHeight - worldY) / gridHeight
+   ↑ Y轴已经反转
+
+2. gridToWorld(格子坐标) → Canvas坐标
+   worldY = mapPixelHeight - (gridY + 1) * gridHeight
+   ↑ 又反转了一次！
+
+3. 结果：反转了两次，相当于没反转？
+   不对！让我计算一下...
+
+实际计算
+───────────────────────────────────────────
+假设：
+  - 地图高度：3584像素
+  - 格子高度：64像素
+  - 鼠标在Canvas顶部：canvasY = 0
+
+screenToGrid:
+  worldY = 0（Canvas坐标）
+  gridY = (3584 - 0) / 64 = 56（最顶部的格子）
+
+gridToWorld:
+  worldY = 3584 - (56 + 1) * 64 = 3584 - 3648 = -64 ❌
+
+这是错的！
+
+正确的逻辑应该是什么？
+═══════════════════════════════════════════
+
+我们需要区分三种坐标：
+
+1. Canvas坐标（内部渲染）
+   - 左上角为原点
+   - Y向下
+   - 用于drawImage
+
+2. 格子坐标（逻辑层）
+   - 左下角为原点
+   - Y向上
+   - gridX, gridY
+
+3. Cocos世界坐标（导出用）
+   - 左下角为原点
+   - Y向上
+   - 用于游戏引擎
+
+转换关系
+───────────────────────────────────────────
+
+屏幕 → Canvas坐标：
+  canvasX = (screenX - rect.left - offsetX) / scale
+  canvasY = (screenY - rect.top - offsetY) / scale
+
+Canvas坐标 → 格子坐标：
+  gridX = floor(canvasX / gridWidth)
+  gridY = floor((mapPixelHeight - canvasY) / gridHeight)
+  
+格子坐标 → Cocos世界坐标（用户看到的像素）：
+  cocosX = gridX * gridWidth
+  cocosY = gridY * gridHeight
+
+格子坐标 → Canvas坐标（渲染用）：
+  canvasX = gridX * gridWidth
+  canvasY = mapPixelHeight - (gridY + 1) * gridHeight
+
+当前的错误
+───────────────────────────────────────────
+
+gridToWorld名字有歧义：
+  - 实际返回的是Canvas坐标
+  - 但用于显示"像素坐标"时，应该是Cocos坐标
+  - 用于渲染时，需要Canvas坐标
+
+解决方案
+───────────────────────────────────────────
+
+方案1：重命名方法
+  gridToWorld → gridToCanvas（渲染用）
+  新增 gridToCocos（显示用）
+
+方案2：修改gridToWorld的含义
+  让它返回Cocos坐标（简单的线性转换）
+  渲染时在局部做Y轴反转
+
+我倾向于方案2，因为：
+  - gridToWorld语义上就应该是"世界坐标"
+  - Cocos世界坐标才是真正的世界坐标
+  - Canvas坐标只是渲染细节
+
+修复方案
+═══════════════════════════════════════════
+
+1. gridToWorld返回Cocos坐标：
+   worldX = gridX * gridWidth
+   worldY = gridY * gridHeight
+
+2. 渲染物体时，转Canvas坐标：
+   canvasX = worldX
+   canvasY = mapPixelHeight - worldY - gridHeight
+
+3. worldToScreen也需要处理Y轴反转：
+   screenX = canvasX * scale + offsetX
+   screenY = canvasY * scale + offsetY
+
+等等！worldToScreen的输入是什么坐标系？
+───────────────────────────────────────────
+
+看renderMapTiles（第1510-1514行）：
+  worldX = tile.x * tileSize
+  worldY = mapPixelHeight - (tile.y + 1) * tileSize
+  screen = worldToScreen(worldX, worldY)
+
+这里worldY已经是Canvas坐标了！
+
+所以worldToScreen的输入是Canvas坐标，不是Cocos坐标！
+
+真相大白
+═══════════════════════════════════════════
+
+这个编辑器的"世界坐标"就是Canvas坐标！
+
+- worldToScreen: Canvas坐标 → 屏幕坐标（考虑缩放和平移）
+- gridToWorld: 格子坐标 → Canvas坐标
+- screenToGrid: 屏幕坐标 → 格子坐标
+
+没有Cocos坐标的概念！
+
+那显示的"像素坐标"应该怎么办？
+───────────────────────────────────────────
+
+用户期望看到的是Cocos语义的坐标：
+  - 左下角格子显示(0, 0)
+  - 往上一格显示(0, gridHeight)
+
+所以应该新增一个方法：
+  gridToCocos(gridX, gridY) {
+    return {
+      x: gridX * gridWidth,
+      y: gridY * gridHeight
+    };
+  }
+
+显示时用这个方法！
+
+渲染物体时的偏移
+───────────────────────────────────────────
+
+当前：
+  baseWorld = gridToWorld(gridX, gridY) // Canvas坐标
+  world.y = baseWorld.y - offsetY
+
+这是对的！因为：
+  - baseWorld.y是Canvas Y（向下）
+  - offsetY正值表示"Cocos向上"
+  - Canvas向上 = Y减小
+  - 所以用减法
+
+但是！如果gridToWorld改成返回Cocos坐标，那这里就要改了！
+
+最终方案
+═══════════════════════════════════════════
+
+保持gridToWorld返回Canvas坐标（因为整个渲染系统都依赖它）
+
+新增方法：
+  gridToCocos(gridX, gridY) - 返回Cocos坐标
+  
+修改显示：
+  const cocosPos = this.gridToCocos(grid.x, grid.y);
+  显示cocosPos而不是gridToWorld的结果
+
+这样：
+  - 渲染逻辑不变
+  - 显示逻辑正确
+  - 物体偏移逻辑不变

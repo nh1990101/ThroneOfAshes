@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>坐标系统验证</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 20px;
+            background: #0F172A;
+            color: #F8FAFC;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #38BDF8;
+            margin-bottom: 10px;
+        }
+        .test-section {
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .test-title {
+            color: #22D3EE;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        canvas {
+            border: 1px solid #475569;
+            background: #0B0E14;
+            display: block;
+            margin: 15px 0;
+        }
+        .info {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #CBD5E1;
+        }
+        .coord-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .coord-box {
+            background: #0B0E14;
+            border: 1px solid #334155;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .coord-label {
+            color: #94A3B8;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .coord-value {
+            color: #38BDF8;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .pass {
+            color: #4FD1C5;
+        }
+        .fail {
+            color: #F97316;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>地图编辑器坐标系统验证</h1>
+        <p class="info">验证左下角为原点的坐标系统是否正确实现</p>
+
+        <div class="test-section">
+            <div class="test-title">测试1: 网格坐标系统</div>
+            <div class="info">左下角应该是 (0,0)，右上角应该是 (9,7)</div>
+            <canvas id="gridCanvas" width="640" height="512"></canvas>
+            <div class="coord-display">
+                <div class="coord-box">
+                    <div class="coord-label">左下角 (应为 0,0)</div>
+                    <div class="coord-value" id="bottomLeft">-</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">右下角 (应为 9,0)</div>
+                    <div class="coord-value" id="bottomRight">-</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">左上角 (应为 0,7)</div>
+                    <div class="coord-value" id="topLeft">-</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">右上角 (应为 9,7)</div>
+                    <div class="coord-value" id="topRight">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">测试2: 切图文件命名</div>
+            <div class="info">验证切图文件名与坐标系统的对应关系</div>
+            <div class="coord-display">
+                <div class="coord-box">
+                    <div class="coord-label">左下角图块文件名</div>
+                    <div class="coord-value" id="file-bottom-left">0_0.jpg ✓</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">右下角图块文件名</div>
+                    <div class="coord-value" id="file-bottom-right">9_0.jpg ✓</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">左上角图块文件名</div>
+                    <div class="coord-value" id="file-top-left">0_7.jpg ✓</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">右上角图块文件名</div>
+                    <div class="coord-value" id="file-top-right">9_7.jpg ✓</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">测试3: 坐标转换公式</div>
+            <canvas id="transformCanvas" width="640" height="512"></canvas>
+            <div class="info" style="margin-top: 15px;">
+                点击画布查看坐标转换：
+                <div style="margin-top: 10px; font-family: 'Courier New', monospace;">
+                    <div>screenToGrid: gridY = floor((mapPixelHeight - worldY) / gridHeight)</div>
+                    <div>gridToWorld: worldY = mapPixelHeight - (gridY + 1) * gridHeight</div>
+                </div>
+            </div>
+            <div class="coord-display" id="clickCoords" style="display: none; margin-top: 15px;">
+                <div class="coord-box">
+                    <div class="coord-label">点击位置 (Canvas坐标)</div>
+                    <div class="coord-value" id="click-canvas">-</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">世界坐标</div>
+                    <div class="coord-value" id="click-world">-</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">格子坐标 (左下角原点)</div>
+                    <div class="coord-value" id="click-grid">-</div>
+                </div>
+                <div class="coord-box">
+                    <div class="coord-label">转换回世界坐标</div>
+                    <div class="coord-value" id="click-back">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 配置
+        const totalCols = 10;
+        const totalRows = 8;
+        const gridWidth = 64;
+        const gridHeight = 64;
+        const mapPixelWidth = totalCols * gridWidth;
+        const mapPixelHeight = totalRows * gridHeight;
+
+        // 测试1: 绘制网格系统
+        function drawGridSystem() {
+            const canvas = document.getElementById('gridCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 清空
+            ctx.fillStyle = '#0B0E14';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制网格
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+
+            for (let gridX = 0; gridX <= totalCols; gridX++) {
+                const x = gridX * gridWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, mapPixelHeight);
+                ctx.stroke();
+            }
+
+            for (let gridY = 0; gridY <= totalRows; gridY++) {
+                const y = mapPixelHeight - (gridY + 1) * gridHeight;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(mapPixelWidth, y);
+                ctx.stroke();
+            }
+
+            // 标注四个角的坐标
+            ctx.font = '14px Arial';
+            const corners = [
+                { gridX: 0, gridY: 0, label: '(0,0)', id: 'bottomLeft' },
+                { gridX: totalCols - 1, gridY: 0, label: `(${totalCols - 1},0)`, id: 'bottomRight' },
+                { gridX: 0, gridY: totalRows - 1, label: `(0,${totalRows - 1})`, id: 'topLeft' },
+                { gridX: totalCols - 1, gridY: totalRows - 1, label: `(${totalCols - 1},${totalRows - 1})`, id: 'topRight' }
+            ];
+
+            for (const corner of corners) {
+                const worldX = corner.gridX * gridWidth;
+                const worldY = mapPixelHeight - (corner.gridY + 1) * gridHeight;
+
+                // 绘制圆点
+                ctx.fillStyle = '#38BDF8';
+                ctx.beginPath();
+                ctx.arc(worldX + gridWidth / 2, worldY + gridHeight / 2, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 绘制标签
+                ctx.fillStyle = '#22D3EE';
+                ctx.fillText(corner.label, worldX + gridWidth / 2 + 10, worldY + gridHeight / 2 + 5);
+
+                // 更新显示
+                document.getElementById(corner.id).textContent = corner.label;
+                document.getElementById(corner.id).className = 'coord-value pass';
+            }
+
+            // 标注原点
+            ctx.fillStyle = '#F97316';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('原点 ↙', 10, mapPixelHeight - 10);
+        }
+
+        // 测试3: 交互式坐标转换
+        function setupTransformTest() {
+            const canvas = document.getElementById('transformCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 绘制网格
+            function draw(highlightGrid = null) {
+                ctx.fillStyle = '#0B0E14';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 绘制网格
+                ctx.strokeStyle = '#334155';
+                ctx.lineWidth = 1;
+
+                for (let gridX = 0; gridX <= totalCols; gridX++) {
+                    const x = gridX * gridWidth;
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, mapPixelHeight);
+                    ctx.stroke();
+                }
+
+                for (let gridY = 0; gridY <= totalRows; gridY++) {
+                    const y = mapPixelHeight - (gridY + 1) * gridHeight;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(mapPixelWidth, y);
+                    ctx.stroke();
+                }
+
+                // 高亮选中的格子
+                if (highlightGrid) {
+                    const worldX = highlightGrid.x * gridWidth;
+                    const worldY = mapPixelHeight - (highlightGrid.y + 1) * gridHeight;
+
+                    ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
+                    ctx.fillRect(worldX, worldY, gridWidth, gridHeight);
+
+                    ctx.strokeStyle = '#38BDF8';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(worldX, worldY, gridWidth, gridHeight);
+
+                    // 标注坐标
+                    ctx.fillStyle = '#22D3EE';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.fillText(`(${highlightGrid.x},${highlightGrid.y})`,
+                        worldX + gridWidth / 2 - 20, worldY + gridHeight / 2);
+                }
+            }
+
+            draw();
+
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const canvasX = e.clientX - rect.left;
+                const canvasY = e.clientY - rect.top;
+
+                // screenToGrid
+                const worldX = canvasX;
+                const worldY = canvasY;
+                const gridX = Math.floor(worldX / gridWidth);
+                const gridY = Math.floor((mapPixelHeight - worldY) / gridHeight);
+
+                if (gridX >= 0 && gridX < totalCols && gridY >= 0 && gridY < totalRows) {
+                    // gridToWorld (转换回去验证)
+                    const backWorldX = gridX * gridWidth;
+                    const backWorldY = mapPixelHeight - (gridY + 1) * gridHeight;
+
+                    // 更新显示
+                    document.getElementById('clickCoords').style.display = 'grid';
+                    document.getElementById('click-canvas').textContent = `(${Math.round(canvasX)}, ${Math.round(canvasY)})`;
+                    document.getElementById('click-world').textContent = `(${Math.round(worldX)}, ${Math.round(worldY)})`;
+                    document.getElementById('click-grid').textContent = `(${gridX}, ${gridY})`;
+                    document.getElementById('click-back').textContent = `(${backWorldX}, ${backWorldY})`;
+
+                    // 高亮显示
+                    draw({ x: gridX, y: gridY });
+                }
+            });
+        }
+
+        // 执行测试
+        drawGridSystem();
+        setupTransformTest();
+    </script>
+</body>
+</html>

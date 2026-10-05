@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>点击检测调试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #2b2b2b;
+            color: #ddd;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        canvas {
+            border: 2px solid #555;
+            cursor: crosshair;
+            background: #1a1a1a;
+        }
+        .info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #333;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        .info div {
+            margin: 5px 0;
+        }
+        .hit {
+            color: #4ade80;
+        }
+        .miss {
+            color: #f87171;
+        }
+        button {
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #0284c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 点击检测调试工具</h1>
+        <div class="info" id="info">
+            <div><strong>说明：</strong>点击Canvas测试坐标转换和物体选中逻辑</div>
+        </div>
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div>
+            <button onclick="addRandomObject()">添加随机物体</button>
+            <button onclick="clearObjects()">清除所有物体</button>
+            <button onclick="toggleGrid()">切换网格</button>
+        </div>
+        <div class="info" id="click-info"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // 模拟地图配置
+        const config = {
+            mapPixelWidth: 800,
+            mapPixelHeight: 600,
+            gridWidth: 64,
+            gridHeight: 64
+        };
+
+        // 坐标系统
+        class CoordSystem {
+            // Canvas Y → 格子Y（当前实现）
+            screenToGrid_current(canvasX, canvasY) {
+                const gridX = Math.floor(canvasX / config.gridWidth);
+                const gridY = Math.floor((config.mapPixelHeight - canvasY) / config.gridHeight);
+                return { x: gridX, y: gridY };
+            }
+
+            // Canvas Y → 格子Y（修正版：加-1）
+            screenToGrid_fixed(canvasX, canvasY) {
+                const gridX = Math.floor(canvasX / config.gridWidth);
+                const gridY = Math.floor((config.mapPixelHeight - canvasY - 1) / config.gridHeight);
+                return { x: Math.max(0, gridX), y: Math.max(0, gridY) };
+            }
+
+            // 格子Y → Canvas Y（左上角）
+            gridToCanvas(gridX, gridY) {
+                return {
+                    x: gridX * config.gridWidth,
+                    y: config.mapPixelHeight - (gridY + 1) * config.gridHeight
+                };
+            }
+
+            // 格子Y → Cocos Y（显示用）
+            gridToCocos(gridX, gridY) {
+                return {
+                    x: gridX * config.gridWidth,
+                    y: gridY * config.gridHeight
+                };
+            }
+        }
+
+        const coords = new CoordSystem();
+        let objects = [];
+        let showGrid = true;
+
+        // 初始化一些测试物体
+        objects.push({
+            gridX: 5,
+            gridY: 5,
+            occupyX: 2,
+            occupyY: 2,
+            color: 'rgba(0, 150, 255, 0.5)'
+        });
+
+        objects.push({
+            gridX: 2,
+            gridY: 2,
+            occupyX: 1,
+            occupyY: 1,
+            color: 'rgba(255, 100, 100, 0.5)'
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制网格
+            if (showGrid) {
+                ctx.strokeStyle = '#444';
+                ctx.lineWidth = 1;
+
+                for (let x = 0; x <= config.mapPixelWidth; x += config.gridWidth) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, config.mapPixelHeight);
+                    ctx.stroke();
+                }
+
+                for (let y = 0; y <= config.mapPixelHeight; y += config.gridHeight) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(config.mapPixelWidth, y);
+                    ctx.stroke();
+                }
+
+                // 标注gridY
+                ctx.fillStyle = '#888';
+                ctx.font = '12px Arial';
+                for (let gridY = 0; gridY < Math.floor(config.mapPixelHeight / config.gridHeight); gridY++) {
+                    const pos = coords.gridToCanvas(0, gridY);
+                    ctx.fillText(`Y=${gridY}`, 5, pos.y + 15);
+                }
+            }
+
+            // 绘制物体
+            objects.forEach((obj, index) => {
+                const halfX = Math.floor(obj.occupyX / 2);
+                const halfY = Math.floor(obj.occupyY / 2);
+
+                // 计算占格框位置（使用gridToCanvas）
+                const leftBottomGrid = {
+                    x: obj.gridX - halfX,
+                    y: obj.gridY - halfY
+                };
+
+                const canvasPos = coords.gridToCanvas(leftBottomGrid.x, leftBottomGrid.y);
+                const width = obj.occupyX * config.gridWidth;
+                const height = obj.occupyY * config.gridHeight;
+
+                // 绘制占格框
+                ctx.fillStyle = obj.color;
+                ctx.fillRect(canvasPos.x, canvasPos.y, width, height);
+
+                ctx.strokeStyle = obj.selected ? 'yellow' : 'cyan';
+                ctx.lineWidth = obj.selected ? 3 : 1;
+                ctx.strokeRect(canvasPos.x, canvasPos.y, width, height);
+
+                // 标注中心格子坐标
+                ctx.fillStyle = 'white';
+                ctx.font = '14px Arial';
+                ctx.fillText(
+                    `[${obj.gridX},${obj.gridY}]`,
+                    canvasPos.x + 5,
+                    canvasPos.y + 20
+                );
+
+                // 标注占格大小
+                ctx.fillText(
+                    `${obj.occupyX}x${obj.occupyY}`,
+                    canvasPos.x + 5,
+                    canvasPos.y + 40
+                );
+            });
+        }
+
+        function getObjectAtGrid(gridX, gridY) {
+            for (let i = objects.length - 1; i >= 0; i--) {
+                const obj = objects[i];
+                const halfX = Math.floor(obj.occupyX / 2);
+                const halfY = Math.floor(obj.occupyY / 2);
+
+                if (gridX >= obj.gridX - halfX && gridX < obj.gridX + obj.occupyX - halfX &&
+                    gridY >= obj.gridY - halfY && gridY < obj.gridY + obj.occupyY - halfY) {
+                    return { obj, index: i };
+                }
+            }
+            return null;
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const canvasX = e.clientX - rect.left;
+            const canvasY = e.clientY - rect.top;
+
+            // 使用当前版本的转换
+            const gridCurrent = coords.screenToGrid_current(canvasX, canvasY);
+            const hitCurrent = getObjectAtGrid(gridCurrent.x, gridCurrent.y);
+
+            // 使用修正版本的转换
+            const gridFixed = coords.screenToGrid_fixed(canvasX, canvasY);
+            const hitFixed = getObjectAtGrid(gridFixed.x, gridFixed.y);
+
+            // 显示信息
+            const infoDiv = document.getElementById('click-info');
+            let html = `<h3>点击位置分析</h3>`;
+
+            html += `<div><strong>Canvas坐标：</strong>(${canvasX.toFixed(1)}, ${canvasY.toFixed(1)})</div>`;
+
+            html += `<div><strong>当前转换结果：</strong>格子(${gridCurrent.x}, ${gridCurrent.y})`;
+            if (hitCurrent) {
+                html += ` <span class="hit">✓ 命中物体 #${hitCurrent.index}</span>`;
+            } else {
+                html += ` <span class="miss">✗ 未命中</span>`;
+            }
+            html += `</div>`;
+
+            html += `<div><strong>修正转换结果：</strong>格子(${gridFixed.x}, ${gridFixed.y})`;
+            if (hitFixed) {
+                html += ` <span class="hit">✓ 命中物体 #${hitFixed.index}</span>`;
+            } else {
+                html += ` <span class="miss">✗ 未命中</span>`;
+            }
+            html += `</div>`;
+
+            // 验证gridToCanvas的往返
+            const canvasBackCurrent = coords.gridToCanvas(gridCurrent.x, gridCurrent.y);
+            html += `<div><strong>当前转换往返：</strong>Canvas(${canvasBackCurrent.x}, ${canvasBackCurrent.y})`;
+            const inSameGrid = canvasX >= canvasBackCurrent.x && canvasX < canvasBackCurrent.x + config.gridWidth &&
+                              canvasY >= canvasBackCurrent.y && canvasY < canvasBackCurrent.y + config.gridHeight;
+            html += inSameGrid ? ' <span class="hit">✓ 在同一格子内</span>' : ' <span class="miss">✗ 不在同一格子</span>';
+            html += `</div>`;
+
+            const canvasBackFixed = coords.gridToCanvas(gridFixed.x, gridFixed.y);
+            html += `<div><strong>修正转换往返：</strong>Canvas(${canvasBackFixed.x}, ${canvasBackFixed.y})`;
+            const inSameGridFixed = canvasX >= canvasBackFixed.x && canvasX < canvasBackFixed.x + config.gridWidth &&
+                                   canvasY >= canvasBackFixed.y && canvasY < canvasBackFixed.y + config.gridHeight;
+            html += inSameGridFixed ? ' <span class="hit">✓ 在同一格子内</span>' : ' <span class="miss">✗ 不在同一格子</span>';
+            html += `</div>`;
+
+            infoDiv.innerHTML = html;
+
+            // 选中物体
+            objects.forEach(obj => obj.selected = false);
+            if (hitCurrent) {
+                hitCurrent.obj.selected = true;
+            }
+
+            draw();
+        });
+
+        function addRandomObject() {
+            const gridX = Math.floor(Math.random() * (config.mapPixelWidth / config.gridWidth - 2)) + 1;
+            const gridY = Math.floor(Math.random() * (config.mapPixelHeight / config.gridHeight - 2)) + 1;
+            const occupyX = Math.floor(Math.random() * 2) + 1;
+            const occupyY = Math.floor(Math.random() * 2) + 1;
+
+            objects.push({
+                gridX,
+                gridY,
+                occupyX,
+                occupyY,
+                color: `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.5)`
+            });
+
+            draw();
+        }
+
+        function clearObjects() {
+            objects = [];
+            document.getElementById('click-info').innerHTML = '';
+            draw();
+        }
+
+        function toggleGrid() {
+            showGrid = !showGrid;
+            draw();
+        }
+
+        // 初始绘制
+        draw();
+    </script>
+</body>
+</html>

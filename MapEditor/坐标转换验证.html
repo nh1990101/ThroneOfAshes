@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>坐标转换验证</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #4ec9b0;
+        }
+        .test-case {
+            background: #252526;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #007acc;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #1e1e1e;
+            border-radius: 4px;
+        }
+        .pass {
+            color: #4ec9b0;
+        }
+        .fail {
+            color: #f48771;
+        }
+        input {
+            background: #3c3c3c;
+            border: 1px solid #555;
+            color: #d4d4d4;
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            background: #0e639c;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        pre {
+            background: #1e1e1e;
+            padding: 10px;
+            overflow-x: auto;
+            border: 1px solid #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 坐标转换验证工具</h1>
+
+        <div class="test-case">
+            <h2>地图配置</h2>
+            <label>地图像素宽度: <input type="number" id="mapWidth" value="3072"></label><br>
+            <label>地图像素高度: <input type="number" id="mapHeight" value="3584"></label><br>
+            <label>格子宽度: <input type="number" id="gridWidth" value="64"></label><br>
+            <label>格子高度: <input type="number" id="gridHeight" value="64"></label><br>
+            <button onclick="runTests()">运行测试</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // 模拟mapEditor的坐标转换方法
+        class CoordinateSystem {
+            constructor(mapWidth, mapHeight, gridWidth, gridHeight) {
+                this.mapPixelWidth = mapWidth;
+                this.mapPixelHeight = mapHeight;
+                this.gridWidth = gridWidth;
+                this.gridHeight = gridHeight;
+            }
+
+            // 格子坐标 → Canvas坐标（渲染用）
+            gridToWorld(gridX, gridY) {
+                return {
+                    x: gridX * this.gridWidth,
+                    y: this.mapPixelHeight - (gridY + 1) * this.gridHeight
+                };
+            }
+
+            // 格子坐标 → Cocos坐标（显示用）
+            gridToCocos(gridX, gridY) {
+                return {
+                    x: gridX * this.gridWidth,
+                    y: gridY * this.gridHeight
+                };
+            }
+
+            // Canvas坐标 → 格子坐标
+            canvasToGrid(canvasX, canvasY) {
+                const gridX = Math.floor(canvasX / this.gridWidth);
+                const gridY = Math.floor((this.mapPixelHeight - canvasY) / this.gridHeight);
+                return { x: gridX, y: gridY };
+            }
+        }
+
+        function runTests() {
+            const mapWidth = parseInt(document.getElementById('mapWidth').value);
+            const mapHeight = parseInt(document.getElementById('mapHeight').value);
+            const gridWidth = parseInt(document.getElementById('gridWidth').value);
+            const gridHeight = parseInt(document.getElementById('gridHeight').value);
+
+            const cs = new CoordinateSystem(mapWidth, mapHeight, gridWidth, gridHeight);
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+
+            // 测试1：左下角格子
+            addTest('测试1：左下角格子 (0,0)', () => {
+                const cocos = cs.gridToCocos(0, 0);
+                const canvas = cs.gridToWorld(0, 0);
+
+                return {
+                    '格子坐标': '(0, 0)',
+                    'Cocos坐标（显示）': `(${cocos.x}, ${cocos.y})`,
+                    'Canvas坐标（渲染）': `(${canvas.x}, ${canvas.y})`,
+                    '预期Cocos': '(0, 0)',
+                    '预期Canvas': `(0, ${mapHeight - gridHeight})`,
+                    '测试通过': cocos.x === 0 && cocos.y === 0 &&
+                               canvas.x === 0 && canvas.y === mapHeight - gridHeight
+                };
+            });
+
+            // 测试2：左下角第二行第一列格子
+            addTest('测试2：左下角往上一格 (0,1)', () => {
+                const cocos = cs.gridToCocos(0, 1);
+                const canvas = cs.gridToWorld(0, 1);
+
+                return {
+                    '格子坐标': '(0, 1)',
+                    'Cocos坐标（显示）': `(${cocos.x}, ${cocos.y})`,
+                    'Canvas坐标（渲染）': `(${canvas.x}, ${canvas.y})`,
+                    '预期Cocos': `(0, ${gridHeight})`,
+                    '预期Canvas': `(0, ${mapHeight - 2 * gridHeight})`,
+                    '测试通过': cocos.x === 0 && cocos.y === gridHeight &&
+                               canvas.x === 0 && canvas.y === mapHeight - 2 * gridHeight
+                };
+            });
+
+            // 测试3：左上角格子
+            const topGridY = Math.floor(mapHeight / gridHeight) - 1;
+            addTest(`测试3：左上角格子 (0,${topGridY})`, () => {
+                const cocos = cs.gridToCocos(0, topGridY);
+                const canvas = cs.gridToWorld(0, topGridY);
+
+                return {
+                    '格子坐标': `(0, ${topGridY})`,
+                    'Cocos坐标（显示）': `(${cocos.x}, ${cocos.y})`,
+                    'Canvas坐标（渲染）': `(${canvas.x}, ${canvas.y})`,
+                    '预期Canvas Y': '接近0（顶部）',
+                    '测试通过': canvas.y >= 0 && canvas.y < gridHeight
+                };
+            });
+
+            // 测试4：Canvas顶部 → 格子 → Canvas往返
+            addTest('测试4：Canvas顶部坐标往返', () => {
+                const canvasY = 0; // Canvas顶部
+                const grid = cs.canvasToGrid(0, canvasY);
+                const backToCanvas = cs.gridToWorld(grid.x, grid.y);
+
+                return {
+                    'Canvas输入': `(0, 0)`,
+                    '转换到格子': `(${grid.x}, ${grid.y})`,
+                    '再转回Canvas': `(${backToCanvas.x}, ${backToCanvas.y})`,
+                    '说明': `Canvas Y=0 在顶部，对应的是最大的gridY`,
+                    'gridY正确性': grid.y === topGridY ? '✓' : '✗'
+                };
+            });
+
+            // 测试5：Canvas底部 → 格子 → Canvas往返
+            addTest('测试5：Canvas底部坐标往返', () => {
+                const canvasY = mapHeight - 1; // Canvas底部
+                const grid = cs.canvasToGrid(0, canvasY);
+                const backToCanvas = cs.gridToWorld(grid.x, grid.y);
+
+                return {
+                    'Canvas输入': `(0, ${canvasY})`,
+                    '转换到格子': `(${grid.x}, ${grid.y})`,
+                    '再转回Canvas': `(${backToCanvas.x}, ${backToCanvas.y})`,
+                    '说明': `Canvas底部对应gridY=0`,
+                    'gridY正确性': grid.y === 0 ? '✓' : '✗'
+                };
+            });
+
+            // 测试6：占格框计算
+            addTest('测试6：2x2物体在(5,5)的占格框', () => {
+                const obj = { gridX: 5, gridY: 5, occupyX: 2, occupyY: 2 };
+                const halfX = Math.floor(obj.occupyX / 2);
+                const halfY = Math.floor(obj.occupyY / 2);
+
+                const leftBottomGrid = {
+                    x: obj.gridX - halfX,
+                    y: obj.gridY - halfY
+                };
+
+                const occupyCanvas = cs.gridToWorld(leftBottomGrid.x, leftBottomGrid.y);
+                const occupyCocos = cs.gridToCocos(leftBottomGrid.x, leftBottomGrid.y);
+
+                return {
+                    '物体中心格子': `(${obj.gridX}, ${obj.gridY})`,
+                    '占格大小': `${obj.occupyX}x${obj.occupyY}`,
+                    '占格左下角格子': `(${leftBottomGrid.x}, ${leftBottomGrid.y})`,
+                    '占格Canvas坐标': `(${occupyCanvas.x}, ${occupyCanvas.y})`,
+                    '占格Cocos坐标': `(${occupyCocos.x}, ${occupyCocos.y})`,
+                    '说明': `占格左下角应该是 (${obj.gridX - halfX}, ${obj.gridY - halfY})`
+                };
+            });
+
+            // 测试7：点击检测vs渲染一致性
+            addTest('测试7：点击检测vs渲染一致性', () => {
+                const obj = { gridX: 10, gridY: 10, occupyX: 3, occupyY: 3 };
+                const halfX = Math.floor(obj.occupyX / 2);
+                const halfY = Math.floor(obj.occupyY / 2);
+
+                // 模拟渲染位置
+                const renderGridX = obj.gridX - halfX;
+                const renderGridY = obj.gridY - halfY;
+                const renderCanvas = cs.gridToWorld(renderGridX, renderGridY);
+
+                // 模拟点击这个Canvas位置
+                const clickGrid = cs.canvasToGrid(renderCanvas.x + 1, renderCanvas.y + 1);
+
+                // 点击检测逻辑
+                const inRange = (
+                    clickGrid.x >= obj.gridX - halfX && clickGrid.x < obj.gridX + obj.occupyX - halfX &&
+                    clickGrid.y >= obj.gridY - halfY && clickGrid.y < obj.gridY + obj.occupyY - halfY
+                );
+
+                return {
+                    '物体格子': `(${obj.gridX}, ${obj.gridY})`,
+                    '渲染起点格子': `(${renderGridX}, ${renderGridY})`,
+                    '渲染Canvas坐标': `(${renderCanvas.x}, ${renderCanvas.y})`,
+                    '点击该位置得到格子': `(${clickGrid.x}, ${clickGrid.y})`,
+                    '点击检测结果': inRange ? '可以选中 ✓' : '无法选中 ✗',
+                    '一致性': inRange ? '通过' : '失败'
+                };
+            });
+        }
+
+        function addTest(title, testFn) {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = 'test-case';
+
+            let html = `<h2>${title}</h2><div class="result">`;
+
+            try {
+                const result = testFn();
+
+                for (const [key, value] of Object.entries(result)) {
+                    if (key === '测试通过' || key === '一致性') {
+                        const className = value ? 'pass' : 'fail';
+                        html += `<div class="${className}">${key}: ${value}</div>`;
+                    } else {
+                        html += `<div>${key}: ${value}</div>`;
+                    }
+                }
+            } catch (e) {
+                html += `<div class="fail">错误: ${e.message}</div>`;
+            }
+
+            html += '</div>';
+            div.innerHTML = html;
+            results.appendChild(div);
+        }
+
+        // 页面加载时自动运行
+        window.onload = runTests;
+    </script>
+</body>
+</html>

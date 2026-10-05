@@ -1,0 +1,52 @@
+[
+  {
+    "id": "$key",
+    "name": "uniq",
+    "type": null,
+    "area": null,
+    "show_url": null,
+    "params": null,
+    "areaX": 0,
+    "areaY": 0
+  },
+  {
+    "id": 1,
+    "name": "金币",
+    "type": 1,
+    "area": "1_1",
+    "show_url": "Res/Map/MapObject/Image/icon",
+    "params": 1,
+    "areaX": 1,
+    "areaY": 1
+  },
+  {
+    "id": 2,
+    "name": "剑士形象怪物",
+    "type": 2,
+    "area": "2_2",
+    "show_url": "Res/Battle/UnitResAtlas/1001/1001",
+    "params": 1,
+    "areaX": 2,
+    "areaY": 2
+  },
+  {
+    "id": 3,
+    "name": "建筑1",
+    "type": 3,
+    "area": "3_3",
+    "show_url": "Res/Map/MapObject/Image/building_1",
+    "params": null,
+    "areaX": 3,
+    "areaY": 3
+  },
+  {
+    "id": 4,
+    "name": "传送门",
+    "type": 4,
+    "area": "3_2",
+    "show_url": "Res/Map/MapObject/Image/building_2",
+    "params": "1_1",
+    "areaX": 3,
+    "areaY": 2
+  }
+]
