@@ -25,6 +25,10 @@ export class MainCity extends BaseWin {
         this.addNodeEvent(this.btn_battle.node, Node.EventType.TOUCH_END, this.OnClickBattle);
         this.addNodeEvent(this.btn_wild.node, Node.EventType.TOUCH_END, this.OnClickWild);
     }
+    //是否全屏
+    public get Is_FullScene() {
+        return true;
+    }
     OnClickBattle() {
         UIMananger.instance.showWin(BattleWin);
     }

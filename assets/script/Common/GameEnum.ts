@@ -2,7 +2,10 @@ import { _decorator, Component, Enum, Node } from 'cc';
 import * as exp from 'constants';
 const { ccclass, property } = _decorator;
 
-
+export enum GameLayer {
+    WILD_MAP,
+    DEFAULT = 30
+}
 export enum GameEvent {
     Connect = "Connect",
 
@@ -23,4 +26,13 @@ export enum UNIT_ACTION {
     ATTACK,//攻击
     MAX,//动作边界判断
 }
+/**地图统帅动作 */
+export enum ROLE_ACTION {
+    IDLE, MOVE = 8,
+}
+/**地图统帅八方向 */
+export enum ROLE_DIR {
+    UP, RIGHT_UP, RIGHT, RIGHT_DOWN, DOWN, LEFT_DOWN, LEFT, LEFT_UP
+}
+
 

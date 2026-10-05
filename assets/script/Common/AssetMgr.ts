@@ -148,34 +148,17 @@ export class AssetMgr extends Component {
 
         return node;
     }
-    /**创建预制体对象（对象池）- 泛型自动推断版本 */
+
+    /**创建预制体对象（对象池）- 自动挂载脚本（componentType）可当预制体作为皮肤使用，不同脚本可挂载同一个预制体 */
     public static async createPrefabFromPool<T extends Component>(
         url: string,
         pos: Vec2,
         parent: Node,
-        componentType: new () => T,
-        keepWorldTransform?: boolean,
-        isInitPool?: boolean
-    ): Promise<T>;
-    /**创建预制体对象（对象池）- 不需要组件版本 */
-    public static async createPrefabFromPool(
-        url: string,
-        pos: Vec2,
-        parent: Node,
-        componentType?: undefined,
-        keepWorldTransform?: boolean,
-        isInitPool?: boolean
-    ): Promise<Node>;
-    /**创建预制体对象（对象池）- 实现 */
-    public static async createPrefabFromPool<T extends Component>(
-        url: string,
-        pos: Vec2,
-        parent: Node,
-        componentType?: (new () => T) | undefined,
+        componentType: (new () => T),
         keepWorldTransform: boolean = true,
         isInitPool?: boolean
-    ): Promise<T | Node> {
-        return new Promise<T | Node>((resolve, reject) => {
+    ): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
             const prefabName = Tools.getPrefabName(url);
             // 如果指定了组件类型，pool key 加上组件名称
             const poolKey = componentType ? `${prefabName}_${componentType.name}` : prefabName;
@@ -205,7 +188,7 @@ export class AssetMgr extends Component {
                 if (uiOpacity) uiOpacity.opacity = 255;
                 node.active = true;
                 if (node.parent != parent) {
-                    node.setParent(parent);
+                    node.setParent(parent,keepWorldTransform);
                 }
                 node.setPosition(pos.toVec3());
 
@@ -216,8 +199,6 @@ export class AssetMgr extends Component {
                         comp = node.addComponent(componentType);
                     }
                     resolve(comp);
-                } else {
-                    resolve(node);
                 }
             } else {
                 this.createPrefab(url, pos, parent).then((node: Node) => {
@@ -249,8 +230,6 @@ export class AssetMgr extends Component {
                     if (componentType) {
                         const comp = node.getComponent(componentType);
                         resolve(comp);
-                    } else {
-                        resolve(node);
                     }
                 });
             }

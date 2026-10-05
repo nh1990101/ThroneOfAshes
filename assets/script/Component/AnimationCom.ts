@@ -150,7 +150,7 @@ export class AnimationCom extends BaseComp {
      * @param onComplete 播放完成回调
      * @param target 回调目标对象
      */
-    public play(startFrame: number = 0,endFrame: number = -1,loop: boolean = true, onComplete?: Function,target?: any): void {
+    public play(startFrame: number = 0, endFrame: number = -1, loop: boolean = true, onComplete?: Function, target?: any): void {
         if (this._frames.length === 0) {
             console.warn('没有可播放的帧');
             return;
@@ -336,7 +336,9 @@ export class AnimationCom extends BaseComp {
             this.aniObj.spriteFrame = this._frames[frameIndex];
         }
     }
-
+    public get aniImg() {
+        return this.aniObj;
+    }
     /**
      * 组件销毁时释放资源
      */

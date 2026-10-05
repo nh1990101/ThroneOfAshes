@@ -7,12 +7,20 @@ export class MapConfig {
         this.config = cfg;
     }
     public GetBlock(x: number, y: number) {
-        return this.config.blocks.get(`${x},${y}`);
+        return this.config.blocks[`${x},${y}`];
     }
     public GetResources(x: number, y: number) {
-        return this.config.resources.get(`${x},${y}`);
+        return this.config.resources[`${x},${y}`];
     }
-    
+    /**每格逻辑格子宽 */
+    public GetGridWidthPx() {
+        return this.config.mapInfo.gridWidth;
+    }
+    /**每格逻辑格子高 */
+    public GetGridHeightPx() {
+        return this.config.mapInfo.gridHeight;
+    }
+
 }
 export interface IMapConfig {
     /**地图id和地图尺寸信息 */
@@ -21,20 +29,29 @@ export interface IMapConfig {
     blocks: Map<string, IMapBock>;
     /**资源刷新规则和布点位置 */
     resources: Map<string, IResources>;
+    /**出生点 */
+    spawnPoints: ISpawnPoints[];
 }
 export interface IMapInfo {
     mapId: number;
     mapName: string;
+    /**地图总宽度像素 */
+    mapPixelWidth: number;
+    /**地图总高度像素 */
+    mapPixelHeight: number;
     /**每格宽度像素 */
     gridWidth: number;
     /**每格高度像素 */
     gridHeight: number;
+    /**横向图片数 */
+    totalCols: number;
+    /**纵向图片数 */
+    totalRows: number;
     /**每块地图切割宽高 */
     tileSize: number;
     /**地图图片资源路径 */
     tilesPath: string;
-    /**出生点 */
-    spawnPoints: ISpawnPoints[];
+
     /**地图物体信息 */
     objects: IMapObject[];
 }
@@ -55,6 +72,10 @@ export interface IResources {
 export interface ISpawnPoints {
     x: number;
     y: number;
+}
+export enum MapResourceType {
+    IMAGE = "image",
+    ANIMATION = "animation"
 }
 export interface IMapObject {
     /**资源路径 */

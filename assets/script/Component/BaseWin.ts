@@ -3,6 +3,7 @@ import { Tools } from '../Common/Tools';
 import { EventManager } from '../Common/EventManager';
 import { EventData } from '../Common/BaseMgr';
 import { BaseComp } from './BaseComp';
+import { UIMananger } from './UIMananger';
 const { ccclass, property } = _decorator;
 
 @ccclass('BaseWin')
@@ -16,8 +17,11 @@ export class BaseWin extends BaseComp {
     //外部透传参数
     protected _winData: any = null;
 
+
+
     showWin(...param) {
         this.node.active = true;
+        UIMananger.instance.SetOpeningWin(this, true);
         Tools.setNodeTopLayer(this.node)
         if (param.length > 0) {
             this._winData = param.length === 1 ? param[0] : param;
@@ -32,7 +36,7 @@ export class BaseWin extends BaseComp {
 
     closeWin() {
         this.node.active = false;
-
+        UIMananger.instance.SetOpeningWin(this, false);
     }
     public initEvent(): void {
         super.initEvent();
@@ -42,6 +46,10 @@ export class BaseWin extends BaseComp {
             this.addNodeEvent(btnClose.node, Node.EventType.TOUCH_END, this.closeWin);
         }
 
+    }
+    //是否全屏
+    public get Is_FullScene() {
+        return false;
     }
 
     // 设置数据（不显示）
@@ -53,6 +61,8 @@ export class BaseWin extends BaseComp {
     getData<T>(): T {
         return this._winData as T;
     }
+
+
 }
 
 

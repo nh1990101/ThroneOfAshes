@@ -48,10 +48,16 @@ export class GameUrl {
      * 战斗预制体
      */
     static Battle_Prefab = new UrlTemplate("GamePlay/Battle/{0}");
+
+    /**野外地图预制体 */
+    static WildMapPrefab=new UrlTemplate("GamePlay/WildMap/{0}");
+   
     /**野外地图地图块 */
-    static WildMapBlockUrl = new UrlTemplate("Res/Map/MapGrid/Map{0}/{1}_{2}");
+    static WildMapBlockUrl = new UrlTemplate("Res/Map/MapGrid/Map{0}/{1}_{2}/spriteFrame");
     /**野外地图配置 */
     static WildMapConfig = new UrlTemplate("Res/Config/WildMap/map{0}");
+    /**野外地图角色动画 */
+    static WildMapRoleAnimation = new UrlTemplate("Res/Wild/RoleAtlas/Role{0}");
 }
 
 

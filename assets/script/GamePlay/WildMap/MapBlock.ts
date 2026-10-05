@@ -5,8 +5,8 @@ const { ccclass, property } = _decorator;
 /**
  * 地图块图片
  */
-@ccclass('MapCell')
-export class MapCell extends Component {
+@ccclass('MapBlock')
+export class MapBlock extends Component {
     @property(BaseSprite)
     mapImg: BaseSprite = null;
     /**地图块坐标 */

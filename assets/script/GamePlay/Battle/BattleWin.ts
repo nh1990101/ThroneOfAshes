@@ -38,7 +38,10 @@ export class BattleWin extends BaseWin {
     private _beginDragPos: Vec2;
     private _lastMovingGrid: HexagonCell;
 
-
+    //是否全屏
+    public get Is_FullScene() {
+        return true;
+    }
     public initEvent(): void {
 
         super.initEvent();

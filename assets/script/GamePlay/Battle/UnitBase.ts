@@ -27,7 +27,7 @@ export class UnitBase extends BaseComp {
 
     protected m_ActionData: Map<UNIT_ACTION, IActionData>;
 
-    private _data: IUnitData;
+    protected _data: IUnitData;
     public init(): void {
         super.init();
 
