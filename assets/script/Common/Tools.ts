@@ -105,6 +105,22 @@ export class Tools {
 
         return parts[parts.length - 1] || '';
     }
+
+    /**
+     * 去除资源路径的文件后缀
+     * @param path 资源路径（如 "res/images/icon.png"）
+     * @returns 去除后缀的路径（如 "res/images/icon"）
+     */
+    static removeFileExtension(path: string,replace="/spriteFrame"): string {
+        if (!path || path.trim() === '') {
+            return '';
+        }
+
+        // 匹配常见的图片和资源文件后缀
+        const extensionPattern = /\.(png|jpg|jpeg|gif|webp|bmp|svg|ico|tiff|psd|prefab|json|atlas|mp3|wav|ogg|mp4|avi|mov)$/i;
+
+        return path.replace(extensionPattern, replace);
+    }
     static setCostFormat(own: number, need: number, enoughColor = GameColor.GAME_GREEN, notEnoughColor = GameColor.GAME_RED) {
         return [`${own}/${need}`, own >= need ? enoughColor : notEnoughColor]
     }

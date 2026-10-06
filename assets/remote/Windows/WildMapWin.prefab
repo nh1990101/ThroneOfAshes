@@ -316,7 +316,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "roleContainer",
+    "_name": "objectContainer",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {

@@ -4,8 +4,8 @@
     "mapName": "Map1",
     "gridWidth": 32,
     "gridHeight": 20,
-    "mapPixelWidth": 3200,
-    "mapPixelHeight": 3200,
+    "mapPixelWidth": 3584,
+    "mapPixelHeight": 3584,
     "tileSize": 512,
     "tilesPath": "Res/Map/MapGrid/Map1",
     "totalCols": 7,
@@ -60,16 +60,44 @@
     {
       "resourcePath": "Res/Map/MapObject/Animation/1001",
       "resourceType": "animation",
-      "gridX": 13,
-      "gridY": 29,
+      "gridX": 10,
+      "gridY": 28,
       "type": "2",
-      "occupyX": 2,
+      "occupyX": 3,
       "occupyY": 3,
       "offsetX": -2,
       "offsetY": 60,
       "params": "2",
       "walkable": false,
-      "imageSrc": "blob:http://localhost:8080/3a61040a-8d1a-4191-a4cd-3e9aec321b07"
+      "imageSrc": "blob:null/c47ccecd-0aaa-4b6a-85fd-350144af51c5"
+    },
+    {
+      "resourcePath": "Res/Map/MapObject/Image/building_1.png",
+      "resourceType": "image",
+      "gridX": 21,
+      "gridY": 31,
+      "type": "3",
+      "occupyX": 10,
+      "occupyY": 8,
+      "offsetX": 6,
+      "offsetY": 28,
+      "params": "",
+      "walkable": false,
+      "imageSrc": "blob:null/1d89684c-d912-4a47-a09e-194f89a82b4c"
+    },
+    {
+      "resourcePath": "Res/Map/MapObject/Image/icon.png",
+      "resourceType": "image",
+      "gridX": 14,
+      "gridY": 30,
+      "type": 1,
+      "occupyX": 1,
+      "occupyY": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "params": 1,
+      "walkable": false,
+      "imageSrc": "blob:null/9afa5242-4017-497c-b83a-2819168d38c7"
     }
   ]
 }

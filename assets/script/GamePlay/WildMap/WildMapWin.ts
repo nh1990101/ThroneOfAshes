@@ -25,10 +25,11 @@ export class WildMapWin extends BaseWin {
     mapContainer: Node = null!;;
 
     @child()
-    roleContainer: Node = null!;
-
-    @child()
     objectContainer: Node = null!;
+
+
+    // @child()
+    // objectContainer: Node = null!;
 
     @comp(BaseBtn)
     btn_ShowGridPos: BaseBtn = null!;
@@ -55,6 +56,9 @@ export class WildMapWin extends BaseWin {
 
     /**当前可见的地图块 */
     private visibleBlocks: Map<string, MapBlock> = new Map();
+
+    /**当前可见的地图物体 */
+    private visibleMapObjects: Map<string, MapObject> = new Map();
 
     /**地图块总尺寸信息 */
     private mapBlockInfo = {
@@ -122,7 +126,7 @@ export class WildMapWin extends BaseWin {
         this.createMapBock();
 
         // 创建地图物件
-        this.createMapObjects();
+        // this.createMapObjects();
 
         // 初始化角色
         this.initRolePos();
@@ -197,7 +201,7 @@ export class WildMapWin extends BaseWin {
             return;
         }
 
-        const cameraPos = this.mapCamera.node.position;
+        const cameraPos = this.mapCamera.node.worldPosition;
         const tileSize = this.mapBlockInfo.blockPixelSize;
 
         // 从根节点的 UITransform 获取屏幕尺寸
@@ -211,22 +215,16 @@ export class WildMapWin extends BaseWin {
         const screenWidth = rootTransform.width * this.mapCamera.rect.width;
         const screenHeight = rootTransform.height * this.mapCamera.rect.height;
 
-        // 正交相机：orthoHeight 是世界坐标高度的一半
-        const viewHeight = this.mapCamera.orthoHeight * 2;
-        const viewWidth = viewHeight * (screenWidth / screenHeight);
-
-        console.log(`[WildMapWin] 视口尺寸: ${viewWidth} x ${viewHeight}, 相机位置: (${cameraPos.x}, ${cameraPos.y})`);
-
         // 计算地图的起始坐标（左下角）
         const mapTransform = this.mapContainer.getComponent(UITransform);
         const mapStartX = -mapTransform.width / 2;
         const mapStartY = -mapTransform.height / 2;
 
         // 计算视口范围在地图中的位置（世界坐标）
-        const viewMinX = cameraPos.x - viewWidth / 2;
-        const viewMaxX = cameraPos.x + viewWidth / 2;
-        const viewMinY = cameraPos.y - viewHeight / 2;
-        const viewMaxY = cameraPos.y + viewHeight / 2;
+        const viewMinX = cameraPos.x - screenWidth / 2;
+        const viewMaxX = cameraPos.x + screenWidth / 2;
+        const viewMinY = cameraPos.y - screenHeight / 2;
+        const viewMaxY = cameraPos.y + screenHeight / 2;
 
         // 转换为地图块索引（从地图左下角开始计算）
         const minBlockX = Math.floor((viewMinX - mapStartX) / tileSize) - this.viewportPadding;
@@ -270,6 +268,9 @@ export class WildMapWin extends BaseWin {
 
         // 从可见列表中移除
         toRemove.forEach(key => this.visibleBlocks.delete(key));
+
+
+        // this.Mgr.WorldPosToGrid(viewMinX,)
     }
 
     /**
@@ -310,9 +311,12 @@ export class WildMapWin extends BaseWin {
     /**
      * 创建地图物件
      */
-    private createMapObjects() {
-        const objects = this.mapCfg.config.mapInfo.objects;
+    private createMapObjects(x: number, y: number) {
+        const key = `${x},${y}`;
+        const objects = this.mapCfg.config.objects;
         if (!objects || objects.length === 0) return;
+        // 防止重复创建
+        if (this.visibleMapObjects.has(key)) return;
 
         for (const objData of objects) {
             this.createMapObject(objData);
@@ -361,7 +365,7 @@ export class WildMapWin extends BaseWin {
         this.role = await AssetMgr.createPrefabFromPool(
             GameUrl.WildMapPrefab.format("WildRole"),
             worldPos,
-            this.roleContainer,
+            this.objectContainer,
             WildRole
         );
 
@@ -547,7 +551,7 @@ export class WildMapWin extends BaseWin {
         let targetX = roleWorldPos.x;
         let targetY = roleWorldPos.y;
 
-        
+
         var resultPos = this.Mgr.CameraBoundsTranceWorldPos(v2(targetX, targetY))
 
         // 初始化时直接设置位置，之后平滑移动

@@ -31,6 +31,8 @@ export interface IMapConfig {
     resources: Map<string, IResources>;
     /**出生点 */
     spawnPoints: ISpawnPoints[];
+        /**地图物体信息 */
+    objects: IMapObject[];
 }
 export interface IMapInfo {
     mapId: number;
@@ -52,8 +54,7 @@ export interface IMapInfo {
     /**地图图片资源路径 */
     tilesPath: string;
 
-    /**地图物体信息 */
-    objects: IMapObject[];
+
 }
 export interface IMapBock {
     /**是否可移动 0不可移动*/
