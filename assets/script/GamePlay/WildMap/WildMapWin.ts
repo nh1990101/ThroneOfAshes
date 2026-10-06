@@ -13,6 +13,7 @@ import { RectPathFindingMgr } from './RectPathFindingMgr';
 import { MapObject } from './MapObject';
 import { BaseBtn } from '../../Component/BaseComp/BaseBtn';
 import { UIMananger } from '../../Component/UIMananger';
+import { BaseSprite } from '../../Component/BaseComp/BaseSprite';
 const { ccclass, property } = _decorator;
 
 @ccclass('WildMapWin')
@@ -28,44 +29,26 @@ export class WildMapWin extends BaseWin {
     objectContainer: Node = null!;
 
 
-    // @child()
-    // objectContainer: Node = null!;
-
     @comp(BaseBtn)
     btn_ShowGridPos: BaseBtn = null!;
     @comp(BaseBtn)
     btn_BackCity: BaseBtn = null!;
 
+    @comp(BaseSprite)
+    testCameraCenter: BaseSprite = null!;
 
 
     protected mapId: number = null;
     protected role: WildRole = null;
     protected mapCfg: MapConfig;
 
-    /**地图块池 */
-    private mapBlocks: MapBlock[] = [];
-    /**地图物件 */
-    private mapObjects: Map<string, MapObject> = new Map();
+
 
     /**寻路管理器 */
     private pathFindingMgr: RectPathFindingMgr = new RectPathFindingMgr();
 
 
-    /**视口范围（用于地图块加载优化） */
-    private viewportPadding: number = 2; // 视口外扩格子数（不是像素）
 
-    /**当前可见的地图块 */
-    private visibleBlocks: Map<string, MapBlock> = new Map();
-
-    /**当前可见的地图物体 */
-    private visibleMapObjects: Map<string, MapObject> = new Map();
-
-    /**地图块总尺寸信息 */
-    private mapBlockInfo = {
-        totalBlocksX: 0,
-        totalBlocksY: 0,
-        blockPixelSize: 0
-    };
 
     /**地图拖动相关 */
     private isDragging: boolean = false;          // 是否正在拖动
@@ -101,7 +84,7 @@ export class WildMapWin extends BaseWin {
     initMap() {
         this.mapCfg = MapMgr.getInstance().getMapCfg();
 
-        this.Mgr.initMapReferences(this.mapContainer, this.mapCamera);
+        this.Mgr.initMapReferences(this.mapContainer, this.objectContainer, this.mapCamera, this.testCameraCenter.node);
         // 初始化格子大小
         MapGridData.WIDTH_PX = this.mapCfg.GetGridWidthPx();
         MapGridData.HEIGHT_PX = this.mapCfg.GetGridHeightPx();
@@ -116,249 +99,32 @@ export class WildMapWin extends BaseWin {
             this.Mgr.UpdateCameraBounds();
         }
         // 创建格子数据
-        this.createGridData();
+        this.Mgr.createGridData();
 
         // 初始化寻路系统
         this.pathFindingMgr.UpdateMapGrid(MapMgr.getInstance().getAllGridsMap());
         this.pathFindingMgr.setDirectionMode(false); // 使用4方向寻路
-
+        // 初始化角色
+        this.initRolePos();
         // 创建地图块
-        this.createMapBock();
+        this.Mgr.createMapBock();
 
         // 创建地图物件
         // this.createMapObjects();
 
-        // 初始化角色
-        this.initRolePos();
+
 
 
     }
 
 
-
-    /**
-     * 创建格子数据
-     */
-    private createGridData() {
-        MapMgr.getInstance().clearAllGrids();
-
-        const mapInfo = this.mapCfg.config.mapInfo;
-
-        // 计算逻辑格子数量：地图总像素 / 每格像素
-        const maxGridX = Math.floor(mapInfo.mapPixelWidth / mapInfo.gridWidth);
-        const maxGridY = Math.floor(mapInfo.mapPixelHeight / mapInfo.gridHeight);
-
-        console.log(`[WildMapWin] 地图尺寸: ${mapInfo.mapPixelWidth}x${mapInfo.mapPixelHeight}px`);
-        console.log(`[WildMapWin] 每格尺寸: ${mapInfo.gridWidth}x${mapInfo.gridHeight}px`);
-        console.log(`[WildMapWin] 逻辑格子数: ${maxGridX}x${maxGridY}`);
-
-        for (let x = 0; x < maxGridX; x++) {
-            for (let y = 0; y < maxGridY; y++) {
-                const blockData = this.mapCfg.GetBlock(x, y);
-                const walkable = !blockData || blockData.movable !== 0;
-
-                const grid = new MapGridData(x, y, walkable);
-                MapMgr.getInstance().setGrid(grid);
-            }
-        }
-
-        console.log(`[WildMapWin] 创建了 ${MapMgr.getInstance().getGridCount()} 个格子数据`);
-
-
-    }
-
-    /**创建地图块 */
-    createMapBock() {
-        const mapInfo = this.mapCfg.config.mapInfo;
-        const tileSize = mapInfo.tileSize;
-
-        // 计算逻辑格子总数
-        const logicCols = Math.floor(mapInfo.mapPixelWidth / MapGridData.WIDTH_PX);
-        const logicRows = Math.floor(mapInfo.mapPixelHeight / MapGridData.HEIGHT_PX);
-
-        console.log(`[WildMapWin] 地图块尺寸 tileSize: ${tileSize}`);
-        console.log(`[WildMapWin] 逻辑格子尺寸: ${MapGridData.WIDTH_PX} x ${MapGridData.HEIGHT_PX}`);
-        console.log(`[WildMapWin] 地图块总数: ${mapInfo.totalRows} x ${mapInfo.totalCols}`);
-        console.log(`[WildMapWin] 逻辑格子总数: ${logicCols} x ${logicRows}`);
-
-        // 保存地图块信息
-        this.mapBlockInfo.blockPixelSize = tileSize;
-        this.mapBlockInfo.totalBlocksX = mapInfo.totalRows || 6;
-        this.mapBlockInfo.totalBlocksY = mapInfo.totalCols || 6;
-
-        // 初始加载视口内的地图块（基于角色初始位置）
-        this.updateVisibleBlocks();
-
-        console.log(`[WildMapWin] 地图块信息: totalBlocksX=${this.mapBlockInfo.totalBlocksX}, totalBlocksY=${this.mapBlockInfo.totalBlocksY}, blockPixelSize=${this.mapBlockInfo.blockPixelSize}`);
-    }
-
-    /**
-     * 更新可见的地图块（基于摄像机视口）
-     */
-    private updateVisibleBlocks() {
-        if (!this.mapCamera) {
-            console.warn('[WildMapWin] mapCamera 未初始化');
-            return;
-        }
-
-        const cameraPos = this.mapCamera.node.worldPosition;
-        const tileSize = this.mapBlockInfo.blockPixelSize;
-
-        // 从根节点的 UITransform 获取屏幕尺寸
-        const rootTransform = this.node.getComponent(UITransform);
-        if (!rootTransform) {
-            console.warn('[WildMapWin] 根节点 UITransform 未找到');
-            return;
-        }
-
-        // 根据相机的 rect 和屏幕尺寸计算实际视口大小
-        const screenWidth = rootTransform.width * this.mapCamera.rect.width;
-        const screenHeight = rootTransform.height * this.mapCamera.rect.height;
-
-        // 计算地图的起始坐标（左下角）
-        const mapTransform = this.mapContainer.getComponent(UITransform);
-        const mapStartX = -mapTransform.width / 2;
-        const mapStartY = -mapTransform.height / 2;
-
-        // 计算视口范围在地图中的位置（世界坐标）
-        const viewMinX = cameraPos.x - screenWidth / 2;
-        const viewMaxX = cameraPos.x + screenWidth / 2;
-        const viewMinY = cameraPos.y - screenHeight / 2;
-        const viewMaxY = cameraPos.y + screenHeight / 2;
-
-        // 转换为地图块索引（从地图左下角开始计算）
-        const minBlockX = Math.floor((viewMinX - mapStartX) / tileSize) - this.viewportPadding;
-        const maxBlockX = Math.ceil((viewMaxX - mapStartX) / tileSize) + this.viewportPadding;
-        const minBlockY = Math.floor((viewMinY - mapStartY) / tileSize) - this.viewportPadding;
-        const maxBlockY = Math.ceil((viewMaxY - mapStartY) / tileSize) + this.viewportPadding;
-
-        // 限制在地图范围内
-        const startX = Math.max(0, minBlockX);
-        const endX = Math.min(this.mapBlockInfo.totalBlocksX - 1, maxBlockX);
-        const startY = Math.max(0, minBlockY);
-        const endY = Math.min(this.mapBlockInfo.totalBlocksY - 1, maxBlockY);
-
-        console.log(`[WildMapWin] 加载地图块范围: X(${startX} - ${endX}), Y(${startY} - ${endY})`);
-
-        // 记录本次应该可见的地图块
-        const shouldBeVisible = new Set<string>();
-
-        // 加载视口内的地图块
-        for (let x = startX; x <= endX; x++) {
-            for (let y = startY; y <= endY; y++) {
-                const key = `${x},${y}`;
-                shouldBeVisible.add(key);
-
-                // 如果地图块不存在，创建它
-                if (!this.visibleBlocks.has(key)) {
-                    this.createMapBlockTile(x, y);
-                }
-            }
-        }
-
-        // 隐藏/回收不在视口内的地图块
-        const toRemove: string[] = [];
-        this.visibleBlocks.forEach((block, key) => {
-            if (!shouldBeVisible.has(key)) {
-                block.HideMapCell();
-                AssetMgr.removeNode(block.node);
-                toRemove.push(key);
-            }
-        });
-
-        // 从可见列表中移除
-        toRemove.forEach(key => this.visibleBlocks.delete(key));
-
-
-        // this.Mgr.WorldPosToGrid(viewMinX,)
-    }
-
-    /**
-     * 创建单个地图块
-     */
-    private async createMapBlockTile(x: number, y: number) {
-        const key = `${x},${y}`;
-
-        // 防止重复创建
-        if (this.visibleBlocks.has(key)) return;
-
-        // 计算地图块位置（从地图左下角开始）
-        const mapTransform = this.mapContainer.getComponent(UITransform);
-        const startX = -mapTransform.width / 2;
-        const startY = -mapTransform.height / 2;
-        const tileSize = this.mapBlockInfo.blockPixelSize;
-
-        // MapBlock 的锚点是 (0.5, 0.5)，所以需要加上半个块的偏移
-        const blockPos = new Vec2(
-            startX + x * tileSize + tileSize / 2,
-            startY + y * tileSize + tileSize / 2
-        );
-
-        const block = await AssetMgr.createPrefabFromPool(
-            GameUrl.WildMapPrefab.format("MapBlock"),
-            blockPos,
-            this.mapContainer,
-            MapBlock
-        );
-
-        block.SetData(this.mapId, new Vec2(x, y));
-        block.ShowMapCell();
-
-        // 添加到可见列表
-        this.visibleBlocks.set(key, block);
-    }
-
-    /**
-     * 创建地图物件
-     */
-    private createMapObjects(x: number, y: number) {
-        const key = `${x},${y}`;
-        const objects = this.mapCfg.config.objects;
-        if (!objects || objects.length === 0) return;
-        // 防止重复创建
-        if (this.visibleMapObjects.has(key)) return;
-
-        for (const objData of objects) {
-            this.createMapObject(objData);
-        }
-    }
-
-    /**
-     * 创建单个地图物件
-     */
-    private async createMapObject(objData: IMapObject) {
-        const worldPos = this.Mgr.gridToWorldPos(objData.gridX, objData.gridY);
-
-        const mapObj = await AssetMgr.createPrefabFromPool(
-            GameUrl.WildMapPrefab.format("MapObject"),
-            worldPos,
-            this.objectContainer,
-            MapObject
-        );
-
-        mapObj.SetData(objData);
-
-        // 标记占据的格子为不可行走
-        if (!objData.walkable) {
-            for (let ox = 0; ox < objData.occupyX; ox++) {
-                for (let oy = 0; oy < objData.occupyY; oy++) {
-                    const grid = MapMgr.getInstance().getGrid(objData.gridX + ox, objData.gridY + oy);
-                    if (grid) {
-                        grid.walkable = false;
-                    }
-                }
-            }
-        }
-
-        this.mapObjects.set(`${objData.gridX},${objData.gridY}`, mapObj);
-    }
 
     /**初始化角色位置 */
     async initRolePos() {
         // 获取出生点
         const spawnPoint = this.mapCfg.config.spawnPoints?.[0] || { x: 5, y: 5 };
 
-        const worldPos = this.Mgr.gridToWorldPos(spawnPoint.x, spawnPoint.y);
+        const worldPos = this.Mgr.getGrid(spawnPoint.x, spawnPoint.y).GetWorldPos();
 
         console.log(`[WildMapWin] 角色出生点格子坐标: (${spawnPoint.x}, ${spawnPoint.y})`);
 
@@ -373,7 +139,7 @@ export class WildMapWin extends BaseWin {
 
 
         // 设置角色所在格子
-        const startGrid = MapMgr.getInstance().getGrid(spawnPoint.x, spawnPoint.y);
+        const startGrid = this.Mgr.getGrid(spawnPoint.x, spawnPoint.y);
         if (startGrid) {
             this.role.setGrid(startGrid);
         }
@@ -382,7 +148,7 @@ export class WildMapWin extends BaseWin {
 
         console.log(`[WildMapWin] 摄像机初始位置: (${this.mapCamera.node.position.x}, ${this.mapCamera.node.position.y})`);
 
-        this.updateAllNodesSortOrder();
+        this.Mgr.updateAllNodesSortOrder();
     }
 
     /**
@@ -529,7 +295,7 @@ export class WildMapWin extends BaseWin {
         this.isCameraFollowing = true;
         this.role.moveAlongPath(path).then(() => {
             console.log('[WildMapWin] 移动完成');
-            this.updateAllNodesSortOrder();
+            this.Mgr.updateAllNodesSortOrder();
         });
     }
 
@@ -567,45 +333,12 @@ export class WildMapWin extends BaseWin {
         }
     }
 
-    /**
-     * 更新所有节点的层级排序（Y排序）
-     * Y坐标越小，zIndex越大（越靠前显示）
-     */
-    private updateAllNodesSortOrder() {
-        // 收集所有需要排序的节点
-        const sortableNodes: { node: Node, y: number }[] = [];
 
-        // 角色
-        if (this.role && this.role.node) {
-            sortableNodes.push({
-                node: this.role.node,
-                y: this.role.node.position.y
-            });
-        }
-
-        // 地图物件
-        this.mapObjects.forEach(obj => {
-            if (obj && obj.node) {
-                sortableNodes.push({
-                    node: obj.node,
-                    y: obj.node.position.y
-                });
-            }
-        });
-
-        // 按Y坐标排序（Y越小越靠前）
-        sortableNodes.sort((a, b) => b.y - a.y);
-
-        // 设置zIndex
-        sortableNodes.forEach((item, index) => {
-            item.node.setSiblingIndex(index);
-        });
-    }
 
     /**上次更新地图块的摄像机位置 */
     private lastUpdateCameraPos: Vec3 = new Vec3();
     /**摄像机移动多少距离后更新地图块 */
-    private updateBlockThreshold: number = 100;
+    private updateBlockThreshold: number = 32;
 
     /**
      * 每帧更新
@@ -615,7 +348,7 @@ export class WildMapWin extends BaseWin {
         if (this.role && this.role.getIsMoving()) {
             this.updateCameraPos(false);
             // 移动时实时更新排序
-            this.updateAllNodesSortOrder();
+            this.Mgr.updateAllNodesSortOrder();
         }
 
         // 定期更新可见地图块
@@ -625,7 +358,8 @@ export class WildMapWin extends BaseWin {
 
             // 当摄像机移动超过阈值时，更新地图块
             if (distance > this.updateBlockThreshold) {
-                this.updateVisibleBlocks();
+                this.Mgr.updateVisibleBlocks();
+                this.Mgr.UpdateVisibleMapObj();
                 this.lastUpdateCameraPos.set(currentPos);
             }
         }
@@ -751,19 +485,6 @@ export class WildMapWin extends BaseWin {
         // 清理网格调试节点
         this.hideGridDebug();
 
-        // 清理可见的地图块
-        this.visibleBlocks.forEach(block => {
-            block.HideMapCell();
-            AssetMgr.removeNode(block.node);
-        });
-        this.visibleBlocks.clear();
-
-        // 清理地图物件
-        this.mapObjects.forEach(obj => {
-            AssetMgr.removeNode(obj.node);
-        });
-        this.mapObjects.clear();
-
         // 清理角色
         if (this.role) {
             AssetMgr.removeNode(this.role.node);
@@ -771,7 +492,7 @@ export class WildMapWin extends BaseWin {
         }
 
         // 清理格子数据
-        this.Mgr.clearAllGrids();
+        this.Mgr.Clear();
 
 
         this.mapCamera.node.position = Vec3.ZERO;

@@ -111,7 +111,7 @@ export class Tools {
      * @param path 资源路径（如 "res/images/icon.png"）
      * @returns 去除后缀的路径（如 "res/images/icon"）
      */
-    static removeFileExtension(path: string,replace="/spriteFrame"): string {
+    static removeFileExtension(path: string, replace = "/spriteFrame"): string {
         if (!path || path.trim() === '') {
             return '';
         }
@@ -192,14 +192,14 @@ export class Tools {
         array[index2] = temp;
     }
 
- 
+
     /**
     * 获取UI节点的世界坐标（考虑锚点）
     * @param node UI节点
     */
-    public static getUIWorldPosition(node: Node): Vec2 {
+    public static getUIWorldPosition(node: Node,worldPos:Vec3): Vec2 {
         if (!node) return v2(0, 0);
-        return node.getComponent(UITransform)?.convertToWorldSpaceAR(Vec3.ZERO).toVec2();
+        return node.getComponent(UITransform)?.convertToWorldSpaceAR(worldPos).toVec2();
     }
 
     /**
@@ -223,14 +223,7 @@ export class Tools {
         return screenPos;
     }
 
-    /**
-     * 获取UI节点的屏幕坐标
-     * @param node UI节点
-     */
-    public static getUIScreenPosition(node: Node): Vec2 {
-        const worldPos = this.getUIWorldPosition(node);
-        return this.worldToScreenPosition(worldPos);
-    }
+
     private static scheduledCallbacks: Map<Node, () => void> = new Map();
 
 

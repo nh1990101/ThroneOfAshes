@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec2 } from 'cc';
+import { _decorator, Component, Node, UITransform, Vec2 } from 'cc';
 import { MapMgr } from './MapMgr';
 const { ccclass, property } = _decorator;
 /**
@@ -21,6 +21,7 @@ export class MapGridData {
     /**占据此格子的单位 */
     public occupyUnit: any = null;
 
+
     constructor(x: number, y: number, walkable: boolean = true) {
         this.gridX = x;
         this.gridY = y;
@@ -36,7 +37,7 @@ export class MapGridData {
     }
 
     /**
-     * 格子世界坐标X（格子中心点）
+     * 格子本地坐标X（格子中心点）
      * 返回相对于 mapContainer 的本地坐标
      */
     public GetXPx(): number {
@@ -45,7 +46,7 @@ export class MapGridData {
     }
 
     /**
-     * 格子世界坐标Y（格子中心点）
+     * 格子本地坐标Y（格子中心点）
      * 返回相对于 mapContainer 的本地坐标
      */
     public GetYPx(): number {
@@ -55,7 +56,8 @@ export class MapGridData {
 
     /**获取格子世界坐标 */
     public GetWorldPos(): Vec2 {
-        return MapMgr.getInstance().gridToWorldPos(this.gridX, this.gridY);
+        var local = MapMgr.getInstance().gridToWorldPos(this.gridX, this.gridY).toVec3();
+        return MapMgr.getInstance().getMapContainer()?.getComponent(UITransform)?.convertToWorldSpaceAR(local).toVec2();
     }
 
     /**获取哈希键（用于Map存储） */

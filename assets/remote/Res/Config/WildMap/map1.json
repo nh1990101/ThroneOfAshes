@@ -60,8 +60,8 @@
     {
       "resourcePath": "Res/Map/MapObject/Animation/1001",
       "resourceType": "animation",
-      "gridX": 10,
-      "gridY": 28,
+      "gridX": 11,
+      "gridY": 29,
       "type": "2",
       "occupyX": 3,
       "occupyY": 3,

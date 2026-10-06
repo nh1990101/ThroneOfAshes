@@ -7,6 +7,7 @@ import { comp } from '../../Common/Decorator';
 import { GameUrl } from '../../Common/GameUrl';
 import { MapGridData } from './MapGridData';
 import { MapMgr } from './MapMgr';
+import { Tools } from '../../Common/Tools';
 const { ccclass, property } = _decorator;
 
 @ccclass('WildRole')
@@ -113,9 +114,10 @@ export class WildRole extends BaseComp {
         }
     }
 
+
     /**
-     * 根据格子设置角色位置（处理坐标转换）
-     */
+ * 根据格子设置角色位置（处理坐标转换）
+ */
     private setPositionFromGrid(grid: MapGridData) {
         const mapContainer = MapMgr.getInstance().getMapContainer();
         if (!mapContainer) {
@@ -123,20 +125,11 @@ export class WildRole extends BaseComp {
             return;
         }
 
-        // grid.GetXPx() 和 GetYPx() 现在返回的是 mapContainer 的本地坐标
-        const gridLocalPos = this._tempTargetPos.set(grid.GetXPx(), grid.GetYPx(), 0);
-
-        // 转换为世界坐标
-        const mapTransform = mapContainer.getComponent(UITransform);
-        const worldPos = mapTransform?.convertToWorldSpaceAR(gridLocalPos);
+        const worldPos = grid.GetWorldPos();
 
         if (worldPos && this.node.parent) {
             // 转换为角色父容器的本地坐标
-            const parentTransform = this.node.parent.getComponent(UITransform);
-            const localPos = parentTransform?.convertToNodeSpaceAR(worldPos);
-            if (localPos) {
-                this.node.setPosition(localPos);
-            }
+            this.node.setWorldPosition(worldPos.toVec3())
         }
     }
 
