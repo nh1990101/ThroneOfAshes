@@ -1,6 +1,6 @@
 import { _decorator, Component, Layers, Node, UITransform, Vec2, Vec3 } from 'cc';
 import { IActionData, UnitBase } from '../Battle/UnitBase';
-import { GameLayer, ROLE_ACTION, ROLE_DIR, UNIT_ACTION } from '../../Common/GameEnum';
+import { GameEvent, GameLayer, ROLE_ACTION, ROLE_DIR, UNIT_ACTION } from '../../Common/GameEnum';
 import { BaseComp } from '../../Component/BaseComp';
 import { AnimationCom } from '../../Component/AnimationCom';
 import { comp } from '../../Common/Decorator';
@@ -8,6 +8,7 @@ import { GameUrl } from '../../Common/GameUrl';
 import { MapGridData } from './MapGridData';
 import { MapMgr } from './MapMgr';
 import { Tools } from '../../Common/Tools';
+import { EventManager } from '../../Common/EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('WildRole')
@@ -240,7 +241,7 @@ export class WildRole extends BaseComp {
             this.targetGrid = targetGrid;
 
             // 计算移动方向
-            const dir = this.calculateDirection(this.currentGrid, targetGrid);
+            const dir = MapGridData.calculateDirection(this.currentGrid, targetGrid);
             this.currentDir = dir;
 
             // 播放移动动画
@@ -264,6 +265,7 @@ export class WildRole extends BaseComp {
         }
         this.currentGrid = targetGrid;
         targetGrid.setOccupied(this);
+        EventManager.Instance.dispatch(GameEvent.Finish_Move_Step, targetGrid);
     }
 
     /**
@@ -341,25 +343,7 @@ export class WildRole extends BaseComp {
         }
     }
 
-    /**
-     * 计算移动方向（八方向）
-     */
-    private calculateDirection(from: MapGridData, to: MapGridData): ROLE_DIR {
-        const dx = to.gridX - from.gridX;
-        const dy = to.gridY - from.gridY;
 
-        // 八方向判断
-        if (dx === 0 && dy > 0) return ROLE_DIR.UP;
-        if (dx > 0 && dy > 0) return ROLE_DIR.RIGHT_UP;
-        if (dx > 0 && dy === 0) return ROLE_DIR.RIGHT;
-        if (dx > 0 && dy < 0) return ROLE_DIR.RIGHT_DOWN;
-        if (dx === 0 && dy < 0) return ROLE_DIR.DOWN;
-        if (dx < 0 && dy < 0) return ROLE_DIR.LEFT_DOWN;
-        if (dx < 0 && dy === 0) return ROLE_DIR.LEFT;
-        if (dx < 0 && dy > 0) return ROLE_DIR.LEFT_UP;
-
-        return this.currentDir; // 默认返回当前方向
-    }
 
     /**
      * 停止移动

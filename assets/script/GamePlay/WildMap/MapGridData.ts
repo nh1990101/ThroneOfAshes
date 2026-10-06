@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, UITransform, Vec2 } from 'cc';
 import { MapMgr } from './MapMgr';
+import { ROLE_DIR } from '../../Common/GameEnum';
 const { ccclass, property } = _decorator;
 /**
  * 地图格子数据（逻辑移动格子）
@@ -121,6 +122,25 @@ export class MapGridData {
     public clearOccupied() {
         this.occupied = false;
         this.occupyUnit = null;
+    }
+    /**
+       * 计算移动方向（八方向）
+       */
+    public static calculateDirection(from: MapGridData, to: MapGridData): ROLE_DIR {
+        const dx = to.gridX - from.gridX;
+        const dy = to.gridY - from.gridY;
+
+        // 八方向判断
+        if (dx === 0 && dy > 0) return ROLE_DIR.UP;
+        if (dx > 0 && dy > 0) return ROLE_DIR.RIGHT_UP;
+        if (dx > 0 && dy === 0) return ROLE_DIR.RIGHT;
+        if (dx > 0 && dy < 0) return ROLE_DIR.RIGHT_DOWN;
+        if (dx === 0 && dy < 0) return ROLE_DIR.DOWN;
+        if (dx < 0 && dy < 0) return ROLE_DIR.LEFT_DOWN;
+        if (dx < 0 && dy === 0) return ROLE_DIR.LEFT;
+        if (dx < 0 && dy > 0) return ROLE_DIR.LEFT_UP;
+
+        return ROLE_DIR.UP; // 默认返回当前方向
     }
 }
 

@@ -1,11 +1,11 @@
-import { _decorator, Camera, Component, Node, Vec2, Vec3, UITransform, EventTouch, Input, Graphics, Label, Color, v2 } from 'cc';
+import { _decorator, Camera, Component, Node, Vec2, Vec3, UITransform, EventTouch, Input, Graphics, Label, Color, v2, Line } from 'cc';
 import { BaseWin } from '../../Component/BaseWin';
 import { MapMgr } from './MapMgr';
 import { child, comp } from '../../Common/Decorator';
 import { WildRole } from './WildRole';
 import { AssetMgr } from '../../Common/AssetMgr';
 import { GameUrl } from '../../Common/GameUrl';
-import { ROLE_DIR } from '../../Common/GameEnum';
+import { GameEvent, ROLE_DIR } from '../../Common/GameEnum';
 import { MapConfig, IMapObject } from './MapConfig';
 import { MapBlock } from './MapBlock';
 import { MapGridData } from './MapGridData';
@@ -14,6 +14,7 @@ import { MapObject } from './MapObject';
 import { BaseBtn } from '../../Component/BaseComp/BaseBtn';
 import { UIMananger } from '../../Component/UIMananger';
 import { BaseSprite } from '../../Component/BaseComp/BaseSprite';
+import { GuideArrow } from './GuideArrow';
 const { ccclass, property } = _decorator;
 
 @ccclass('WildMapWin')
@@ -37,6 +38,15 @@ export class WildMapWin extends BaseWin {
     @comp(BaseSprite)
     testCameraCenter: BaseSprite = null!;
 
+    @child()
+    GuideContainer: Node = null!;
+
+
+
+
+    @comp(BaseSprite)
+    targetPoint: BaseSprite = null!;
+
 
     protected mapId: number = null;
     protected role: WildRole = null;
@@ -46,7 +56,7 @@ export class WildMapWin extends BaseWin {
 
     /**寻路管理器 */
     private pathFindingMgr: RectPathFindingMgr = new RectPathFindingMgr();
-
+    private guideArrows: GuideArrow[] = [];
 
 
 
@@ -63,6 +73,7 @@ export class WildMapWin extends BaseWin {
     private gridDebugNode: Node = null;           // 网格调试节点
     private isGridVisible: boolean = false;       // 网格是否可见
 
+
     //是否全屏
     public get Is_FullScene() {
         return true;
@@ -74,7 +85,7 @@ export class WildMapWin extends BaseWin {
     public initEvent(): void {
         super.initEvent();
         this.initMapClickEvent();
-
+        this.addEvent(GameEvent.Finish_Move_Step, this.OnMoveStepOneFinish, this);
     }
     public OnRefreshUI(): void {
         super.OnRefreshUI();
@@ -109,14 +120,12 @@ export class WildMapWin extends BaseWin {
         // 创建地图块
         this.Mgr.createMapBock();
 
-        // 创建地图物件
-        // this.createMapObjects();
-
-
-
+        var uiTrans = this.targetPoint.getComponent(UITransform);
+        uiTrans.width = this.mapCfg.config.mapInfo.gridWidth;
+        uiTrans.height = this.mapCfg.config.mapInfo.gridHeight;
+        this.targetPoint.node.active = false;
 
     }
-
 
 
     /**初始化角色位置 */
@@ -291,12 +300,38 @@ export class WildMapWin extends BaseWin {
 
         console.log(`[WildMapWin] 找到路径，长度: ${path.length}`);
 
+
+        this.createGuideArrow(currentGrid, path);
+
         // 开始移动（点击移动后恢复摄像机跟随）
         this.isCameraFollowing = true;
         this.role.moveAlongPath(path).then(() => {
             console.log('[WildMapWin] 移动完成');
             this.Mgr.updateAllNodesSortOrder();
+            this.ClearGuide();
         });
+    }
+
+    /**显示导航箭头 */
+    private createGuideArrow(fromGrid: MapGridData, path: MapGridData[]) {
+        this.ClearGuide();
+        for (let i = 0; i < path.length; i++) {
+            let itemPath = path[i];
+            let preGrid = i == 0 ? fromGrid : path[i - 1];
+            AssetMgr.createPrefabFromPool(GameUrl.WildMapPrefab.format("GuideArrow"), Vec2.ZERO, this.GuideContainer, GuideArrow).then(guideArrow => {
+                guideArrow.SetData(itemPath, MapGridData.calculateDirection(preGrid, itemPath));
+                this.guideArrows.push(guideArrow);
+            })
+        }
+        this.targetPoint.node.active = true;
+
+        this.targetPoint.node.setWorldPosition(path[path.length - 1].GetWorldPos().toVec3());
+    }
+    private OnMoveStepOneFinish() {
+        if (this.guideArrows && this.guideArrows.length > 0) {
+            var guideArrow = this.guideArrows.shift();
+            AssetMgr.removeNode(guideArrow.node);
+        }
     }
 
     /**更新摄像机位置，跟随角色 */
@@ -494,9 +529,16 @@ export class WildMapWin extends BaseWin {
         // 清理格子数据
         this.Mgr.Clear();
 
-
         this.mapCamera.node.position = Vec3.ZERO;
+
+        this.ClearGuide();
         super.clear();
+    }
+    public ClearGuide() {
+        this.guideArrows.forEach(guide => {
+            AssetMgr.removeNode(guide.node);
+        })
+        this.targetPoint.node.active = false;
     }
 
     get Mgr() {
