@@ -4,7 +4,7 @@ class MapEditor {
         this.config = null;
         this.mapTiles = []; // 地图分块数据 {x, y, image}
         this.markers = {
-            blocks: new Map(), // 不可移动点 key: "x,y" value: {movable: 0/1}
+            blocks: new Map(), // 不可移动点 key: "x,y" value: true
             resources: new Map(), // 资源刷新点 key: "x,y" value: [{id, weight, minCount, maxCount}, ...]
             spawnPoints: [] // 出生点 [{x, y}, ...]
         };
@@ -542,19 +542,14 @@ class MapEditor {
 
         document.getElementById('input-excel-file').addEventListener('change', (e) => this.loadExcelData(e));
 
-        // 加载资源
-        document.getElementById('btn-load-resources').addEventListener('click', async () => {
-            await this.loadResources();
-        });
-
-        // 随机生成物件
-        document.getElementById('btn-random-generate').addEventListener('click', () => this.randomGenerateObjects());
-
         // 选择资源目录
         document.getElementById('btn-select-dir').addEventListener('click', () => this.selectResourceDirectory());
 
         // 加载资源
         document.getElementById('btn-load-resources').addEventListener('click', () => this.loadMapObjects());
+
+        // 随机生成物件
+        document.getElementById('btn-random-generate').addEventListener('click', () => this.randomGenerateObjects());
     }
 
     // 初始化键盘快捷键
@@ -874,15 +869,21 @@ class MapEditor {
                 }
             }
 
-            // 自动设置地图尺寸信息
+            // 自动设置地图尺寸信息（仅在尺寸未设置时）
             if (this.mapTiles.length > 0) {
-                this.config.totalCols = maxCol + 1;
-                this.config.totalRows = maxRow + 1;
-                this.config.tileSize = tileWidth; // 假设所有分块大小一致
-                this.config.mapPixelWidth = this.config.totalCols * tileWidth;
-                this.config.mapPixelHeight = this.config.totalRows * tileHeight;
+                // 如果配置中已经有正确的地图尺寸，不要覆盖
+                // 只在第一次切图（新建地图）时自动设置
+                if (!this.config.mapPixelWidth || !this.config.mapPixelHeight) {
+                    this.config.totalCols = maxCol + 1;
+                    this.config.totalRows = maxRow + 1;
+                    this.config.tileSize = tileWidth; // 假设所有分块大小一致
+                    this.config.mapPixelWidth = this.config.totalCols * tileWidth;
+                    this.config.mapPixelHeight = this.config.totalRows * tileHeight;
 
-                console.log(`地图尺寸: ${this.config.mapPixelWidth}x${this.config.mapPixelHeight}像素, ${this.config.totalCols}x${this.config.totalRows}格 (块大小: ${tileWidth}x${tileHeight})`);
+                    console.log(`首次设置地图尺寸: ${this.config.mapPixelWidth}x${this.config.mapPixelHeight}像素, ${this.config.totalCols}x${this.config.totalRows}格 (块大小: ${tileWidth}x${tileHeight})`);
+                } else {
+                    console.log(`保持配置中的地图尺寸: ${this.config.mapPixelWidth}x${this.config.mapPixelHeight}像素`);
+                }
             }
 
             this.updateInfo(`加载了 ${this.mapTiles.length} 个地图分块`);
@@ -1093,6 +1094,8 @@ class MapEditor {
 
     // 鼠标按下
     onMouseDown(e) {
+        console.log('onMouseDown triggered, button:', e.button);
+
         if (e.button === 1) { // 中键
             e.preventDefault();
             this.isDragging = true;
@@ -1100,13 +1103,16 @@ class MapEditor {
             this.dragStartY = e.clientY - this.offsetY;
         } else if (e.button === 0) { // 左键
             const grid = this.screenToGrid(e.clientX, e.clientY);
+            console.log('screenToGrid result:', grid);
             if (!grid) return;
 
             const markMode = document.getElementById('mark-mode').value;
+            console.log('markMode:', markMode);
 
             if (markMode !== 'none') {
                 // 统一为长按操作模式
                 this.isPainting = true;
+                console.log('调用 paintMark:', grid.x, grid.y);
                 this.paintMark(grid.x, grid.y);
             } else {
                 // 检查是否点击了物体
@@ -1234,13 +1240,16 @@ class MapEditor {
     paintMark(gridX, gridY) {
         const key = `${gridX},${gridY}`;
         const markMode = document.getElementById('mark-mode').value;
+        console.log('paintMark 被调用:', gridX, gridY, 'markMode:', markMode);
 
         if (markMode === 'block') {
-            const movable = parseInt(document.getElementById('block-movable').value);
-            this.markers.blocks.set(key, { movable });
+            // 简化：标记的就是不可移动点，不需要额外存储movable值
+            console.log('标记不可移动点');
+            this.markers.blocks.set(key, true);
+            console.log('markers.blocks 大小:', this.markers.blocks.size);
         } else if (markMode === 'resource') {
             // 检查是否是不可移动格子
-            if (this.markers.blocks.has(key) && this.markers.blocks.get(key).movable === 0) {
+            if (this.markers.blocks.has(key)) {
                 this.updateInfo('不可移动的格子上不能刷资源点');
                 return;
             }
@@ -1576,8 +1585,12 @@ class MapEditor {
         this.gridCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
         this.gridCtx.lineWidth = 1;
 
+        // 修复X轴范围
+        const minX = Math.min(startGrid.x, endGrid.x);
+        const maxX = Math.max(startGrid.x, endGrid.x);
+
         // 绘制垂直线
-        for (let x = Math.max(0, startGrid.x); x <= Math.min(this.config.totalCols, endGrid.x + 1); x++) {
+        for (let x = Math.max(0, minX); x <= Math.min(this.config.totalCols, maxX + 1); x++) {
             const world = this.gridToWorld(x, 0);
             const screen = this.worldToScreen(world.x, 0);
 
@@ -1587,8 +1600,12 @@ class MapEditor {
             this.gridCtx.stroke();
         }
 
+        // 修复Y轴范围
+        const minY = Math.min(startGrid.y, endGrid.y);
+        const maxY = Math.max(startGrid.y, endGrid.y);
+
         // 绘制水平线
-        for (let y = Math.max(0, startGrid.y); y <= Math.min(this.config.totalRows, endGrid.y + 1); y++) {
+        for (let y = Math.max(0, minY); y <= Math.min(this.config.totalRows, maxY + 1); y++) {
             const world = this.gridToWorld(0, y);
             const screen = this.worldToScreen(world.x, world.y);
 
@@ -1601,14 +1618,23 @@ class MapEditor {
 
     // 渲染标记
     renderMarkers() {
+        console.log('renderMarkers 被调用, markers.blocks 大小:', this.markers.blocks.size);
+
         const rect = this.markerCanvas.getBoundingClientRect();
         const startGrid = this.screenToGrid(0, 0);
         const endGrid = this.screenToGrid(rect.width, rect.height);
 
+        console.log('startGrid:', startGrid, 'endGrid:', endGrid);
         if (!startGrid || !endGrid) return;
 
-        for (let y = startGrid.y; y <= endGrid.y; y++) {
-            for (let x = startGrid.x; x <= endGrid.x; x++) {
+        // 修复Y轴范围：确保从小到大遍历
+        const minY = Math.min(startGrid.y, endGrid.y);
+        const maxY = Math.max(startGrid.y, endGrid.y);
+        const minX = Math.min(startGrid.x, endGrid.x);
+        const maxX = Math.max(startGrid.x, endGrid.x);
+
+        for (let y = minY; y <= maxY; y++) {
+            for (let x = minX; x <= maxX; x++) {
                 const key = `${x},${y}`;
                 const world = this.gridToWorld(x, y);
                 const screen = this.worldToScreen(world.x, world.y);
@@ -1617,8 +1643,7 @@ class MapEditor {
 
                 // 绘制不可移动点
                 if (this.markers.blocks.has(key)) {
-                    const block = this.markers.blocks.get(key);
-                    this.markerCtx.fillStyle = block.movable === 0 ? 'rgba(255, 0, 0, 0.4)' : 'rgba(0, 255, 0, 0.4)';
+                    this.markerCtx.fillStyle = 'rgba(255, 0, 0, 0.4)';
                     this.markerCtx.fillRect(screen.x, screen.y, gridW, gridH);
                 }
 
@@ -1789,7 +1814,30 @@ class MapEditor {
             const config = JSON.parse(text);
 
             this.config = config.mapInfo;
-            this.markers.blocks = new Map(config.blocks || []);
+
+            // 兼容新旧两种blocks格式
+            if (Array.isArray(config.blocks)) {
+                if (config.blocks.length > 0) {
+                    // 检查第一个元素的格式
+                    if (typeof config.blocks[0] === 'string') {
+                        // 新格式：["x,y", "x,y", ...]
+                        this.markers.blocks = new Map(config.blocks.map(key => [key, true]));
+                    } else if (Array.isArray(config.blocks[0])) {
+                        // 旧格式：[["x,y", {movable: 0}], ...]
+                        // 只保留不可移动的点（movable === 0）
+                        this.markers.blocks = new Map(
+                            config.blocks
+                                .filter(([key, value]) => value.movable === 0)
+                                .map(([key, value]) => [key, true])
+                        );
+                    }
+                } else {
+                    this.markers.blocks = new Map();
+                }
+            } else {
+                this.markers.blocks = new Map();
+            }
+
             this.markers.resources = new Map(config.resources || []);
             this.markers.spawnPoints = config.spawnPoints || [];
             this.objects = config.objects || [];
@@ -1806,72 +1854,117 @@ class MapEditor {
                         let isPlist = false;
 
                         // 适配项目根目录
-                        const basePath = ResFS.isProjectRoot
-                            ? `assets/remote/${obj.resourcePath}`
-                            : obj.resourcePath;
+                        // 如果是项目根目录，加上 assets/remote/ 前缀
+                        // 如果不是项目根目录但路径不包含 assets/remote/，也尝试加上前缀
+                        let basePath;
+                        if (ResFS.isProjectRoot) {
+                            basePath = `assets/remote/${obj.resourcePath}`;
+                        } else {
+                            // 不是项目根目录，尝试多种路径
+                            basePath = obj.resourcePath;
+                        }
 
                         // 先尝试加载plist文件（图集）
-                        try {
-                            const plistPath = basePath + '.plist';
-                            const plistFile = await ResFS.read(plistPath);
-                            const plistText = await plistFile.text();
+                        // 如果不是项目根目录，尝试多种路径组合
+                        const plistPathsToTry = ResFS.isProjectRoot
+                            ? [basePath]
+                            : [
+                                basePath,
+                                `assets/remote/${obj.resourcePath}`,
+                                obj.resourcePath.replace(/^Res\//, '')
+                            ];
 
-                            // 解析plist获取图集信息
-                            const plistData = await this.parsePlistForAtlas(plistText, basePath);
-                            if (plistData && plistData.atlasPath) {
-                                // 加载图集图片
-                                const atlasFile = await ResFS.read(plistData.atlasPath);
-                                const atlasUrl = URL.createObjectURL(atlasFile);
-                                const atlasImg = await this.loadImage(atlasUrl);
+                        for (const tryPath of plistPathsToTry) {
+                            if (loaded) break;
 
-                                // 如果有第一帧信息，裁剪出第一帧
-                                if (plistData.firstFrameRect) {
-                                    const canvas = document.createElement('canvas');
-                                    const rect = plistData.firstFrameRect;
-                                    canvas.width = rect.width;
-                                    canvas.height = rect.height;
-                                    const ctx = canvas.getContext('2d');
+                            try {
+                                const plistPath = tryPath + '.plist';
+                                const plistFile = await ResFS.read(plistPath);
+                                const plistText = await plistFile.text();
 
-                                    ctx.drawImage(
-                                        atlasImg,
-                                        rect.x, rect.y, rect.width, rect.height,
-                                        0, 0, rect.width, rect.height
-                                    );
+                                // 解析plist获取图集信息
+                                const plistData = await this.parsePlistForAtlas(plistText, tryPath);
+                                if (plistData && plistData.atlasPath) {
+                                    // 加载图集图片
+                                    const atlasFile = await ResFS.read(plistData.atlasPath);
+                                    const atlasUrl = URL.createObjectURL(atlasFile);
+                                    const atlasImg = await this.loadImage(atlasUrl);
 
-                                    const frameBlob = await new Promise(resolve => canvas.toBlob(resolve));
-                                    const frameUrl = URL.createObjectURL(frameBlob);
-                                    obj.imageSrc = frameUrl;
-                                    obj.image = await this.loadImage(frameUrl);
-                                    loaded = true;
-                                    isPlist = true;
-                                    console.log(`成功加载图集第一帧: ${obj.resourcePath}`);
-                                } else {
-                                    // 没有帧信息，使用整个图集
-                                    obj.imageSrc = atlasUrl;
-                                    obj.image = atlasImg;
-                                    loaded = true;
+                                    // 如果有第一帧信息，裁剪出第一帧
+                                    if (plistData.firstFrameRect) {
+                                        const canvas = document.createElement('canvas');
+                                        const rect = plistData.firstFrameRect;
+                                        canvas.width = rect.width;
+                                        canvas.height = rect.height;
+                                        const ctx = canvas.getContext('2d');
+
+                                        ctx.drawImage(
+                                            atlasImg,
+                                            rect.x, rect.y, rect.width, rect.height,
+                                            0, 0, rect.width, rect.height
+                                        );
+
+                                        const frameBlob = await new Promise(resolve => canvas.toBlob(resolve));
+                                        const frameUrl = URL.createObjectURL(frameBlob);
+                                        obj.imageSrc = frameUrl;
+                                        obj.image = await this.loadImage(frameUrl);
+                                        loaded = true;
+                                        isPlist = true;
+                                        console.log(`成功加载图集第一帧: ${plistPath}`);
+                                    } else {
+                                        // 没有帧信息，使用整个图集
+                                        obj.imageSrc = atlasUrl;
+                                        obj.image = atlasImg;
+                                        loaded = true;
+                                        console.log(`成功加载图集: ${plistPath}`);
+                                    }
                                 }
+                            } catch (plistError) {
+                                // plist不存在或解析失败，继续尝试下一个路径
                             }
-                        } catch (plistError) {
-                            // plist不存在或解析失败，尝试加载普通图片
+                        }
+
+                        if (!loaded) {
                             console.log(`未找到plist或解析失败: ${obj.resourcePath}.plist`);
                         }
 
                         // 如果plist加载失败，尝试普通图片
                         if (!loaded) {
-                            const extensions = ['.png', '.jpg', '.jpeg'];
-                            for (const ext of extensions) {
-                                try {
-                                    const path = basePath + ext;
-                                    const file = await ResFS.read(path);
-                                    const url = URL.createObjectURL(file);
-                                    obj.imageSrc = url;
-                                    obj.image = await this.loadImage(url);
-                                    loaded = true;
-                                    console.log(`成功加载物体图片: ${path}`);
-                                    break;
-                                } catch (err) {
-                                    // 尝试下一个扩展名
+                            // 如果不是项目根目录，尝试多种路径组合
+                            const pathsToTry = ResFS.isProjectRoot
+                                ? [basePath]
+                                : [
+                                    basePath,  // 原始路径
+                                    `assets/remote/${obj.resourcePath}`,  // 尝试加前缀
+                                    obj.resourcePath.replace(/^Res\//, '')  // 尝试去掉 Res/ 前缀
+                                ];
+
+                            console.log(`尝试加载物体图片: ${obj.resourcePath}`);
+                            console.log(`ResFS.isProjectRoot = ${ResFS.isProjectRoot}`);
+                            console.log(`尝试的路径:`, pathsToTry);
+
+                            for (const tryPath of pathsToTry) {
+                                if (loaded) break;
+
+                                // 检查路径是否已经包含扩展名
+                                const hasExtension = /\.(png|jpg|jpeg)$/i.test(tryPath);
+                                const extensions = hasExtension ? [''] : ['.png', '.jpg', '.jpeg'];
+
+                                for (const ext of extensions) {
+                                    try {
+                                        const path = tryPath + ext;
+                                        console.log(`  尝试: ${path}`);
+                                        const file = await ResFS.read(path);
+                                        const url = URL.createObjectURL(file);
+                                        obj.imageSrc = url;
+                                        obj.image = await this.loadImage(url);
+                                        loaded = true;
+                                        console.log(`✅ 成功加载物体图片: ${path}`);
+                                        break;
+                                    } catch (err) {
+                                        console.log(`  ✗ 失败: ${err.message}`);
+                                        // 尝试下一个扩展名或路径
+                                    }
                                 }
                             }
                         }
@@ -1910,9 +2003,12 @@ class MapEditor {
             return;
         }
 
+        // 优化blocks数据：只保存坐标key的数组，不保存value（因为都是true）
+        const blocksArray = Array.from(this.markers.blocks.keys());
+
         const config = {
             mapInfo: this.config,
-            blocks: Array.from(this.markers.blocks.entries()),
+            blocks: blocksArray,  // 简化为字符串数组：["x,y", "x,y", ...]
             resources: Array.from(this.markers.resources.entries()),
             spawnPoints: this.markers.spawnPoints,
             objects: this.objects.map(obj => ({
@@ -2217,71 +2313,107 @@ class MapEditor {
                             let isPlist = false;
                             let frameRect = null;
 
+                            // 适配项目根目录
+                            let basePath;
+                            if (ResFS.isProjectRoot) {
+                                basePath = `assets/remote/${config.show_url}`;
+                            } else {
+                                basePath = config.show_url;
+                            }
+
                             // 先尝试加载plist文件（图集）
-                            const basePath = ResFS.isProjectRoot
-                                ? `assets/remote/${config.show_url}`
-                                : config.show_url;
+                            const plistPathsToTry = ResFS.isProjectRoot
+                                ? [basePath]
+                                : [
+                                    basePath,
+                                    `assets/remote/${config.show_url}`,
+                                    config.show_url.replace(/^Res\//, '')
+                                ];
 
-                            try {
-                                const plistPath = basePath + '.plist';
-                                const plistFile = await ResFS.read(plistPath);
-                                const plistText = await plistFile.text();
+                            for (const tryPath of plistPathsToTry) {
+                                if (loaded) break;
 
-                                // 解析plist获取图集信息
-                                const plistData = await this.parsePlistForAtlas(plistText, basePath);
-                                if (plistData && plistData.atlasPath) {
-                                    // 加载图集图片
-                                    const atlasFile = await ResFS.read(plistData.atlasPath);
-                                    const atlasUrl = URL.createObjectURL(atlasFile);
-                                    const atlasImg = await this.loadImage(atlasUrl);
+                                try {
+                                    const plistPath = tryPath + '.plist';
+                                    const plistFile = await ResFS.read(plistPath);
+                                    const plistText = await plistFile.text();
 
-                                    // 如果有第一帧信息，裁剪出第一帧
-                                    if (plistData.firstFrameRect) {
-                                        const canvas = document.createElement('canvas');
-                                        const rect = plistData.firstFrameRect;
-                                        canvas.width = rect.width;
-                                        canvas.height = rect.height;
-                                        const ctx = canvas.getContext('2d');
+                                    // 解析plist获取图集信息
+                                    const plistData = await this.parsePlistForAtlas(plistText, tryPath);
+                                    if (plistData && plistData.atlasPath) {
+                                        // 加载图集图片
+                                        const atlasFile = await ResFS.read(plistData.atlasPath);
+                                        const atlasUrl = URL.createObjectURL(atlasFile);
+                                        const atlasImg = await this.loadImage(atlasUrl);
 
-                                        ctx.drawImage(
-                                            atlasImg,
-                                            rect.x, rect.y, rect.width, rect.height,
-                                            0, 0, rect.width, rect.height
-                                        );
+                                        // 如果有第一帧信息，裁剪出第一帧
+                                        if (plistData.firstFrameRect) {
+                                            const canvas = document.createElement('canvas');
+                                            const rect = plistData.firstFrameRect;
+                                            canvas.width = rect.width;
+                                            canvas.height = rect.height;
+                                            const ctx = canvas.getContext('2d');
 
-                                        const frameBlob = await new Promise(resolve => canvas.toBlob(resolve));
-                                        const frameUrl = URL.createObjectURL(frameBlob);
-                                        obj.imageSrc = frameUrl;
-                                        obj.image = await this.loadImage(frameUrl);
-                                        loaded = true;
-                                        isPlist = true;
-                                        console.log(`加载图集第一帧: ${config.show_url}`);
-                                    } else {
-                                        // 没有帧信息，使用整个图集
-                                        obj.imageSrc = atlasUrl;
-                                        obj.image = atlasImg;
-                                        loaded = true;
+                                            ctx.drawImage(
+                                                atlasImg,
+                                                rect.x, rect.y, rect.width, rect.height,
+                                                0, 0, rect.width, rect.height
+                                            );
+
+                                            const frameBlob = await new Promise(resolve => canvas.toBlob(resolve));
+                                            const frameUrl = URL.createObjectURL(frameBlob);
+                                            obj.imageSrc = frameUrl;
+                                            obj.image = await this.loadImage(frameUrl);
+                                            loaded = true;
+                                            isPlist = true;
+                                            console.log(`加载图集第一帧: ${plistPath}`);
+                                        } else {
+                                            // 没有帧信息，使用整个图集
+                                            obj.imageSrc = atlasUrl;
+                                            obj.image = atlasImg;
+                                            loaded = true;
+                                            console.log(`加载图集: ${plistPath}`);
+                                        }
                                     }
+                                } catch (plistError) {
+                                    // plist不存在或解析失败，继续尝试下一个路径
                                 }
-                            } catch (plistError) {
-                                // plist不存在或解析失败，尝试加载普通图片
+                            }
+
+                            if (!loaded) {
                                 console.log(`未找到plist或解析失败: ${config.show_url}.plist`);
                             }
 
                             // 如果plist加载失败，尝试普通图片
                             if (!loaded) {
-                                const extensions = ['.png', '.jpg', '.jpeg'];
-                                for (const ext of extensions) {
-                                    try {
-                                        const path = basePath + ext;
-                                        const file = await ResFS.read(path);
-                                        const url = URL.createObjectURL(file);
-                                        obj.imageSrc = url;
-                                        obj.image = await this.loadImage(url);
-                                        loaded = true;
-                                        break;
-                                    } catch (e) {
-                                        // 尝试下一个扩展名
+                                const pathsToTry = ResFS.isProjectRoot
+                                    ? [basePath]
+                                    : [
+                                        basePath,
+                                        `assets/remote/${config.show_url}`,
+                                        config.show_url.replace(/^Res\//, '')
+                                    ];
+
+                                for (const tryPath of pathsToTry) {
+                                    if (loaded) break;
+
+                                    // 检查路径是否已经包含扩展名
+                                    const hasExtension = /\.(png|jpg|jpeg)$/i.test(tryPath);
+                                    const extensions = hasExtension ? [''] : ['.png', '.jpg', '.jpeg'];
+
+                                    for (const ext of extensions) {
+                                        try {
+                                            const path = tryPath + ext;
+                                            const file = await ResFS.read(path);
+                                            const url = URL.createObjectURL(file);
+                                            obj.imageSrc = url;
+                                            obj.image = await this.loadImage(url);
+                                            loaded = true;
+                                            console.log(`成功加载物体图片: ${path}`);
+                                            break;
+                                        } catch (e) {
+                                            // 尝试下一个扩展名或路径
+                                        }
                                     }
                                 }
                             }

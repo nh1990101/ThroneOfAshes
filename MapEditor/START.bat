@@ -32,6 +32,16 @@ if %HAS_PYTHON% equ 0 (
 
     REM 启动服务器
     python -m http.server 8080
+    if errorlevel 1 (
+        echo.
+        echo [✗] 服务器启动失败！
+        echo 可能原因：
+        echo 1. 端口 8080 已被占用
+        echo 2. Python 权限不足
+        echo.
+        pause
+        exit /b 1
+    )
     goto :end
 )
 
@@ -51,6 +61,16 @@ if %HAS_NODE% equ 0 (
 
     REM 启动服务器
     npx http-server -p 8080 -c-1
+    if errorlevel 1 (
+        echo.
+        echo [✗] 服务器启动失败！
+        echo 可能原因：
+        echo 1. 端口 8080 已被占用
+        echo 2. Node.js 权限不足
+        echo.
+        pause
+        exit /b 1
+    )
     goto :end
 )
 
