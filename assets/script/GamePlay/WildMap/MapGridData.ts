@@ -24,10 +24,10 @@ export class MapGridData {
     public occupyUnit: any = null;
 
 
-    constructor(x: number, y: number, walkable: boolean = true) {
-        this.gridX = x;
-        this.gridY = y;
-        this.walkable = walkable;
+    constructor() {
+        // this.gridX = x;
+        // this.gridY = y;
+        // this.walkable = walkable;
     }
 
     public SetData(x: number, y: number, walkable: boolean = true) {
@@ -124,7 +124,13 @@ export class MapGridData {
         this.occupied = false;
         this.occupyUnit = null;
     }
-    public toString(){
+    public Clear() {
+        this.clearOccupied();
+        this.walkable = false;
+        this.gridX = 0;
+        this.gridY = 0;
+    }
+    public toString() {
         return `${this.gridX},${this.gridY}`;
     }
     /**

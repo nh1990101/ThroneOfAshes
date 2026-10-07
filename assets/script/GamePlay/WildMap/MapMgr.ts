@@ -11,6 +11,7 @@ import { IMapObject } from './MapConfig';
 import test from 'node:test';
 import { WildRole } from './WildRole';
 import { Tools } from '../../Common/Tools';
+import { PoolMgr } from '../../Common/Pool';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapMgr')
@@ -63,6 +64,7 @@ export class MapMgr extends BaseMgr {
 
     public initEvent(): void {
         super.initEvent();
+        PoolMgr.register(MapGridData, (obj) => { obj.Clear() });
     }
 
     /**
@@ -91,11 +93,12 @@ export class MapMgr extends BaseMgr {
         console.log(`[WildMapWin] 每格尺寸: ${mapInfo.gridWidth}x${mapInfo.gridHeight}px`);
         console.log(`[WildMapWin] 逻辑格子数: ${maxGridX}x${maxGridY}`);
 
+
         for (let x = 0; x < maxGridX; x++) {
             for (let y = 0; y < maxGridY; y++) {
                 const walkable = !mapCfg.GetNotMoveGrid(x, y);
-
-                const grid = new MapGridData(x, y, walkable);
+                const grid = PoolMgr.get(MapGridData);
+                grid.SetData(x, y, walkable);
                 this.setGrid(grid);
             }
         }
@@ -234,6 +237,9 @@ export class MapMgr extends BaseMgr {
      * 清空所有格子数据
      */
     public clearAllGrids() {
+        this.gridMap.forEach(grid => {
+            PoolMgr.put<MapGridData>(grid);
+        })
         this.gridMap.clear();
     }
 
