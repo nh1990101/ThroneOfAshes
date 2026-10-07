@@ -48,6 +48,9 @@ export class MapMgr extends BaseMgr {
     /**当前可见的地图物体 */
     private visibleMapObjects: Map<IMapObject, MapObject> = new Map();
 
+    /**记录每个物体占的地图格子 */
+    private _mapObjOccupyGrids: Map<IMapObject, MapGridData[]> = new Map();
+
     /**地图物件 */
     // private mapObjects: Map<IMapObject, MapObject> = new Map();
 
@@ -90,8 +93,7 @@ export class MapMgr extends BaseMgr {
 
         for (let x = 0; x < maxGridX; x++) {
             for (let y = 0; y < maxGridY; y++) {
-                const blockData = mapCfg.GetBlock(x, y);
-                const walkable = !blockData || blockData.movable !== 0;
+                const walkable = !mapCfg.GetNotMoveGrid(x, y);
 
                 const grid = new MapGridData(x, y, walkable);
                 this.setGrid(grid);
@@ -109,7 +111,7 @@ export class MapMgr extends BaseMgr {
 
         const mapObjects = mapCfg.config.objects;
         mapObjects.forEach(obj => {
-
+            var arrOccupyGrid = [];
             var occupyX = Math.floor(obj.occupyX / 2);
             var occupyY = Math.floor(obj.occupyY / 2);
             var startGridX = obj.gridX - occupyX;
@@ -122,9 +124,11 @@ export class MapMgr extends BaseMgr {
                     if (gridData) {
                         gridData.setOccupied(obj);
                         gridData.walkable = obj.walkable;
+                        Tools.insertArr(arrOccupyGrid, gridData);
                     }
                 }
             }
+            this._mapObjOccupyGrids.set(obj, arrOccupyGrid);
         })
     }
     /**更新摄像机边界值 */
@@ -579,7 +583,7 @@ export class MapMgr extends BaseMgr {
             ).then(mapObj => {
                 mapObj.SetData(objData);
                 mapObj.node.setWorldPosition(worldPos.toVec3());
-                
+
                 resolve(mapObj);
 
             })
@@ -608,6 +612,10 @@ export class MapMgr extends BaseMgr {
         sortableNodes.forEach((item, index) => {
             item.node.setSiblingIndex(index);
         });
+    }
+
+    public GetOccupyGridsByMapObj(mapObj: IMapObject) {
+        return this._mapObjOccupyGrids.get(mapObj) || [];
     }
 }
 

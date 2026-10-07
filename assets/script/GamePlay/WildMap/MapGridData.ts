@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, UITransform, Vec2 } from 'cc';
 import { MapMgr } from './MapMgr';
 import { ROLE_DIR } from '../../Common/GameEnum';
+import { IMapObject } from './MapConfig';
 const { ccclass, property } = _decorator;
 /**
  * 地图格子数据（逻辑移动格子）
@@ -123,6 +124,9 @@ export class MapGridData {
         this.occupied = false;
         this.occupyUnit = null;
     }
+    public toString(){
+        return `${this.gridX},${this.gridY}`;
+    }
     /**
        * 计算移动方向（八方向）
        */
@@ -141,6 +145,18 @@ export class MapGridData {
         if (dx < 0 && dy > 0) return ROLE_DIR.LEFT_UP;
 
         return ROLE_DIR.UP; // 默认返回当前方向
+    }
+    /**检测是否到达物体附近（靠近占格位置） */
+    public static CheckIsArriveMapObject(curPosGrid: MapGridData, targetObjectData: IMapObject) {
+        var mgr = MapMgr.getInstance();
+        var neighbors8 = curPosGrid.getNeighbors8();
+        for (let i = 0; i < neighbors8.length; i++) {
+            let grid = mgr.getGrid(neighbors8[i].x, neighbors8[i].y);
+            if (grid && grid.occupyUnit == targetObjectData) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

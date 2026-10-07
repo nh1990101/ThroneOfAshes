@@ -192,10 +192,25 @@ export class RectPathFindingMgr extends BaseMgr {
                     if (!neighborCell.walkable || !neighborCell.isEmpty()) {
                         continue;
                     }
-                } else if (!ignoreEndOccupied) {
-                    // 终点：如果不忽略占据，则必须为空
-                    if (!neighborCell.isEmpty()) {
-                        continue;
+                } else {
+                    // 终点处理
+                    if (ignoreEndOccupied) {
+                        // 忽略终点占据的情况下
+                        // 判断占据单位是否为地图物体（IMapObject）
+                        const isMapObject = neighborCell.occupyUnit &&
+                            typeof neighborCell.occupyUnit === 'object' &&
+                            'resourcePath' in neighborCell.occupyUnit;
+
+                        if (!isMapObject && !neighborCell.walkable) {
+                            // 不是地图物体占据，且不可行走，则跳过
+                            continue;
+                        }
+                        // 如果是地图物体占据，即使walkable为false也允许通过
+                    } else {
+                        // 不忽略占据，终点必须为空
+                        if (!neighborCell.isEmpty()) {
+                            continue;
+                        }
                     }
                 }
 
@@ -215,8 +230,15 @@ export class RectPathFindingMgr extends BaseMgr {
             }
         }
 
-        // 无法找到路径
-        console.warn('[RectPathFinding] 无法找到路径');
+        // 无法找到路径，尝试寻找最近的可达格子
+        console.log('[RectPathFinding] 目标不可达，寻找最近的可达点');
+        const nearestReachable = this.findNearestReachableGrid(startCell, endCell, gridMap);
+        if (nearestReachable && !nearestReachable.equals(startCell)) {
+            // 递归寻路到最近的可达格子
+            return this.findPath(start, nearestReachable, false, gridMap);
+        }
+
+        console.warn('[RectPathFinding] 完全无法找到路径');
         return [];
     }
 
@@ -233,6 +255,53 @@ export class RectPathFindingMgr extends BaseMgr {
         }
 
         return path.reverse();
+    }
+
+    /**
+     * 查找距离目标最近的可达格子
+     */
+    private findNearestReachableGrid(
+        start: MapGridData,
+        target: MapGridData,
+        gridMap: Map<string, MapGridData>
+    ): MapGridData | null {
+        const visited = new Set<string>();
+        const queue: MapGridData[] = [start];
+        visited.add(start.getHashKey());
+
+        let nearestGrid: MapGridData | null = null;
+        let minDistance = Infinity;
+
+        // BFS 遍历所有可达格子
+        while (queue.length > 0) {
+            const current = queue.shift()!;
+            const distance = current.distanceTo(target);
+
+            // 更新最近的格子
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestGrid = current;
+            }
+
+            // 遍历邻居
+            const neighborPositions = this._use8Direction
+                ? current.getNeighbors8()
+                : current.getNeighbors4();
+
+            for (const neighborPos of neighborPositions) {
+                const neighborKey = `${neighborPos.x},${neighborPos.y}`;
+                if (visited.has(neighborKey)) continue;
+
+                const neighborCell = gridMap.get(neighborKey);
+                if (!neighborCell) continue;
+                if (!neighborCell.walkable || !neighborCell.isEmpty()) continue;
+
+                visited.add(neighborKey);
+                queue.push(neighborCell);
+            }
+        }
+
+        return nearestGrid;
     }
 
     // ==================== 移动范围计算 ====================
@@ -408,6 +477,31 @@ export class RectPathFindingMgr extends BaseMgr {
     }
 
     /**
+     * 获取最近的格子
+     * @param fromGrid 起始格子
+     * @param targetGrids 目标格子数组
+     * @returns 距离最近的格子，如果目标数组为空则返回 null
+     */
+    public GetNearestGrids(fromGrid: MapGridData, targetGrids: MapGridData[]): MapGridData | null {
+        if (!fromGrid || !targetGrids || targetGrids.length === 0) {
+            return null;
+        }
+
+        let nearestGrid: MapGridData | null = null;
+        let minDistance = Infinity;
+
+        for (const targetGrid of targetGrids) {
+            const distance = fromGrid.distanceTo(targetGrid);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestGrid = targetGrid;
+            }
+        }
+
+        return nearestGrid;
+    }
+
+    /**
      * 世界坐标转格子坐标
      */
     public worldPosToGrid(worldX: number, worldY: number): Vec2 {
@@ -424,4 +518,5 @@ export class RectPathFindingMgr extends BaseMgr {
         const worldY = gridY * MapGridData.HEIGHT_PX + MapGridData.HEIGHT_PX / 2;
         return new Vec2(worldX, worldY);
     }
+ 
 }

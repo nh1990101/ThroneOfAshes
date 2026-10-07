@@ -15,6 +15,8 @@ import { BaseBtn } from '../../Component/BaseComp/BaseBtn';
 import { UIMananger } from '../../Component/UIMananger';
 import { BaseSprite } from '../../Component/BaseComp/BaseSprite';
 import { GuideArrow } from './GuideArrow';
+import { Tools } from '../../Common/Tools';
+import { BaseLabel } from '../../Component/BaseComp/BaseLabel';
 const { ccclass, property } = _decorator;
 
 @ccclass('WildMapWin')
@@ -41,11 +43,18 @@ export class WildMapWin extends BaseWin {
     @child()
     GuideContainer: Node = null!;
 
-
-
-
     @comp(BaseSprite)
     targetPoint: BaseSprite = null!;
+
+    @comp(BaseLabel)
+    lb_Energy: BaseLabel = null!;
+
+    @comp(BaseLabel)
+    lb_rolePos: BaseLabel = null!;
+
+    @comp(BaseLabel)
+    lb_touchPos: BaseLabel = null!;
+
 
 
     protected mapId: number = null;
@@ -72,7 +81,10 @@ export class WildMapWin extends BaseWin {
     /**网格显示相关 */
     private gridDebugNode: Node = null;           // 网格调试节点
     private isGridVisible: boolean = false;       // 网格是否可见
-
+    /**移动路线第几格*/
+    private _moveCurStep = 0;
+    private _checkFromGrid: MapGridData;//路线展示的起始格子
+    private _checkTargetGrid: MapGridData;//路线展示的目标格子
 
     //是否全屏
     public get Is_FullScene() {
@@ -86,6 +98,7 @@ export class WildMapWin extends BaseWin {
         super.initEvent();
         this.initMapClickEvent();
         this.addEvent(GameEvent.Finish_Move_Step, this.OnMoveStepOneFinish, this);
+        this.addEvent(GameEvent.MapObject_Touch, this.OnTouchMapObject, this);
     }
     public OnRefreshUI(): void {
         super.OnRefreshUI();
@@ -158,6 +171,14 @@ export class WildMapWin extends BaseWin {
         console.log(`[WildMapWin] 摄像机初始位置: (${this.mapCamera.node.position.x}, ${this.mapCamera.node.position.y})`);
 
         this.Mgr.updateAllNodesSortOrder();
+
+        this.updateRolePosInfo();
+    }
+    private updateRolePosInfo() {
+        this.lb_rolePos.string = this.role.getCurrentGrid().toString();
+    }
+    private updateTouchePosInfo(targetGrid: MapGridData) {
+        this.lb_touchPos.string = targetGrid.toString();
     }
 
     /**
@@ -191,7 +212,7 @@ export class WildMapWin extends BaseWin {
     private onMapTouchMove(event: EventTouch) {
         const touchPos = event.getUILocation();
         const currentPos = new Vec2(touchPos.x, touchPos.y);
-
+        
         // 计算移动距离
         const distance = Vec2.distance(this.touchStartPos, currentPos);
 
@@ -269,21 +290,25 @@ export class WildMapWin extends BaseWin {
         // 获取屏幕坐标并转换为格子数据
         const screenPos = event.getLocation();
         const targetGrid = MapMgr.getInstance().screenPosToGrid(screenPos);
+        this.updateTouchePosInfo(targetGrid);
+        this.FindPathMove(targetGrid);
+    }
 
+    private FindPathMove(targetGrid: MapGridData, mapObjData?: IMapObject) {
         if (!targetGrid) {
             console.warn('[WildMapWin] 点击位置不在地图范围内');
             return;
         }
 
-        if (!targetGrid.walkable) {
-            console.warn('[WildMapWin] 目标格子不可行走');
-            return;
-        }
+        // if (!targetGrid.walkable) {
+        //     console.warn('[WildMapWin] 目标格子不可行走');
+        //     return;
+        // }
 
-        if (targetGrid.occupied) {
-            console.warn('[WildMapWin] 目标格子已被占据');
-            return;
-        }
+        // if (targetGrid.occupied) {
+        //     console.warn('[WildMapWin] 目标格子已被占据');
+        //     return;
+        // }
 
         // 寻路
         const currentGrid = this.role.getCurrentGrid();
@@ -291,47 +316,86 @@ export class WildMapWin extends BaseWin {
             console.warn('[WildMapWin] 角色当前格子无效');
             return;
         }
-
-        const path = this.pathFindingMgr.findPath(currentGrid, targetGrid);
+        const path = this.pathFindingMgr.findPath(currentGrid, targetGrid, true);
         if (path.length === 0) {
             console.warn('[WildMapWin] 无法找到路径');
             return;
         }
+        var filterPaths = [];
+        for (let i = 0; i < path.length; i++) {
+            let pathGrid = path[i];
+            if (pathGrid && pathGrid.walkable) {
+                Tools.insertArr(filterPaths, pathGrid);
+            }
+        }
+        console.log(`[WildMapWin] 找到路径，长度: ${filterPaths.length}`);
 
-        console.log(`[WildMapWin] 找到路径，长度: ${path.length}`);
+        var lastPathGrid = filterPaths[filterPaths.length - 1];
 
-
-        this.createGuideArrow(currentGrid, path);
-
-        // 开始移动（点击移动后恢复摄像机跟随）
-        this.isCameraFollowing = true;
-        this.role.moveAlongPath(path).then(() => {
-            console.log('[WildMapWin] 移动完成');
-            this.Mgr.updateAllNodesSortOrder();
-            this.ClearGuide();
-        });
+        //再次确认路线后移动
+        if (this._checkFromGrid && currentGrid.equals(this._checkFromGrid) && this._checkTargetGrid && lastPathGrid.equals(this._checkTargetGrid)) {
+            // 开始移动（点击移动后恢复摄像机跟随）
+            this.isCameraFollowing = true;
+            this.role.moveAlongPath(filterPaths).then(() => {
+                console.log('[WildMapWin] 移动完成');
+                this.Mgr.updateAllNodesSortOrder();
+                this.ClearGuide();
+                this._checkFromGrid = null;
+                this._checkTargetGrid = null;
+                if (mapObjData) {
+                    this.HandleMapOjectArrive(mapObjData);
+                }
+            });
+        } else {
+            this._checkFromGrid = currentGrid;
+            this._checkTargetGrid = lastPathGrid;
+            this.targetPoint.node.setWorldPosition(this._checkTargetGrid.GetWorldPos().toVec3());
+            this.createGuideArrow(path);
+        }
     }
 
     /**显示导航箭头 */
-    private createGuideArrow(fromGrid: MapGridData, path: MapGridData[]) {
+    private createGuideArrow(path: MapGridData[]) {
         this.ClearGuide();
-        for (let i = 0; i < path.length; i++) {
-            let itemPath = path[i];
-            let preGrid = i == 0 ? fromGrid : path[i - 1];
-            AssetMgr.createPrefabFromPool(GameUrl.WildMapPrefab.format("GuideArrow"), Vec2.ZERO, this.GuideContainer, GuideArrow).then(guideArrow => {
-                guideArrow.SetData(itemPath, MapGridData.calculateDirection(preGrid, itemPath));
-                this.guideArrows.push(guideArrow);
-            })
+        if (path.length > 1) {
+            for (let i = 0; i < path.length - 1; i++) {
+                let itemPath = path[i + 1];
+                let preGrid = path[i];
+                AssetMgr.createPrefabFromPool(GameUrl.WildMapPrefab.format("GuideArrow"), Vec2.ZERO, this.GuideContainer, GuideArrow).then(guideArrow => {
+                    guideArrow.SetData(itemPath, MapGridData.calculateDirection(preGrid, itemPath));
+                    this.guideArrows.push(guideArrow);
+                })
+            }
         }
         this.targetPoint.node.active = true;
-
-        this.targetPoint.node.setWorldPosition(path[path.length - 1].GetWorldPos().toVec3());
     }
+
     private OnMoveStepOneFinish() {
+        this._moveCurStep++;
+        console.log("_testStep" + this._moveCurStep)
         if (this.guideArrows && this.guideArrows.length > 0) {
             var guideArrow = this.guideArrows.shift();
             AssetMgr.removeNode(guideArrow.node);
         }
+        this.updateRolePosInfo();
+    }
+    private OnTouchMapObject(mapObjData: IMapObject) {
+        if (mapObjData) {
+            // var rolePos=
+            var rolePosGrid = this.role.getCurrentGrid();
+            var targetGrid = this.Mgr.getGrid(mapObjData.gridX, mapObjData.gridY);
+            //到达目标物体后
+            if (rolePosGrid && MapGridData.CheckIsArriveMapObject(rolePosGrid, mapObjData)) {
+                this.HandleMapOjectArrive(mapObjData)
+            } else {
+                //还没到达就寻路
+                targetGrid = this.pathFindingMgr.GetNearestGrids(rolePosGrid, this.Mgr.GetOccupyGridsByMapObj(mapObjData))
+                this.FindPathMove(targetGrid, mapObjData);
+            }
+        }
+    }
+    private HandleMapOjectArrive(mapObjData: IMapObject) {
+        console.log(`处理地图物体事件：${mapObjData}`)
     }
 
     /**更新摄像机位置，跟随角色 */
@@ -412,14 +476,7 @@ export class WildMapWin extends BaseWin {
             this.hideGridDebug();
         }
     }
-    closeWin(): void {
-        super.closeWin();
-        this.clear();
-    }
-    OnClickBackCity() {
-        this.closeWin();
 
-    }
 
     /**
      * 显示网格调试信息（显示逻辑行走格子）
@@ -512,7 +569,14 @@ export class WildMapWin extends BaseWin {
         }
         console.log('[WildMapWin] 网格显示已关闭');
     }
+    closeWin(): void {
+        super.closeWin();
+        this.clear();
+    }
+    OnClickBackCity() {
+        this.closeWin();
 
+    }
     /**
      * 清理资源
      */
@@ -538,7 +602,10 @@ export class WildMapWin extends BaseWin {
         this.guideArrows.forEach(guide => {
             AssetMgr.removeNode(guide.node);
         })
+        this.guideArrows = [];
         this.targetPoint.node.active = false;
+        this._moveCurStep = 0;
+
     }
 
     get Mgr() {

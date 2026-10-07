@@ -6,8 +6,8 @@ export class MapConfig {
     constructor(cfg: IMapConfig) {
         this.config = cfg;
     }
-    public GetBlock(x: number, y: number) {
-        return this.config.blocks[`${x},${y}`];
+    public GetNotMoveGrid(x: number, y: number) {
+        return this.config.blocks.indexOf(`${x},${y}`) > -1;
     }
     public GetResources(x: number, y: number) {
         return this.config.resources[`${x},${y}`];
@@ -26,12 +26,12 @@ export interface IMapConfig {
     /**地图id和地图尺寸信息 */
     mapInfo: IMapInfo;
     /**不可移动点坐标信息 */
-    blocks: Map<string, IMapBock>;
+    blocks: string[];
     /**资源刷新规则和布点位置 */
     resources: Map<string, IResources>;
     /**出生点 */
     spawnPoints: ISpawnPoints[];
-        /**地图物体信息 */
+    /**地图物体信息 */
     objects: IMapObject[];
 }
 export interface IMapInfo {

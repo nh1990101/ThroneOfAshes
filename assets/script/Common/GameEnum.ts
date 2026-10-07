@@ -15,6 +15,8 @@ export enum GameEvent {
     Clear_Battle_Select_Unit = "Clear_Battle_Select_Unit",
     //野外地图角色移动一格后的回调
     Finish_Move_Step = "Finish_Move_Step",
+    //点击地图物体
+    MapObject_Touch = "MapObject_Touch",
 }
 
 /**

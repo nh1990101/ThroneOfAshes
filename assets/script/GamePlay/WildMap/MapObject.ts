@@ -7,6 +7,8 @@ import { GameUrl } from '../../Common/GameUrl';
 import { BaseBtn } from '../../Component/BaseComp/BaseBtn';
 import { MapMgr } from './MapMgr';
 import { Tools } from '../../Common/Tools';
+import { EventManager } from '../../Common/EventManager';
+import { GameEvent } from '../../Common/GameEnum';
 const { ccclass, property } = _decorator;
 
 @ccclass('MapObject')
@@ -53,7 +55,8 @@ export class MapObject extends BaseComp {
         this.touchArea.getComponent(UITransform).setContentSize(mapCfg.GetGridWidthPx() * this.m_data.occupyX, mapCfg.GetGridHeightPx() * this.m_data.occupyY)
     }
     OnTouchObj() {
-        console.log(`点击了${this.m_data}`)
+        console.log(`点击了${this.m_data}`);
+        EventManager.Instance.dispatch(GameEvent.MapObject_Touch,this.m_data)
     }
     clear() {
         super.clear();
