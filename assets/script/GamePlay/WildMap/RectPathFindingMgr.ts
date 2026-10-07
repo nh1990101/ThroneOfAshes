@@ -116,13 +116,14 @@ export class RectPathFindingMgr extends BaseMgr {
      * @param start 起点格子
      * @param end 终点格子
      * @param ignoreEndOccupied 是否忽略终点被占据（用于攻击移动）
+     * @param mustReachPath 如果移动不了就找一个就近的格子
      * @param gridMap 地图数据（可选，默认使用当前地图）
      * @returns 路径数组（包含起点和终点），如果无法到达返回空数组
      */
     public findPath(
         start: MapGridData,
         end: MapGridData,
-        ignoreEndOccupied: boolean = false,
+        ignoreEndOccupied: boolean = false, mustReachPath: boolean = false,
         gridMap: Map<string, MapGridData> = this._gridMap
     ): MapGridData[] {
         // 验证起点和终点
@@ -229,13 +230,14 @@ export class RectPathFindingMgr extends BaseMgr {
                 }
             }
         }
-
-        // 无法找到路径，尝试寻找最近的可达格子
-        console.log('[RectPathFinding] 目标不可达，寻找最近的可达点');
-        const nearestReachable = this.findNearestReachableGrid(startCell, endCell, gridMap);
-        if (nearestReachable && !nearestReachable.equals(startCell)) {
-            // 递归寻路到最近的可达格子
-            return this.findPath(start, nearestReachable, false, gridMap);
+        if (mustReachPath) {
+            // 无法找到路径，尝试寻找最近的可达格子
+            console.log('[RectPathFinding] 目标不可达，寻找最近的可达点');
+            const nearestReachable = this.findNearestReachableGrid(startCell, endCell, gridMap);
+            if (nearestReachable && !nearestReachable.equals(startCell)) {
+                // 递归寻路到最近的可达格子
+                return this.findPath(start, nearestReachable, false, true, gridMap);
+            }
         }
 
         console.warn('[RectPathFinding] 完全无法找到路径');
@@ -518,5 +520,5 @@ export class RectPathFindingMgr extends BaseMgr {
         const worldY = gridY * MapGridData.HEIGHT_PX + MapGridData.HEIGHT_PX / 2;
         return new Vec2(worldX, worldY);
     }
- 
+
 }
