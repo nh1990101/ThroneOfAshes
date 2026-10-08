@@ -152,6 +152,53 @@ export class MapGridData {
 
         return ROLE_DIR.UP; // 默认返回当前方向
     }
+
+    /**
+     * 计算移动方向（四方向）
+     * 每个方向占据90度范围：
+     * - UP: -45° 到 45°（正上方向）
+     * - RIGHT: 45° 到 135°（正右方向）
+     * - DOWN: 135° 到 -135°（正下方向）
+     * - LEFT: -135° 到 -45°（正左方向）
+     */
+    public static calculateDirection4(from: MapGridData, to: MapGridData): ROLE_DIR {
+        const dx = to.gridX - from.gridX;
+        const dy = to.gridY - from.gridY;
+
+        // 如果两点重合，返回默认方向
+        if (dx === 0 && dy === 0) return ROLE_DIR.UP;
+
+        // 计算角度（弧度），使用atan2获取正确的象限角度
+        const angle = Math.atan2(dy, dx);
+
+        // 将弧度转换为度数，并调整到 [0, 360) 范围
+        // atan2 返回 [-π, π]，转换为 [-180, 180]
+        let degree = angle * (180 / Math.PI);
+
+        // 调整角度：由于Y轴向上为正，需要将角度系统调整为：
+        // 上(90°), 右(0°), 下(-90°), 左(180°/-180°)
+        // 因此我们需要旋转坐标系，让上方为0度参考
+        degree = 90 - degree;
+
+        // 标准化到 [0, 360) 范围
+        if (degree < 0) degree += 360;
+        if (degree >= 360) degree -= 360;
+
+        // 四方向判断（每个方向90度范围）
+        // UP: [315, 360) 和 [0, 45)
+        // RIGHT: [45, 135)
+        // DOWN: [135, 225)
+        // LEFT: [225, 315)
+        if (degree >= 315 || degree < 45) {
+            return ROLE_DIR.UP;
+        } else if (degree >= 45 && degree < 135) {
+            return ROLE_DIR.RIGHT;
+        } else if (degree >= 135 && degree < 225) {
+            return ROLE_DIR.DOWN;
+        } else { // degree >= 225 && degree < 315
+            return ROLE_DIR.LEFT;
+        }
+    }
     /**检测是否到达物体附近（靠近占格位置） */
     public static CheckIsArriveMapObject(curPosGrid: MapGridData, targetObjectData: IMapObject) {
         var mgr = MapMgr.getInstance();

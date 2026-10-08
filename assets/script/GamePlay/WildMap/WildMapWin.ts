@@ -90,15 +90,16 @@ export class WildMapWin extends BaseWin {
     private _checkFromGrid: MapGridData;//路线展示的起始格子
     private _checkTargetGrid: MapGridData;//路线展示的目标格子
 
-
+    /**移动方式0：点一下动一下，1：点哪去哪并且有路线预览 */
+    private _MoveStype = 0;
     private _isInitFrog = false;
     //是否全屏
     public get Is_FullScene() {
         return true;
     }
     showWin(mapId: number): void {
-        super.showWin(mapId);
         this.mapId = mapId;
+        super.showWin(mapId);
     }
     public initEvent(): void {
         super.initEvent();
@@ -308,14 +309,18 @@ export class WildMapWin extends BaseWin {
         const screenPos = event.getLocation();
         const targetGrid = MapMgr.getInstance().screenPosToGrid(screenPos);
 
+        var resultGrid = targetGrid;
 
-        var rolePos=this.role.getCurrentGrid();
-        var dir = MapGridData.calculateDirection(rolePos, targetGrid);
-        dir = Math.floor(dir / 2);
-        var gridPos = rolePos.getNeighbors4()[dir];
-        var resultGrid = this.Mgr.getGrid(gridPos.x, gridPos.y);
+        if (this._MoveStype == 0) {
+            var rolePos = this.role.getCurrentGrid();
+            var dir = MapGridData.calculateDirection4(rolePos, targetGrid);
+
+            var gridPos = rolePos.getNeighbors4()[dir / 2];
+            resultGrid = this.Mgr.getGrid(gridPos.x, gridPos.y);
+        }
 
         this.updateTouchePosInfo(targetGrid);
+
         this.FindPathMove(resultGrid);
     }
 
@@ -358,26 +363,26 @@ export class WildMapWin extends BaseWin {
         var lastPathGrid = filterPaths[filterPaths.length - 1];
 
         //再次确认路线后移动
-        // if (this._checkFromGrid && currentGrid.equals(this._checkFromGrid) && this._checkTargetGrid && lastPathGrid.equals(this._checkTargetGrid)) {
-        // 开始移动（点击移动后恢复摄像机跟随）
-        this.isCameraFollowing = true;
-        this.role.moveAlongPath(filterPaths).then(() => {
-            console.log('[WildMapWin] 移动完成');
-            this.Mgr.updateAllNodesSortOrder();
-            this.ClearGuide();
-            this._checkFromGrid = null;
-            this._checkTargetGrid = null;
-            if (mapObjData) {
-                this.HandleMapOjectArrive(mapObjData);
-            }
-        });
-        // } 
-        // else {
-        //     this._checkFromGrid = currentGrid;
-        //     this._checkTargetGrid = lastPathGrid;
-        //     this.targetPoint.node.setWorldPosition(this._checkTargetGrid.GetWorldPos().toVec3());
-        //     this.createGuideArrow(path);
-        // }
+        if (this._MoveStype == 0 || (this._checkFromGrid && currentGrid.equals(this._checkFromGrid) && this._checkTargetGrid && lastPathGrid.equals(this._checkTargetGrid))) {
+            // 开始移动（点击移动后恢复摄像机跟随）
+            this.isCameraFollowing = true;
+            this.role.moveAlongPath(filterPaths).then(() => {
+                console.log('[WildMapWin] 移动完成');
+                this.Mgr.updateAllNodesSortOrder();
+                this.ClearGuide();
+                this._checkFromGrid = null;
+                this._checkTargetGrid = null;
+                if (mapObjData) {
+                    this.HandleMapOjectArrive(mapObjData);
+                }
+            });
+        }
+        else {
+            this._checkFromGrid = currentGrid;
+            this._checkTargetGrid = lastPathGrid;
+            this.targetPoint.node.setWorldPosition(this._checkTargetGrid.GetWorldPos().toVec3());
+            this.createGuideArrow(path);
+        }
     }
 
     /**显示导航箭头 */
@@ -620,7 +625,7 @@ export class WildMapWin extends BaseWin {
         this.Mgr.Clear();
 
         this.mapCamera.node.position = Vec3.ZERO;
-
+        this.lastUpdateCameraPos = Vec3.ZERO;
         this.ClearGuide();
         super.clear();
     }

@@ -11,8 +11,8 @@ export class MapBlock extends Component {
     mapImg: BaseSprite = null;
     /**地图块坐标 */
     protected pos: Vec2;
-    /**地图ID */
-    protected mapId: number;
+    /**地图名字*/
+    protected mapName: string;
     protected onLoad(): void {
         this.mapImg = this.getComponentInChildren(BaseSprite);
     }
@@ -24,14 +24,14 @@ export class MapBlock extends Component {
 
     }
 
-    SetData(mapId: number, pos: Vec2) {
+    SetData(mapName: string, pos: Vec2) {
         this.pos = pos;
-        this.mapId = mapId
+        this.mapName = mapName
         this.mapImg.node.active = false;
     }
     ShowMapCell() {
         this.mapImg.node.active = true;
-        this.mapImg.setSpriteFromSingle(GameUrl.WildMapBlockUrl.format(this.mapId, this.pos.x, this.pos.y));
+        this.mapImg.setSpriteFromSingle(GameUrl.WildMapBlockUrl.format(this.mapName, this.pos.x, this.pos.y));
     }
     HideMapCell() {
         this.mapImg.node.active = false;

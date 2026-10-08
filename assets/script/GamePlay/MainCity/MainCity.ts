@@ -16,6 +16,10 @@ export class MainCity extends BaseWin {
     btn_wild: BaseBtn = null!;
 
     @comp(BaseBtn)
+    btn_wild2: BaseBtn = null!;
+
+
+    @comp(BaseBtn)
     btn_battle: BaseBtn = null!;
 
 
@@ -24,6 +28,7 @@ export class MainCity extends BaseWin {
 
         this.addNodeEvent(this.btn_battle.node, Node.EventType.TOUCH_END, this.OnClickBattle);
         this.addNodeEvent(this.btn_wild.node, Node.EventType.TOUCH_END, this.OnClickWild);
+        this.addNodeEvent(this.btn_wild2.node, Node.EventType.TOUCH_END, this.OnClickWild2);
     }
     //是否全屏
     public get Is_FullScene() {
@@ -34,6 +39,9 @@ export class MainCity extends BaseWin {
     }
     OnClickWild() {
         UIMananger.instance.showWin(WildMapWin, 1);
+    }
+    OnClickWild2() {
+        UIMananger.instance.showWin(WildMapWin, 2);
     }
     OnRefreshUI(): void {
         super.OnRefreshUI();

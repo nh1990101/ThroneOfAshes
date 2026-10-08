@@ -548,7 +548,7 @@ export class MapMgr extends BaseMgr {
             MapBlock
         );
 
-        block.SetData(this.curMapId, new Vec2(x, y));
+        block.SetData(this.getMapCfg().config.mapInfo.mapName, new Vec2(x, y));
         block.ShowMapCell();
 
         // 添加到可见列表

@@ -53,7 +53,7 @@ export class GameUrl {
     static WildMapPrefab=new UrlTemplate("GamePlay/WildMap/{0}");
    
     /**野外地图地图块 */
-    static WildMapBlockUrl = new UrlTemplate("Res/Map/MapGrid/Map{0}/{1}_{2}/spriteFrame");
+    static WildMapBlockUrl = new UrlTemplate("Res/Map/MapGrid/{0}/{1}_{2}/spriteFrame");
     /**野外地图配置 */
     static WildMapConfig = new UrlTemplate("Res/Config/WildMap/map{0}");
     /**野外地图角色动画 */
