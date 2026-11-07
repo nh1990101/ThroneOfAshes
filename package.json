@@ -1,20 +1,28 @@
 {
-  "name": "RPGCore",
-  "uuid": "3d97537b-cc62-486c-bca6-b14e7a95324e",
-  "creator": {
-    "version": "3.8.8"
-  },
-  "scripts": {
-    "proto": "node proto/auto-compile.js",
-    "proto:watch": "node proto/auto-compile.js --watch",
-    "proto:gmcmd": "cd proto && pbjs -t static-module -w commonjs -o gmcmd.js gmcmd.proto && pbts -o gmcmd.d.ts gmcmd.js"
-  },
-  "dependencies": {
-    "jszip": "^3.10.2",
-    "protobufjs": "^7.2.5"
-  },
-  "devDependencies": {
-    "@types/node": "^26.6.3",
-    "protobufjs-cli": "^1.1.2"
-  }
+    "name": "RPGCore",
+    "type": "3d",
+    "version": "unknow",
+    "uuid": "3d97537b-cc62-486c-bca6-b14e7a95324e",
+    "creator": {
+        "version": "3.8.8"
+    },
+    "scripts": {
+        "proto": "node proto/auto-compile.js",
+        "proto:watch": "node proto/auto-compile.js --watch",
+        "proto:check": "node proto/auto-compile.js --check",
+        "proto:test": "node --test proto/tools/*.test.js",
+        "proto:gmcmd": "node proto/auto-compile.js"
+    },
+    "dependencies": {
+        "jszip": "^3.10.2",
+        "protobufjs": "^7.2.5"
+    },
+    "devDependencies": {
+        "@types/node": "^26.6.3",
+        "protobufjs-cli": "^1.1.2"
+    },
+    "pink": {
+        "uuid": "d7470606-a2c5-4110-8f2c-9af77e7dc4fb",
+        "version": "1.127.0"
+    }
 }
