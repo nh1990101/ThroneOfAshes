@@ -1,7 +1,6 @@
 // Auto-generated from BuildLevelData.json by sharedata/tools/excel-exporter.
 export interface IBuildLevelData {
   id: number;
-  ch_key?: string;
   build_id?: number;
   level?: number;
   need_build_id?: number[];
@@ -12,7 +11,7 @@ export interface IBuildLevelData {
   uplv_time?: number;
   product_item?: number;
   product_count?: number;
-  desc?: string;
+  desc?: number;
   day_shop_cost?: number;
   garrison_count?: number;
 }

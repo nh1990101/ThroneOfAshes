@@ -8,6 +8,7 @@ import { GameUrl } from '../../Common/GameUrl';
 import { comp } from '../../Common/Decorator';
 const { ccclass, property } = _decorator;
 export interface IActionData {
+    actionType?: UNIT_ACTION;
     frameStart: number;
     frameEnd: number;
     /**
@@ -26,12 +27,14 @@ export class UnitBase extends BaseComp {
 
 
     protected m_ActionData: Map<UNIT_ACTION, IActionData>;
-
+    /**播放倍速 */
+    protected playSpeedRate: number = 1;
     protected _data: IUnitData;
+    protected m_curPlayData: IActionData;
     public init(): void {
         super.init();
 
-
+        // this.animation.node.setScale(0.75, 0.75)
     }
     initEvent(): void {
         super.initEvent();
@@ -42,13 +45,13 @@ export class UnitBase extends BaseComp {
     protected SetActionFrame() {
         if (this._data) {
             this.m_ActionData = new Map<UNIT_ACTION, IActionData>();
-            this.m_ActionData.set(UNIT_ACTION.IDLE, { frameStart: 0, frameEnd: 5, frameRate: 10 });
-            this.m_ActionData.set(UNIT_ACTION.MOVE, { frameStart: 6, frameEnd: 8, frameRate: 10 });
-            this.m_ActionData.set(UNIT_ACTION.BE_HIT, { frameStart: 9, frameEnd: 10, frameRate: 10 });
-            this.m_ActionData.set(UNIT_ACTION.DEAD, { frameStart: 11, frameEnd: 13, frameRate: 10 });
+            this.m_ActionData.set(UNIT_ACTION.IDLE, { actionType: UNIT_ACTION.IDLE, frameStart: 0, frameEnd: 5, frameRate: 10 });
+            this.m_ActionData.set(UNIT_ACTION.MOVE, { actionType: UNIT_ACTION.MOVE, frameStart: 6, frameEnd: 8, frameRate: 10 });
+            this.m_ActionData.set(UNIT_ACTION.BE_HIT, { actionType: UNIT_ACTION.BE_HIT, frameStart: 9, frameEnd: 10, frameRate: 10 });
+            this.m_ActionData.set(UNIT_ACTION.DEAD, { actionType: UNIT_ACTION.DEAD, frameStart: 11, frameEnd: 13, frameRate: 10 });
 
             var attackFrameNum = this.animation.getTotalFrames() - 14;
-            this.m_ActionData.set(UNIT_ACTION.ATTACK, { frameStart: 14, frameEnd: 13 + attackFrameNum, frameRate: 10 });
+            this.m_ActionData.set(UNIT_ACTION.ATTACK, { actionType: UNIT_ACTION.ATTACK, frameStart: 14, frameEnd: 13 + attackFrameNum, frameRate: 10 });
         }
     }
     /**
@@ -71,12 +74,12 @@ export class UnitBase extends BaseComp {
     public SetConfigData(data: IUnitData): Promise<void> {
         this._data = data;
         return new Promise(resolve => {
-
-            this.animation.loadFramesFromAtlas(GameUrl.UnitAtlasUrl.format(data.id), "").then(() => {
+            this.animation.loadFramesFromAtlas(data.animation_name, "").then(() => {
                 this.SetActionFrame();
                 resolve(null);
             })
         })
+
     }
 
     /**
@@ -89,8 +92,10 @@ export class UnitBase extends BaseComp {
     public PlayAction(actionName: UNIT_ACTION, isLoop: boolean, onComplete?: Function, target?: any) {
         var actionData = this.m_ActionData.get(actionName);
         if (actionData) {
-            this.animation.setFrameRate(actionData.frameRate);
-            this.animation.play(actionData.frameStart, actionData.frameEnd, isLoop, onComplete, target);
+            this.m_curPlayData = actionData;
+            this.animation.setFrameRate(actionData.frameRate * this.playSpeedRate);
+
+            this.animation.play(actionData.frameStart, actionData.frameEnd, isLoop, false, onComplete, target);
         }
     }
     /**
@@ -100,14 +105,38 @@ export class UnitBase extends BaseComp {
 
         //播放完最后一个动作后回到结束动作
         if (actionName.length == 1) {
-            this.PlayAction(actionName[0], false, () => { this.PlayAction(endAction, true, onComplete, target) }, this);
+            this.PlayAction(actionName[0], false, () => {
+
+                if (onComplete) {
+                    if (target) {
+                        onComplete.call(target)
+                    } else {
+                        onComplete();
+                    }
+                }
+                this.PlayAction(endAction, true)
+            }, this);
         }
         else if (actionName.length > 1) {
-            this.PlayAction(actionName.shift(), false, () => { this.PlayActions(actionName, endAction, onComplete, target) });
+            this.PlayAction(actionName.shift(), false, () => { this.PlayActions(actionName, endAction, onComplete, target) }, this);
         }
 
     }
-
+    public clear(): void {
+        super.clear();
+        this.playSpeedRate = 1;
+    }
+    public SetSpeedRate(rate: number) {
+        if (this.playSpeedRate != rate) {
+            this.playSpeedRate = rate;
+            if (this.animation.isPlaying && this.m_curPlayData) {
+                this.animation.setFrameRate(this.m_curPlayData.frameRate * this.playSpeedRate);
+            }
+        }
+    }
+    public GetCurPlayData() {
+        return this.m_curPlayData;
+    }
 }
 
 

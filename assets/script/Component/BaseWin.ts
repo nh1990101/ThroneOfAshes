@@ -4,6 +4,7 @@ import { EventManager } from '../Common/EventManager';
 import { EventData } from '../Common/BaseMgr';
 import { BaseComp } from './BaseComp';
 import { UIMananger } from './UIMananger';
+import { child } from '../Common/Decorator';
 const { ccclass, property } = _decorator;
 
 @ccclass('BaseWin')
@@ -12,6 +13,11 @@ export class BaseWin extends BaseComp {
     @property(Node)
     winBg: Node = null;
 
+    @child({ name: 'btn_mask' })
+    mask_button: Node = null;
+
+    /** 蒙版另有点击逻辑时设为 false，基类不再绑关闭 */
+    protected close_on_mask = true;
 
     protected animTime = 0.2;
     //外部透传参数
@@ -36,6 +42,7 @@ export class BaseWin extends BaseComp {
 
     closeWin() {
         this.node.active = false;
+        this._winData = null;
         UIMananger.instance.SetOpeningWin(this, false);
     }
     public initEvent(): void {
@@ -46,10 +53,19 @@ export class BaseWin extends BaseComp {
             this.addNodeEvent(btnClose.node, Node.EventType.TOUCH_END, this.closeWin);
         }
 
+        if (this.close_on_mask && this.mask_button) {
+            this.addNodeEvent(this.mask_button, Node.EventType.TOUCH_END, this.closeWin);
+        }
     }
     //是否全屏
     public get Is_FullScene() {
         return false;
+    }
+    
+
+    /** 所属父面板。关掉本窗口时把父面板显示回来，父面板关掉时本窗口一起关 */
+    public get parentWinName(): string | null {
+        return null;
     }
 
     // 设置数据（不显示）

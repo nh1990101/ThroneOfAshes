@@ -1,0 +1,198 @@
+{
+  "format": "RPGCore.SkillPresentation",
+  "schemaVersion": 1,
+  "skillId": "remote1",
+  "name": "远程弹道技能特效1",
+  "durationMs": 3000,
+  "settings": {
+    "defaultFps": 10,
+    "effectFps": 24,
+    "previewDamage": 1000,
+    "targetFlip": "x",
+    "collision": "ignore",
+    "durationMode": "auto"
+  },
+  "scene": {
+    "cols": 7,
+    "rows": 7,
+    "hexWidth": 98,
+    "hexHeight": 86,
+    "coordinateOrigin": "bottom-left",
+    "units": [
+      {
+        "id": "unit_f2f86535",
+        "unitId": 120010,
+        "q": 2,
+        "r": 3,
+        "role": "caster",
+        "scale": 1
+      },
+      {
+        "id": "unit_552030ef",
+        "unitId": 110020,
+        "q": 6,
+        "r": 0,
+        "role": "target",
+        "scale": 1
+      }
+    ]
+  },
+  "resourceMappings": {
+    "110010": "1010",
+    "110020": "1002"
+  },
+  "tracks": [
+    {
+      "id": "track_e45d21de",
+      "name": "施法者行为",
+      "type": "caster",
+      "enabled": true,
+      "startMs": 0,
+      "binding": null,
+      "params": {
+        "unitInstanceId": "",
+        "unitId": 120010,
+        "action": 4,
+        "fps": 10,
+        "loop": false
+      }
+    },
+    {
+      "id": "track_c49461cb",
+      "name": "受击者行为",
+      "type": "target",
+      "enabled": true,
+      "startMs": 463,
+      "binding": {
+        "trackId": "track_efb2fc07",
+        "anchor": "end",
+        "offsetMs": 0
+      },
+      "params": {
+        "unitInstanceId": "",
+        "unitId": null,
+        "action": 2,
+        "fps": 10,
+        "loop": false
+      }
+    },
+    {
+      "id": "track_e95f433a",
+      "name": "播放技能特效",
+      "type": "effect",
+      "enabled": true,
+      "startMs": 200,
+      "binding": {
+        "trackId": "track_e45d21de",
+        "frame": 3,
+        "offsetMs": 0
+      },
+      "params": {
+        "effectId": "1004",
+        "fps": 24,
+        "speed": 1,
+        "position": {
+          "mode": "caster",
+          "relativeTo": "caster",
+          "x": 0,
+          "y": 0
+        },
+        "layer": "top",
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "scale": 1,
+        "loop": true,
+        "durationMs": null,
+        "multiTarget": false
+      }
+    },
+    {
+      "id": "track_efb2fc07",
+      "name": "技能移动飞行",
+      "type": "flight",
+      "enabled": true,
+      "startMs": 200,
+      "binding": {
+        "trackId": "track_e45d21de",
+        "frame": 3,
+        "offsetMs": 0
+      },
+      "params": {
+        "effectTrackId": "track_e95f433a",
+        "speed": 1500,
+        "start": {
+          "mode": "caster",
+          "relativeTo": "caster",
+          "x": 0,
+          "y": 0
+        },
+        "end": {
+          "mode": "target",
+          "relativeTo": "caster",
+          "x": 0,
+          "y": 0
+        },
+        "startOffset": {
+          "x": 0,
+          "y": 68
+        },
+        "endOffset": {
+          "x": 0,
+          "y": 68
+        },
+        "hideOnArrival": true,
+        "alignToTarget": true
+      }
+    },
+    {
+      "id": "track_bccb6fd4",
+      "name": "伤害节点",
+      "type": "damage",
+      "enabled": true,
+      "startMs": 563,
+      "binding": {
+        "trackId": "track_c49461cb",
+        "frame": 2,
+        "offsetMs": 0
+      },
+      "params": {
+        "share": null,
+        "unitInstanceId": ""
+      }
+    }
+  ],
+  "resolved": {
+    "durationMs": 1262.5441761769712,
+    "damagePercentTotal": 100,
+    "nodes": [
+      {
+        "trackId": "track_e45d21de",
+        "startMs": 0,
+        "durationMs": 300
+      },
+      {
+        "trackId": "track_c49461cb",
+        "startMs": 462.5441761769711,
+        "durationMs": 200
+      },
+      {
+        "trackId": "track_e95f433a",
+        "startMs": 200,
+        "durationMs": 250
+      },
+      {
+        "trackId": "track_efb2fc07",
+        "startMs": 200,
+        "durationMs": 262.5441761769711
+      },
+      {
+        "trackId": "track_bccb6fd4",
+        "startMs": 562.5441761769712,
+        "durationMs": 700,
+        "damagePercent": 100
+      }
+    ]
+  }
+}

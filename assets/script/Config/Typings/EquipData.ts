@@ -1,7 +1,6 @@
 // Auto-generated from EquipData.json by sharedata/tools/excel-exporter.
 export interface IEquipData {
   id: number;
-  ch_key?: string;
   pos?: number;
   suit_id?: number;
   star_id?: number[];

@@ -1,0 +1,155 @@
+{
+  "ver": "1.0.8",
+  "importer": "sprite-atlas",
+  "imported": true,
+  "uuid": "7cda6e6d-8394-4f37-b46a-9ae412b09b60",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {
+    "61604": {
+      "importer": "sprite-frame",
+      "uuid": "7cda6e6d-8394-4f37-b46a-9ae412b09b60@61604",
+      "displayName": "",
+      "id": "61604",
+      "name": "ui_hero_port_3",
+      "userData": {
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 1,
+        "trimY": 1,
+        "width": 197,
+        "height": 254,
+        "rawWidth": 197,
+        "rawHeight": 254,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "1766709e-bcb9-49f8-ae04-6e17427c4aab@6c48a",
+        "atlasUuid": "7cda6e6d-8394-4f37-b46a-9ae412b09b60",
+        "trimType": "auto"
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "25df7": {
+      "importer": "sprite-frame",
+      "uuid": "7cda6e6d-8394-4f37-b46a-9ae412b09b60@25df7",
+      "displayName": "",
+      "id": "25df7",
+      "name": "ui_hero_port",
+      "userData": {
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 1,
+        "trimY": 506,
+        "width": 197,
+        "height": 240,
+        "rawWidth": 197,
+        "rawHeight": 240,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "1766709e-bcb9-49f8-ae04-6e17427c4aab@6c48a",
+        "atlasUuid": "7cda6e6d-8394-4f37-b46a-9ae412b09b60",
+        "trimType": "auto"
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "6784d": {
+      "importer": "sprite-frame",
+      "uuid": "7cda6e6d-8394-4f37-b46a-9ae412b09b60@6784d",
+      "displayName": "",
+      "id": "6784d",
+      "name": "ui_hero_port_2",
+      "userData": {
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 1,
+        "trimY": 257,
+        "width": 197,
+        "height": 247,
+        "rawWidth": 197,
+        "rawHeight": 247,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "1766709e-bcb9-49f8-ae04-6e17427c4aab@6c48a",
+        "atlasUuid": "7cda6e6d-8394-4f37-b46a-9ae412b09b60",
+        "trimType": "auto"
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "atlasTextureName": "HeroCardIcon.png",
+    "format": 3,
+    "uuid": "7cda6e6d-8394-4f37-b46a-9ae412b09b60",
+    "textureUuid": "1766709e-bcb9-49f8-ae04-6e17427c4aab@6c48a"
+  }
+}

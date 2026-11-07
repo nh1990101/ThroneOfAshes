@@ -8,3 +8,7 @@ export interface IMarketSlotData {
   sort?: number;
   is_close?: boolean;
 }
+
+export interface IMarketSlotDataIndex {
+  market_type_dict: Record<string, Record<string, string>>;
+}

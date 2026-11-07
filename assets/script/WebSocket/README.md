@@ -17,15 +17,15 @@
 - 自动处理消息的编码和解码
 - 支持类型安全的TypeScript接口
 
-### 2. 请求-响应模式
-- 基于Promise的异步API
-- 自动匹配请求和响应消息
-- 支持超时控制
+### 2. 请求发送与响应事件
+- 使用消息枚举发送 protobuf 请求
+- 成功响应解开 `Result.content` 后通过 `EventManager` 派发
+- 服务端错误码通过独立的 `RESULT_ERROR` 事件派发
 
-### 3. 心跳机制
-- 自动发送心跳保持连接
-- 心跳超时自动重连
-- 可配置心跳间隔和超时时间
+### 3. 心跳接口
+- 保留以 `HelloReq` 发送心跳的示例方法
+- 可通过 `setHeartbeatConfig(interval)` 设置心跳间隔
+- 当前 `startHeartbeat()` 的定时调度已注释，启用前需与服务端确认心跳协议
 
 ### 4. 自动重连
 - 断线自动重连
@@ -46,18 +46,15 @@
 
 ### 1. 注册协议
 
-在`ProtoNetworkMgr.ts`的`initProtoConfig()`方法中注册协议：
+请求的 protobuf 类型通过自动生成的 `ProtoRequestType` 注册。
 
-```typescript
-private initProtoConfig() {
-    // 注册请求-响应协议对
-    this.registerProto('HelloReq', 'HelloResp', pb.HelloReq, pb.HelloResp);
-    this.registerProto('LoginReq', 'LoginResp', pb.LoginReq, pb.LoginResp);
-    
-    // 注册服务器通知消息
-    this.registerNotify('NtfGMCMDInit', pb.NtfGMCMDInit);
-}
-```
+在 `proto/routes.json` 中，为每个请求、响应和通知分别填写服务端分配的
+`{ commandId, moduleId }`，运行 `npm run proto` 生成路由。指令 ID 是有符号 int32，模块号范围为 0~255；
+接收时按“模块号 + 指令 ID”定位消息，同一指令 ID 可用于不同模块。
+
+当前配置统一使用测试模块号 1 和测试指令 1001~1003，`testOnly: true`；真实联调前替换为服务端值。
+服务端尚未分配的新消息可保留 `null`。未配置或配置非法的请求会告警并停止发送，
+未配置或存在重复路由的服务器消息会告警并停止解码。
 
 ### 2. 连接服务器
 
@@ -69,8 +66,7 @@ const network = ProtoNetworkMgr.instance;
 
 // 配置参数
 network.setReconnectConfig(5, 3000);  // 最大重连5次，间隔3秒
-network.setHeartbeatConfig(30000, 10000);  // 心跳30秒，超时10秒
-network.setTimeout(30000);  // 请求超时30秒
+network.setHeartbeatConfig(30000);  // 设置心跳间隔；当前定时调度未启用
 
 // 监听连接事件
 network.addEventListener(ProtoNetworkMgr.EventType.CONNECTED, () => {
@@ -84,39 +80,70 @@ const connected = await network.connect('ws://your-server-url');
 ### 3. 发送请求
 
 ```typescript
-import { pb } from './WebSocket/proto/ProtoDefined';
+import { EventManager } from './Common/EventManager';
+import { ProtoRequestType, ProtoServerMessageType } from './WebSocket/ProtoMessageType';
+import type { pbType } from './WebSocket/proto/ProtoDefined.d';
 
-try {
-    // 构造请求
-    const req: pb.IHelloReq = {
-        content: 'Hello Server!'
-    };
-    
-    // 发送并等待响应
-    const resp = await network.send<pb.IHelloReq, pb.IHelloResp>('HelloReq', req);
-    
+const helloOwner = {};
+const onHelloResp = (event: { detail: pbType.IHelloResp | null }) => {
+    // 本例只处理一次响应，收到后移除监听。
+    stopHelloListener();
+    const resp = event.detail;
+    if (!resp) {
+        console.log('请求成功，服务端未返回业务数据');
+        return;
+    }
     console.log('服务器响应:', resp.content);
     console.log('服务器时间:', resp.serverTime);
-    
-} catch (error) {
-    console.error('请求失败:', error);
+};
+function stopHelloListener(): void {
+    EventManager.Instance.removeListener(ProtoServerMessageType.HelloResp, onHelloResp, helloOwner);
 }
+
+// 先监听响应，再发送请求；send 返回 void，响应通过回调处理。
+EventManager.Instance.addListener(ProtoServerMessageType.HelloResp, onHelloResp, helloOwner);
+network.send<pbType.IHelloReq>(ProtoRequestType.HelloReq, { content: 'Hello Server!' });
+
+// 页面关闭或请求结束时调用 stopHelloListener()，包括收到 RESULT_ERROR 的情况。
 ```
 
 ### 4. 监听服务器推送
 
 ```typescript
-// 监听特定的通知消息
-network.addEventListener('NtfGMCMDInit', (event: CustomEvent) => {
-    const data = event.detail as pb.INtfGMCMDInit;
+const notificationOwner = {};
+const onGMCMDInit = (event: { detail: pbType.INtfGMCMDInit | null }) => {
+    const data = event.detail;
+    if (!data) return;
     console.log('收到GM命令列表:', data.cmds);
-});
+};
+EventManager.Instance.addListener(ProtoServerMessageType.NtfGMCMDInit, onGMCMDInit, notificationOwner);
 
-// 监听所有消息（调试用）
-network.addEventListener('*', (event: CustomEvent) => {
-    console.log('收到消息:', event.type, event.detail);
-});
+// 页面关闭时调用，使用同一个回调和所属对象移除监听。
+function stopNotificationListener(): void {
+    EventManager.Instance.removeListener(ProtoServerMessageType.NtfGMCMDInit, onGMCMDInit, notificationOwner);
+}
 ```
+
+### 服务端统一 Result 返回
+
+所有服务端 protobuf 信息体先按 `pbType.Result` 解码。`code = 0` 表示成功，`content` 是 `Any`：其 `value` 存放实际响应或通知的 protobuf 字节，`type_url` 保留服务端原始完整类型名。网络管理器按路由解包后，原业务监听仍从 `event.detail` 取得 `AccountLoginResp` 等实际业务数据，同时可读取 `event.code`、`event.typeUrl` 和 `event.header`。
+
+`content` 未设置时，成功事件的 `detail` 为 `null`；`content` 已设置但 `value` 是空字节时，按合法空业务消息解码。`type_url` 可使用自定义 URL 前缀，完整类型名必须与路由对应响应类型一致；没有 `type_url` 时按路由选择类型。
+
+`code !== 0` 不调用业务成功监听，也不解码 `Any.value`；错误码通过 `ProtoNetworkMgr.EventType.RESULT_ERROR` 分发。BaseMgr/BaseComp 可使用现有事件登记接口，普通调用示例如下：
+
+```typescript
+const owner = {};
+const onResultError = (event) => {
+    const { code, messageName, header, typeUrl } = event.detail;
+    console.warn('服务端错误码:', code, '消息:', messageName, header, typeUrl);
+};
+EventManager.Instance.addListener(ProtoNetworkMgr.EventType.RESULT_ERROR, onResultError, owner);
+// 生命周期结束时移除。
+EventManager.Instance.removeListener(ProtoNetworkMgr.EventType.RESULT_ERROR, onResultError, owner);
+```
+
+网络对象的 `addEventListener(ProtoNetworkMgr.EventType.RESULT_ERROR, handler)` 也能收到相同结构的 `event.detail`。该事件与连接错误 `EventType.ERROR` 分开；未知路由的服务端错误仍可收到，`messageName` 为 `null`。
 
 ### 5. 断开连接
 
@@ -133,20 +160,35 @@ const isOnline = network.isOnline();
 ### 二进制消息格式
 
 ```
-[消息名长度(2字节)][消息名(UTF-8)][消息体(Protobuf)]
+包头（8字节）：[标识长度(1)][mjg(3)][包体长度(int32)]
+包体：信息头（14字节）+ 信息体 + 哈希码（4字节）
+信息头：[format(1)][state(int32)][sn(int32)][指令ID(int32)][模块号(1)]
+信息体：Protobuf 序列化数据
+哈希码：int32，大端序；BPHash(信息头与protobuf的原始字节, 14 + protobuf字节长度)
 ```
 
-- **消息名长度**: uint16，大端序
-- **消息名**: UTF-8编码的字符串，如"HelloReq"
-- **消息体**: Protobuf序列化后的二进制数据
+- 所有 int32 使用大端序，包标识固定为 `03 6D 6A 67`。
+- 客户端发送的信息体仍为原始请求；服务端返回的信息体为 `Result`（成功内容位于 `Any.value`）。接收包长度和哈希计算范围中的 protobuf 字节指外层 Result 的实际序列化字节。
+- 长度字段表示包体总长度 `14 + protobuf长度 + 4`，不包含 8 字节包头；完整数据包长度为 `8 + 长度字段`。解码时 protobuf 长度为 `长度字段 - 14 - 4`；空信息体的长度字段为 18，完整数据包为 26 字节。
+- 当前发送时 `format = 0`、`state = 0`，`sn` 从 1 递增；重连不重置，队列保留原序号。
+- 每条 WebSocket 二进制消息承载一个完整数据包，protobuf 数据位于字节偏移 22；最后 4 字节为哈希，不参与 protobuf 解码。
+- BPHash 从 0 开始，逐字节执行 `(hash << 7) ^ signedByte`，按 int32 溢出。为与服务端一致，原始字节大于等于 128 时，仅在哈希运算中减去 256，按 `-128~127` 的有符号 byte 解释；实际发送字节保持不变。哈希输入从偏移 8 的包体开始，包含 14 字节信息头和 protobuf，排除 8 字节包头与末尾 4 字节哈希。第二参数为 `包体长度 - 4`，随消息内容动态计算；空 protobuf 的输入长度为 14。
+- 接收数据仍通过 `EventManager` 按消息名分发，`event.detail` 为 protobuf 对象，
+  `event.header` 包含 `format`、`state`、`sn`、`commandId`、`moduleId` 和收到的 `hashCode`。接收端目前单独读取哈希值，未启用 BPHash 一致性校验。
+
+服务端校验向量：`User { id: 1, name: 'Proto测试用户' }` 的 protobuf 为 21 字节，包体长度字段为 39，完整包为 47 字节；哈希输入从偏移 8 开始，共 `14 + 21 = 35` 字节。计算哈希为 `1257880503`，包尾为 `4A F9 BB B7`。按无符号 byte 直接异或会得到旧值 `1429849271`，两端须使用相同的有符号解释。
 
 ### 示例
 
-发送HelloReq消息：
-1. 消息名"HelloReq"编码后长度为8字节
-2. 长度字段: `[0x00, 0x08]`
-3. 消息名: `[0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x52, 0x65, 0x71]`
-4. 消息体: HelloReq的protobuf编码数据
+假设 `HelloReq` 的指令 ID 为 `0x01020304`、模块号为 `0x11`（仅用于展示，
+实际数值由服务端分配），首条消息 `{ content: 'A' }` 的 protobuf 信息体为 3 字节，完整数据包为 29 字节：
+
+```text
+03 6D 6A 67 00 00 00 15
+00 00 00 00 00 00 00 00 01 01 02 03 04 11
+0A 01 41
+42 22 80 C1
+```
 
 ## 协议定义
 
@@ -171,7 +213,7 @@ message HelloResp {
 
 ## 编译协议
 
-项目已配置自动编译脚本：
+项目已配置自动编译脚本，详细说明见项目根目录的 `proto/README.md`：
 
 ```bash
 # 编译所有proto文件
@@ -179,40 +221,46 @@ npm run proto
 
 # 监听模式自动编译
 npm run proto:watch
+
+# 只检查生成文件是否最新
+npm run proto:check
+
+# 生成器和客户端本地模拟收发测试（Node.js 24+）
+npm run proto:test
 ```
 
 编译后会生成：
-- `assets/script/WebSocket/proto/ProtoDefined.js` - JS实现
+- `assets/script/WebSocket/proto/ProtoDefined.ts` - Cocos 使用的实现
 - `assets/script/WebSocket/proto/ProtoDefined.d.ts` - TypeScript类型定义
+- `assets/script/WebSocket/ProtoMessageType.ts` - 消息枚举
+- `assets/script/WebSocket/ProtoRoutes.ts` - 路由表
 
 ## 最佳实践
 
 ### 1. 错误处理
 
 ```typescript
-try {
-    const resp = await network.send('HelloReq', req);
-    // 处理响应
-} catch (error) {
-    if (error.message.includes('timeout')) {
-        // 处理超时
-        console.error('请求超时');
-    } else if (error.message.includes('Connection closed')) {
-        // 处理断线
-        console.error('连接已断开');
-    } else {
-        // 其他错误
-        console.error('未知错误:', error);
-    }
+const resultErrorOwner = {};
+const onServerResultError = (event: {
+    detail: { code: number; messageName: string | null };
+}) => {
+    const { code, messageName } = event.detail;
+    console.error('服务端业务错误:', code, '消息:', messageName);
+    // 按服务端约定处理错误码，并结束对应界面的等待状态。
+};
+EventManager.Instance.addListener(ProtoNetworkMgr.EventType.RESULT_ERROR, onServerResultError, resultErrorOwner);
+
+// 页面关闭时释放。
+function stopResultErrorListener(): void {
+    EventManager.Instance.removeListener(ProtoNetworkMgr.EventType.RESULT_ERROR, onServerResultError, resultErrorOwner);
 }
 ```
 
-### 2. 自定义超时
+连接错误单独通过网络对象的 `EventType.ERROR` 通知；服务端业务错误通过上面的 `RESULT_ERROR` 回调处理。
 
-```typescript
-// 为特定请求设置超时（单位：毫秒）
-const resp = await network.send('LongTaskReq', req, 60000);  // 60秒超时
-```
+### 2. 请求监听的生命周期
+
+发送和响应分别由 `send()` 与 `EventManager` 负责。请求结束或页面关闭时释放对应的响应监听和错误监听；继承 `BaseMgr`、`BaseComp` 的代码可使用项目现有的 `addEvent` 登记接口，随生命周期注销。
 
 ### 3. 连接状态管理
 
@@ -269,9 +317,10 @@ network.addEventListener(ProtoNetworkMgr.EventType.CONNECTED, async () => {
    - 查看是否有类型错误
 
 3. **收不到响应**
-   - 检查请求-响应名称是否匹配
+   - 检查响应路由的模块号和指令 ID 是否与服务端一致
+   - 确认业务消息通过 `EventManager` 监听
    - 确认服务器已正确发送响应
-   - 检查是否超时（默认30秒）
+   - 检查 `Result.code` 和 `Any.type_url`，非零错误码走 `RESULT_ERROR`
 
 4. **重连失败**
    - 检查重连次数是否已用完
@@ -317,10 +366,11 @@ message BatchReq {
 }
 
 // 批量发送
-const batch: pb.IBatchReq = {
+const batch: pbType.IBatchReq = {
     requests: [req1, req2, req3]
 };
-await network.send('BatchReq', batch);
+// 先新增 BatchReq、配置服务端路由并运行 npm run proto，再使用生成的类型和枚举。
+network.send<pbType.IBatchReq>(ProtoRequestType.BatchReq, batch);
 ```
 
 ### 3. 消息压缩
@@ -351,17 +401,13 @@ GameWebSocket.instance.connect('ws://json-server');
 
 ### 自定义心跳消息
 
-修改`sendHeartbeat()`方法使用自定义的心跳协议：
+当前 `sendHeartbeat()` 使用已有的 `HelloReq`；服务端支持这一约定时，可使用下面的实现。`startHeartbeat()` 的定时调度当前处于注释状态，启用后才会自动发送。
 
 ```typescript
-private async sendHeartbeat() {
-    try {
-        await this.send<pb.IPingReq, pb.IPongResp>('PingReq', {
-            timestamp: Date.now()
-        });
-    } catch (error) {
-        warn('[ProtoNetwork] Heartbeat failed:', error);
-    }
+private sendHeartbeat(): void {
+    this.send<pbType.IHelloReq>(ProtoRequestType.HelloReq, {
+        content: 'heartbeat',
+    });
 }
 ```
 

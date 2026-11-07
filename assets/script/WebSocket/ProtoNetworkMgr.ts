@@ -1,7 +1,9 @@
-import { _decorator, warn, log, director, Scheduler, macro, sys } from 'cc';
-import { pb } from './proto/ProtoDefined';
-import type { pb as pbType } from './proto/ProtoDefined.d';
+import { _decorator, warn, log } from 'cc';
+import { pbType as protoCodecs } from './proto/ProtoDefined';
+import type { pbType } from './proto/ProtoDefined.d';
 import { ProtoRequestType, ProtoServerMessageType } from './ProtoMessageType';
+import { ProtoConfig } from './ProtoConfig';
+import type { IProtoRoute } from './ProtoConfig';
 import { EventManager } from '../Common/EventManager';
 
 const { ccclass } = _decorator;
@@ -35,6 +37,7 @@ export class ProtoNetworkMgr extends EventTarget {
         CONNECTED: 'connected',
         DISCONNECTED: 'disconnected',
         ERROR: 'error',
+        RESULT_ERROR: 'result-error',
         RECONNECTING: 'reconnecting',
     };
 
@@ -62,6 +65,9 @@ export class ProtoNetworkMgr extends EventTarget {
     // 消息队列
     private messageQueue: Array<{ data: Uint8Array }> = [];
 
+    // 消息序号从 1 开始递增，断线重连不重置，队列消息保留原序号。
+    private messageSN: number = 0;
+
     // 协议配置映射
     private protoConfig: Map<string, IProtoConfig> = new Map();
 
@@ -76,8 +82,8 @@ export class ProtoNetworkMgr extends EventTarget {
      */
     private initProtoConfig() {
         // 自动注册所有请求协议
-        for (const reqName in ProtoRequestType) {
-            const reqType = (pb as any)[reqName];
+        for (const reqName of Object.values(ProtoRequestType)) {
+            const reqType = this.findProtoType(reqName);
             if (reqType) {
                 this.registerProto(reqName, reqType);
                 log(`[ProtoNetwork] Auto registered proto: ${reqName}`);
@@ -89,6 +95,16 @@ export class ProtoNetworkMgr extends EventTarget {
         log('[ProtoNetwork] Protocol initialization completed');
     }
 
+    /** 路由保留源消息标识，编解码类型统一从 pbType 命名空间查找。 */
+    private findProtoType(messageName: string): any {
+        const typeName = messageName.split('.').filter(Boolean).pop();
+        if (!typeName || !Object.prototype.hasOwnProperty.call(protoCodecs, typeName)) return null;
+        const protoType = (protoCodecs as any)[typeName];
+        return protoType && typeof protoType.create === 'function'
+            && typeof protoType.encode === 'function' && typeof protoType.decode === 'function'
+            ? protoType : null;
+    }
+
     /**
      * 注册请求协议
      */
@@ -97,6 +113,13 @@ export class ProtoNetworkMgr extends EventTarget {
             reqName,
             reqType,
         });
+    }
+
+    /** 检查路由是否能完整写入 int32 指令 ID 和 byte 模块号。 */
+    private isValidRoute(route: IProtoRoute | null | undefined): route is IProtoRoute {
+        return !!route && Number.isInteger(route.commandId)
+            && route.commandId >= -0x80000000 && route.commandId <= 0x7FFFFFFF
+            && Number.isInteger(route.moduleId) && route.moduleId >= 0 && route.moduleId <= 0xFF;
     }
 
     /**
@@ -125,10 +148,10 @@ export class ProtoNetworkMgr extends EventTarget {
                     this.isReconnecting = false;
 
                     this.startHeartbeat();
-                    this.dispatchEvent(new Event(ProtoNetworkMgr.EventType.CONNECTED));
 
-                    // 发送排队的消息
+                    // 先发送旧队列，再允许连接监听者发送新消息，保持 SN 顺序。
                     this.flushMessageQueue();
+                    this.dispatchEvent(new Event(ProtoNetworkMgr.EventType.CONNECTED));
 
                     resolve(true);
                 };
@@ -139,6 +162,7 @@ export class ProtoNetworkMgr extends EventTarget {
                 };
 
                 this.ws.onmessage = (event: MessageEvent) => {
+                    log('[ProtoNetwork] 服务器返回:', event.data);
                     this.handleMessage(event);
                 };
 
@@ -224,23 +248,44 @@ export class ProtoNetworkMgr extends EventTarget {
             return;
         }
 
+        const route = ProtoConfig.PROTO_ROUTES[reqName];
+        if (!this.isValidRoute(route)) {
+            warn(`[ProtoNetwork] Missing or invalid route for ${reqName}, configure ProtoConfig.PROTO_ROUTES`);
+            return;
+        }
+        if (this.messageSN >= 0x7FFFFFFF) {
+            warn('[ProtoNetwork] Message SN exceeded int32 range');
+            return;
+        }
+
         // 编码消息
         const message = config.reqType.create(data);
         const buffer = config.reqType.encode(message).finish();
 
-        // 添加消息头: [消息名长度(2字节)][消息名][消息体]
-        const nameBuffer = new TextEncoder().encode(reqName);
-        const packet = new Uint8Array(2 + nameBuffer.length + buffer.length);
+        const { HEADER_LENGTH, MESSAGE_HEADER_LENGTH, HASH_LENGTH, IDENTIFIER, FORMAT, STATE } = ProtoConfig.PROTO;
+        const bodyOffset = HEADER_LENGTH + MESSAGE_HEADER_LENGTH;
+        const bodyLength = MESSAGE_HEADER_LENGTH + buffer.length + HASH_LENGTH;
+        const packet = new Uint8Array(HEADER_LENGTH + bodyLength);
+        const view = new DataView(packet.buffer);
 
-        // 写入消息名长度
-        packet[0] = (nameBuffer.length >> 8) & 0xFF;
-        packet[1] = nameBuffer.length & 0xFF;
+        // 8 字节包头，长度字段包含信息头、protobuf 和尾部哈希，不包含包头自身。
+        view.setUint8(0, IDENTIFIER.length);
+        for (let i = 0; i < IDENTIFIER.length; i++) {
+            view.setUint8(1 + i, IDENTIFIER.charCodeAt(i));
+        }
+        view.setInt32(4, bodyLength, false);
 
-        // 写入消息名
-        packet.set(nameBuffer, 2);
-
-        // 写入消息体
-        packet.set(buffer, 2 + nameBuffer.length);
+        // 14 字节信息头，protobuf 数据从偏移 22 开始。
+        view.setUint8(HEADER_LENGTH, FORMAT);
+        view.setInt32(HEADER_LENGTH + 1, STATE, false);
+        view.setInt32(HEADER_LENGTH + 5, ++this.messageSN, false);
+        view.setInt32(HEADER_LENGTH + 9, route.commandId, false);
+        view.setUint8(HEADER_LENGTH + 13, route.moduleId);
+        packet.set(buffer, bodyOffset);
+        // BPHash 输入为服务端包体去掉哈希：14 字节信息头 + protobuf。
+        const hashContent = packet.subarray(HEADER_LENGTH, packet.length - HASH_LENGTH);
+        const hashCode = this.BPHash(hashContent, hashContent.length);
+        view.setInt32(bodyOffset + buffer.length, hashCode, false);
 
         // 如果未连接,加入队列
         if (!this.isConnected || !this.ws) {
@@ -252,7 +297,8 @@ export class ProtoNetworkMgr extends EventTarget {
         // 发送消息
         try {
             this.ws.send(packet);
-            log(`[ProtoNetwork] Sent message: ${reqName}`, data);
+            // packetLen=${packet.length},bodyLength=${bodyLength},protobufLength=${buffer.length},hashCode=${hashCode}
+            log(`%c[ProtoNetwork] Sent message: ${reqName}(${route.moduleId}-${route.commandId})`, 'color: #ffd000', data);
         } catch (error) {
             warn('[ProtoNetwork] Failed to send message:', error);
         }
@@ -264,34 +310,108 @@ export class ProtoNetworkMgr extends EventTarget {
     private handleMessage(event: MessageEvent) {
         try {
             const buffer = new Uint8Array(event.data);
+            const { HEADER_LENGTH, MESSAGE_HEADER_LENGTH, HASH_LENGTH, IDENTIFIER, FORMAT } = ProtoConfig.PROTO;
+            const bodyOffset = HEADER_LENGTH + MESSAGE_HEADER_LENGTH;
+            if (buffer.length < bodyOffset + HASH_LENGTH) {
+                warn(`[ProtoNetwork] Packet too short: ${buffer.length}`);
+                return;
+            }
+            const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
 
-            // 解析消息头
-            const nameLength = (buffer[0] << 8) | buffer[1];
-            const nameBuffer = buffer.slice(2, 2 + nameLength);
-            const msgName = new TextDecoder().decode(nameBuffer);
-            const msgBuffer = buffer.slice(2 + nameLength);
+            // 校验包标识和完整包体长度（信息头 + protobuf + 哈希）。
+            if (view.getUint8(0) !== IDENTIFIER.length) {
+                warn('[ProtoNetwork] Invalid packet identifier length');
+                return;
+            }
+            for (let i = 0; i < IDENTIFIER.length; i++) {
+                if (view.getUint8(1 + i) !== IDENTIFIER.charCodeAt(i)) {
+                    warn('[ProtoNetwork] Invalid packet identifier');
+                    return;
+                }
+            }
+            const bodyLength = view.getInt32(4, false);
+            if (bodyLength < MESSAGE_HEADER_LENGTH + HASH_LENGTH || HEADER_LENGTH + bodyLength !== buffer.length) {
+                warn(`[ProtoNetwork] Body length mismatch: ${bodyLength}, received: ${buffer.length - HEADER_LENGTH}`);
+                return;
+            }
+            const payloadLength = bodyLength - MESSAGE_HEADER_LENGTH - HASH_LENGTH;
 
-            log(`[ProtoNetwork] Received message: ${msgName}`);
-
-            // 直接从pb命名空间查找消息类型（响应和通知都在这里）
-            const protoType = (pb as any)[msgName];
-
-            if (!protoType) {
-                warn(`[ProtoNetwork] Unknown message type: ${msgName}`);
+            const header = {
+                format: view.getUint8(HEADER_LENGTH),
+                state: view.getInt32(HEADER_LENGTH + 1, false),
+                sn: view.getInt32(HEADER_LENGTH + 5, false),
+                commandId: view.getInt32(HEADER_LENGTH + 9, false),
+                moduleId: view.getUint8(HEADER_LENGTH + 13),
+                hashCode: view.getInt32(bodyOffset + payloadLength, false),
+            };
+            if (header.format !== FORMAT) {
+                warn(`[ProtoNetwork] Unsupported message format: ${header.format}`);
                 return;
             }
 
-            // 解码消息
-            const message = protoType.decode(msgBuffer);
-            const plainObject = protoType.toObject(message, {
-                longs: String,
-                enums: String,
-                bytes: String,
-                defaults: true,
-            });
+            // 所有服务端信息体统一为 Result；Any.value 内才是实际业务协议。
+            const msgBuffer = buffer.subarray(bodyOffset, bodyOffset + payloadLength);
+            const result = protoCodecs.Result.decode(msgBuffer);
+            const typeUrl = result.content?.type_url || '';
+
+            // 按模块号和指令 ID 匹配响应/通知，区分不同模块的相同指令 ID。
+            let msgName: ProtoServerMessageType | undefined;
+            let duplicateRoute = false;
+            for (const name of Object.values(ProtoServerMessageType)) {
+                const route = ProtoConfig.PROTO_ROUTES[name];
+                if (route && route.commandId === header.commandId && route.moduleId === header.moduleId) {
+                    if (msgName) {
+                        duplicateRoute = true;
+                        msgName = undefined;
+                        break;
+                    }
+                    msgName = name;
+                }
+            }
+            if (result.code !== 0) {
+                const error = { code: result.code, messageName: msgName || null, header, typeUrl };
+                warn(`[ProtoNetwork] Server result error: ${result.code}`, error);
+                EventManager.Instance.dispatch(ProtoNetworkMgr.EventType.RESULT_ERROR, { detail: error });
+                this.dispatchEvent(new CustomEvent(ProtoNetworkMgr.EventType.RESULT_ERROR, { detail: error }));
+                return;
+            }
+            if (duplicateRoute) {
+                warn(`[ProtoNetwork] Duplicate server message route: ${header.moduleId}/${header.commandId}`);
+                return;
+            }
+            if (!msgName) {
+                warn(`[ProtoNetwork] Unknown server message route: ${header.moduleId}/${header.commandId}`);
+                return;
+            }
+            let plainObject: unknown = null;
+            if (result.content) {
+                const protoType = this.findProtoType(msgName);
+                if (!protoType) {
+                    warn(`[ProtoNetwork] Unknown message type: ${msgName}`);
+                    return;
+                }
+                if (typeUrl) {
+                    const actualType = typeUrl.substring(typeUrl.lastIndexOf('/') + 1);
+                    const expectedUrl: string = protoType.getTypeUrl();
+                    const expectedType = expectedUrl.substring(expectedUrl.lastIndexOf('/') + 1);
+                    if (actualType !== expectedType) {
+                        warn(`[ProtoNetwork] Result content type mismatch: ${actualType}, expected: ${expectedType}`);
+                        return;
+                    }
+                }
+                // value 为空是合法的空业务消息；content 缺失则保留 detail = null。
+                const message = protoType.decode(result.content.value);
+                plainObject = protoType.toObject(message, {
+                    longs: String,
+                    enums: String,
+                    bytes: String,
+                    defaults: true,
+                });
+            }
+            log(`%c[ProtoNetwork] Received message: ${msgName}`, 'color: #0bf132', plainObject);
 
             // 触发事件监听（所有服务器消息都通过事件系统分发）
-            EventManager.Instance.dispatch(msgName, { detail: plainObject });
+            EventManager.Instance.dispatch(msgName, { detail: plainObject, header, code: result.code, typeUrl });
 
         } catch (error) {
             warn('[ProtoNetwork] Failed to handle message:', error);
@@ -320,11 +440,11 @@ export class ProtoNetworkMgr extends EventTarget {
      * 开始心跳
      */
     private startHeartbeat() {
-        this.stopHeartbeat();
+        // this.stopHeartbeat();
 
-        this.heartbeatTimer = setInterval(() => {
-            this.sendHeartbeat();
-        }, this.heartbeatInterval);
+        // this.heartbeatTimer = setInterval(() => {
+        //     this.sendHeartbeat();
+        // }, this.heartbeatInterval);
     }
 
     /**
@@ -382,5 +502,17 @@ export class ProtoNetworkMgr extends EventTarget {
         if (this.isConnected) {
             this.startHeartbeat();
         }
+    }
+    /** 按服务端有符号 byte 规则计算 BPHash，保留 int32 溢出结果。 */
+    public BPHash(bytes: Uint8Array, len: number): number {
+        let hash = 0;
+
+        for (let i = 0; i < len; i++) {
+            // Uint8Array 是 0~255；服务端 byte 在提升为 int 时会保留符号。
+            const signedByte = bytes[i] >= 128 ? bytes[i] - 256 : bytes[i];
+            hash = (hash << 7) ^ signedByte;
+        }
+
+        return hash;
     }
 }

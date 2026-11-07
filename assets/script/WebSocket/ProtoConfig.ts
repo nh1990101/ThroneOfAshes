@@ -1,3 +1,6 @@
+import { PROTO_ROUTES, PROTO_ROUTES_TEST_ONLY } from './ProtoRoutes';
+export type { IProtoRoute } from './ProtoRoutes';
+
 /**
  * Protobuf网络配置
  * 用于配置服务器地址、心跳、重连等参数
@@ -8,7 +11,7 @@ export class ProtoConfig {
      */
     static SERVER = {
         // 开发环境服务器地址
-        DEV_URL: 'ws://127.0.0.1:8080/ws',
+        DEV_URL: 'ws://192.168.0.228:8888/websocket',
 
         // 测试环境服务器地址
         TEST_URL: 'ws://1.117.60.180:17001/ws',
@@ -116,15 +119,31 @@ export class ProtoConfig {
      * 协议配置
      */
     static PROTO = {
-        // 消息头长度（字节）
-        HEADER_LENGTH: 2,
+        // 包头：[标识长度(1)][mjg(3)][包体长度(4)]；包体包含信息头、protobuf 和哈希。
+        HEADER_LENGTH: 8,
 
-        // 消息名最大长度
-        MAX_NAME_LENGTH: 255,
+        // 信息头：[format(1)][state(4)][sn(4)][指令ID(4)][模块号(1)]
+        MESSAGE_HEADER_LENGTH: 14,
+
+        // 包尾 BPHash（按有符号 byte 计算信息头 + protobuf），int32 大端序。
+        HASH_LENGTH: 4,
+
+        IDENTIFIER: 'mjg',
+        FORMAT: 0,
+        STATE: 0,
 
         // 消息体最大长度
         MAX_BODY_LENGTH: 1024 * 1024, // 1MB
     };
+
+    /**
+     * 消息路由由 proto/routes.json 维护，运行 npm run proto 后更新。
+     * 未配置的消息自动生成为 null；请求不会发送，服务器消息不会解码。
+     */
+    static PROTO_ROUTES = PROTO_ROUTES;
+
+    /** 当前指令 ID 和模块号是否仍为测试值。 */
+    static PROTO_ROUTES_TEST_ONLY = PROTO_ROUTES_TEST_ONLY;
 
     /**
      * 错误码配置
@@ -144,8 +163,8 @@ export class ProtoConfig {
     static getConfig(env: 'dev' | 'test' | 'prod' = 'test') {
         return {
             serverUrl: env === 'dev' ? this.SERVER.DEV_URL :
-                      env === 'prod' ? this.SERVER.PROD_URL :
-                      this.SERVER.TEST_URL,
+                env === 'prod' ? this.SERVER.PROD_URL :
+                    this.SERVER.TEST_URL,
             reconnectMaxCount: this.RECONNECT.MAX_COUNT,
             reconnectDelay: this.RECONNECT.DELAY,
             heartbeatInterval: this.HEARTBEAT.INTERVAL,

@@ -40,7 +40,7 @@ export class BaseBtn extends Button {
 
         // 设置默认按钮点击缩放
         this.transition = Button.Transition.SCALE;
-
+        this.zoomScale = 0.8;
 
         // 设置默认可交互
         this.interactable = true;
@@ -50,7 +50,7 @@ export class BaseBtn extends Button {
     }
     SetText(content: string) {
         if (this._lb_text) {
-            this._lb_text.string = content;
+            this._lb_text.setText(content);
         }
     }
     SetSprite(resName: string, atlasName?: string) {

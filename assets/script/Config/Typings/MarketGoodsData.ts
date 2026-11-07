@@ -2,7 +2,6 @@
 export interface IMarketGoodsData {
   id: string;
   group_id?: number;
-  ch_key?: string;
   group_key?: string;
   market_type_id?: string;
   market_level?: number;
@@ -14,4 +13,8 @@ export interface IMarketGoodsData {
   weight?: number;
   is_close?: boolean;
   is_free?: boolean;
+}
+
+export interface IMarketGoodsDataIndex {
+  group_dict: Record<number, Record<string, string>>;
 }

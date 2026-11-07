@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Vec2 } from 'cc';
 import { BaseMgr } from '../../Common/BaseMgr';
 import { MapGridData } from './MapGridData';
+import { MapObjUserData } from './Data/MapObjUserData';
 const { ccclass, property } = _decorator;
 
 /**
@@ -145,7 +146,7 @@ export class RectPathFindingMgr extends BaseMgr {
             return [];
         }
 
-        if (!endCell.walkable && !ignoreEndOccupied) {
+        if (!endCell.walkable && !ignoreEndOccupied && !mustReachPath) {
             console.warn('[RectPathFinding] 终点不可行走');
             return [];
         }
@@ -198,9 +199,7 @@ export class RectPathFindingMgr extends BaseMgr {
                     if (ignoreEndOccupied) {
                         // 忽略终点占据的情况下
                         // 判断占据单位是否为地图物体（IMapObject）
-                        const isMapObject = neighborCell.occupyUnit &&
-                            typeof neighborCell.occupyUnit === 'object' &&
-                            'resourcePath' in neighborCell.occupyUnit;
+                        const isMapObject = neighborCell.GetMapObject() != null;// instanceof MapObjUserData;
 
                         if (!isMapObject && !neighborCell.walkable) {
                             // 不是地图物体占据，且不可行走，则跳过
@@ -279,8 +278,8 @@ export class RectPathFindingMgr extends BaseMgr {
             const current = queue.shift()!;
             const distance = current.distanceTo(target);
 
-            // 更新最近的格子
-            if (distance < minDistance) {
+            // 更新最近的格子（排除起点本身）
+            if (distance < minDistance && !current.equals(start)) {
                 minDistance = distance;
                 nearestGrid = current;
             }

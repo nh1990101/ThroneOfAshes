@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "b44f9144-f77a-4276-aa12-120cdee12483",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "b44f9144-f77a-4276-aa12-120cdee12483@6c48a",
+      "displayName": "equip_stone",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "b44f9144-f77a-4276-aa12-120cdee12483",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "b44f9144-f77a-4276-aa12-120cdee12483@f9941",
+      "displayName": "equip_stone",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": -0.5,
+        "offsetY": -1.5,
+        "trimX": 30,
+        "trimY": 20,
+        "width": 107,
+        "height": 131,
+        "rawWidth": 168,
+        "rawHeight": 168,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -53.5,
+            -65.5,
+            0,
+            53.5,
+            -65.5,
+            0,
+            -53.5,
+            65.5,
+            0,
+            53.5,
+            65.5,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            30,
+            148,
+            137,
+            148,
+            30,
+            17,
+            137,
+            17
+          ],
+          "nuv": [
+            0.17857142857142858,
+            0.10119047619047619,
+            0.8154761904761905,
+            0.10119047619047619,
+            0.17857142857142858,
+            0.8809523809523809,
+            0.8154761904761905,
+            0.8809523809523809
+          ],
+          "minPos": [
+            -53.5,
+            -65.5,
+            0
+          ],
+          "maxPos": [
+            53.5,
+            65.5,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "b44f9144-f77a-4276-aa12-120cdee12483@6c48a",
+        "atlasUuid": "",
+        "trimType": "auto"
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "fixAlphaTransparencyArtifacts": false,
+    "hasAlpha": true,
+    "redirect": "b44f9144-f77a-4276-aa12-120cdee12483@6c48a"
+  }
+}

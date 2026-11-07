@@ -1,0 +1,63 @@
+{
+  "ver": "1.0.8",
+  "importer": "sprite-atlas",
+  "imported": true,
+  "uuid": "25199aea-4e0c-4fcf-a0ce-18a70aa364be",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {
+    "0bbbe": {
+      "importer": "sprite-frame",
+      "uuid": "25199aea-4e0c-4fcf-a0ce-18a70aa364be@0bbbe",
+      "displayName": "",
+      "id": "0bbbe",
+      "name": "ui_unitupgrade_icon_tab_knight",
+      "userData": {
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 2,
+        "trimY": 2,
+        "width": 100,
+        "height": 99,
+        "rawWidth": 100,
+        "rawHeight": 99,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "10ab9f84-5b07-4e02-9118-66e1e1438f7e@6c48a",
+        "atlasUuid": "25199aea-4e0c-4fcf-a0ce-18a70aa364be",
+        "trimType": "auto"
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "atlasTextureName": "SoldierIcon.png",
+    "format": 2,
+    "uuid": "25199aea-4e0c-4fcf-a0ce-18a70aa364be",
+    "textureUuid": "10ab9f84-5b07-4e02-9118-66e1e1438f7e@6c48a"
+  }
+}

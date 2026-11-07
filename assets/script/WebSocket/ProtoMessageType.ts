@@ -1,31 +1,21 @@
-/**
- * 协议消息类型枚举
- * 自动生成，避免使用魔法字符串
- */
+/** 协议消息类型枚举，由 proto 工具自动生成，请勿手动修改。 */
 
-/**
- * 请求消息类型
- */
+/** 请求消息类型。 */
 export enum ProtoRequestType {
-    /** Hello请求 */
+    AccountLoginReq = 'com.game.hjwz.message.AccountLoginReq',
+    User = 'com.message.User',
     HelloReq = 'HelloReq',
-    /** GM命令请求 */
     UseGMCMDReq = 'UseGMCMDReq',
 }
 
-/**
- * 服务器消息类型（响应和通知）
- */
+/** 服务器消息类型（响应和通知）。 */
 export enum ProtoServerMessageType {
-    /** Hello响应 */
+    AccountLoginResp = 'com.game.hjwz.message.AccountLoginResp',
+    User = 'com.message.User',
     HelloResp = 'HelloResp',
-    /** GM命令响应 */
-    UseGMCMDResp = 'UseGMCMDResp',
-    /** GM命令初始化通知 */
     NtfGMCMDInit = 'NtfGMCMDInit',
+    UseGMCMDResp = 'UseGMCMDResp',
 }
 
-/**
- * 所有消息类型（包含请求、响应、通知）
- */
+/** 所有网络消息类型。 */
 export type ProtoMessageType = ProtoRequestType | ProtoServerMessageType;

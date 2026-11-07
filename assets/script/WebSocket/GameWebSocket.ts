@@ -1,11 +1,14 @@
 import { _decorator, Component } from 'cc';
 import { ProtoNetworkMgr } from './ProtoNetworkMgr';
 import { ProtoConfig } from './ProtoConfig';
-import { pb } from './proto/ProtoDefined';
-import type { pb as pbType } from './proto/ProtoDefined.d';
+import type { pbType } from './proto/ProtoDefined.d';
 import { ProtoRequestType, ProtoServerMessageType } from './ProtoMessageType';
 import { BaseMgr } from '../Common/BaseMgr';
 import { EventManager } from '../Common/EventManager';
+import { UIMananger } from '../Component/UIMananger';
+import { lang } from '../Common/LangMgr';
+import { CHECK_TYPE } from '../Common/GameEnum';
+import { CheckBox, ICheckBoxData } from '../Common/CheckBox';
 
 
 
@@ -29,9 +32,10 @@ export class GameWebSocket extends BaseMgr {
         this.addEvent(ProtoNetworkMgr.EventType.DISCONNECTED, this.onDisconnected, this);
         this.addEvent(ProtoNetworkMgr.EventType.RECONNECTING, this.onReconnecting, this);
         this.addEvent(ProtoNetworkMgr.EventType.ERROR, this.onError, this);
+        this.addEvent(ProtoNetworkMgr.EventType.RESULT_ERROR, this.onError, this);
 
         // 监听服务器推送消息
-        this.network.addEventListener(ProtoServerMessageType.NtfGMCMDInit, this.onGMCMDInit.bind(this));
+        this.addEvent(ProtoServerMessageType.NtfGMCMDInit, this.onGMCMDInit, this);
     }
     start() {
         // this.initNetwork();
@@ -40,27 +44,27 @@ export class GameWebSocket extends BaseMgr {
     /**
      * 初始化网络连接
      */
-    async initNetwork() {
+    async initNetwork(): Promise<void> {
+        if (!this.network) {
+            this.eventRegistor();
+        }
+        const config = ProtoConfig.getConfig('dev');
+        // this.network.setReconnectConfig(config.reconnectMaxCount, config.reconnectDelay);
+        // this.network.setHeartbeatConfig(config.heartbeatInterval);
 
-        // 应用配置
-        const config = ProtoConfig.getConfig('test');
-        this.network.setReconnectConfig(config.reconnectMaxCount, config.reconnectDelay);
-        this.network.setHeartbeatConfig(config.heartbeatInterval);
-
-
-        // 连接服务器
         console.log('正在连接服务器:', config.serverUrl);
         const connected = await this.network.connect(config.serverUrl);
-
-        if (connected) {
-            console.log('连接服务器成功');
-            // 连接成功后可以发送消息
-            this.testHelloMessage();
-        } else {
-            console.error('连接服务器失败');
+        if (!connected) {
+            const erroContent = `连接服务器失败: ${config.serverUrl}，请检查服务端是否启动及网络是否可达`;
+            let winData: ICheckBoxData = { tittle: lang(211), content: erroContent, showType: CHECK_TYPE.CONFIRM };
+            UIMananger.instance.showWin(CheckBox, winData)
+            throw new Error(erroContent);
         }
+
+        console.log('连接服务器成功');
+        // this.testUser();
     }
-  
+
     /**
      * 测试Hello消息
      */
@@ -74,6 +78,7 @@ export class GameWebSocket extends BaseMgr {
         // 先监听响应
         EventManager.Instance.addListener(ProtoServerMessageType.HelloResp, (event: any) => {
             const resp = event.detail;
+            if (!resp) return;
             console.log('收到服务器响应:');
             console.log('  内容:', resp.content);
             console.log('  服务器时间:', resp.serverTime);
@@ -82,7 +87,19 @@ export class GameWebSocket extends BaseMgr {
         // 发送请求
         this.network.send<pbType.IHelloReq>(ProtoRequestType.HelloReq, req);
     }
+    testUser(id: number = 1, name: string = 'Proto测试用户'): void {
+        const req: pbType.IUser = { id, name };
 
+        EventManager.Instance.addListener(ProtoServerMessageType.User, (event: any) => {
+            const resp = event.detail;
+            if (!resp) return;
+            console.log('收到服务器响应:');
+            console.log('  ID:', resp.id);
+            console.log('  名称:', resp.name);
+        }, this);
+
+        this.network.send<pbType.IUser>(ProtoRequestType.User, req);
+    }
     /**
      * 测试GM命令
      */
@@ -97,6 +114,7 @@ export class GameWebSocket extends BaseMgr {
         // 先监听响应
         EventManager.Instance.addListener(ProtoServerMessageType.UseGMCMDResp, (event: any) => {
             const resp = event.detail;
+            if (!resp) return;
             console.log('GM命令结果:', resp.msg);
         }, this);
 
@@ -141,6 +159,7 @@ export class GameWebSocket extends BaseMgr {
      */
     private onGMCMDInit(event: CustomEvent) {
         const data = event.detail as pbType.INtfGMCMDInit;
+        if (!data) return;
         console.log('[服务器推送] 收到GM命令列表:');
 
         if (data.cmds && data.cmds.length > 0) {
@@ -205,7 +224,7 @@ export class GameWebSocket extends BaseMgr {
      */
     public async reconnect(): Promise<boolean> {
         if (this.network) {
-            const config = ProtoConfig.getConfig('test');
+            const config = ProtoConfig.getConfig('dev');
             return await this.network.connect(config.serverUrl);
         }
         return false;
@@ -220,5 +239,8 @@ export class GameWebSocket extends BaseMgr {
         }
 
     }
-  
+    public get NetWork() {
+        return this.network;
+    }
+
 }

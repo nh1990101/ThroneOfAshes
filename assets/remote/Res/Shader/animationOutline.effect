@@ -1,0 +1,168 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        outlineColor: { value: [1, 1, 1, 1], editor: { type: color, displayName: "描边颜色" } }
+        outlineWidth: { value: 2, editor: { displayName: "描边宽度", slide: true, range: [0, 20, 1] } }
+        outlineWorld: { value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }
+        outlineWorldInv: { value: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }
+        frameUV: { value: [0, 0, 1, 1] }
+        frameSize: { value: [100, 100] }
+        frameCenter: { value: [0, 0] }
+        uvStep: { value: [0, 0] }
+        texelSize: { value: [1, 1] }
+        frameRotated: { value: 0 }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if SAMPLE_FROM_RT
+    #include <common/common-define>
+  #endif
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  uniform OutlineTransform {
+    mat4 outlineWorld;
+    mat4 outlineWorldInv;
+  };
+
+  uniform OutlineParams {
+    vec4 outlineColor;
+    vec4 frameUV;
+    vec2 frameSize;
+    vec2 frameCenter;
+    vec2 uvStep;
+    vec2 texelSize;
+    float outlineWidth;
+    float frameRotated;
+  };
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    // UI 批渲染传入的是世界坐标，使用组件显式传入的逆矩阵还原到本地空间。
+    #if !USE_LOCAL
+      pos = outlineWorldInv * pos;
+    #endif
+
+    // 在本地空间扩大 Sprite 网格，避免改变世界坐标时产生整体位移。
+    vec2 safeSize = max(abs(frameSize), vec2(1.0));
+    vec2 expandScale = (safeSize + vec2(max(outlineWidth, 0.0) * 2.0)) / safeSize;
+    pos.xy = frameCenter + (pos.xy - frameCenter) * expandScale;
+
+    // UV 同步向外扩展；图集旋转帧需要交换两个轴的扩展比例。
+    vec2 uvCenter = (frameUV.xy + frameUV.zw) * 0.5;
+    vec2 uvScale = frameRotated > 0.5 ? expandScale.yx : expandScale;
+    uv0 = uvCenter + (a_texCoord - uvCenter) * uvScale;
+
+    // 使用同一组件的世界矩阵返回世界空间，不依赖 UI 批次的内置矩阵。
+    pos = outlineWorld * pos;
+
+    #if USE_PIXEL_ALIGNMENT
+      pos = cc_matView * pos;
+      pos.xyz = floor(pos.xyz);
+      pos = cc_matProj * pos;
+    #else
+      pos = cc_matViewProj * pos;
+    #endif
+
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+    #endif
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 color;
+  in vec2 uv0;
+
+  #pragma builtin(local)
+  layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+
+  uniform OutlineParams {
+    vec4 outlineColor;
+    vec4 frameUV;
+    vec2 frameSize;
+    vec2 frameCenter;
+    vec2 uvStep;
+    vec2 texelSize;
+    float outlineWidth;
+    float frameRotated;
+  };
+
+  vec4 sampleFrame(vec2 uv) {
+    // 图集帧边界外视为透明，避免采到相邻帧。
+    if (any(lessThan(uv, frameUV.xy)) || any(greaterThan(uv, frameUV.zw))) {
+      return vec4(0.0);
+    }
+
+    // 半像素内缩避免线性过滤带入图集中的相邻帧。
+    vec2 halfTexel = texelSize * 0.5;
+    vec2 sampleUV = clamp(uv, frameUV.xy + halfTexel, frameUV.zw - halfTexel);
+    return CCSampleWithAlphaSeparated(cc_spriteTexture, sampleUV);
+  }
+
+  float sampleFrameAlpha(vec2 uv) {
+    return sampleFrame(uv).a;
+  }
+
+  float sampleOutlineAlpha(vec2 uv) {
+    vec2 diagonal = uvStep * 0.70710678;
+    float alpha = 0.0;
+    alpha = max(alpha, sampleFrameAlpha(uv + vec2(uvStep.x, 0.0)));
+    alpha = max(alpha, sampleFrameAlpha(uv - vec2(uvStep.x, 0.0)));
+    alpha = max(alpha, sampleFrameAlpha(uv + vec2(0.0, uvStep.y)));
+    alpha = max(alpha, sampleFrameAlpha(uv - vec2(0.0, uvStep.y)));
+    alpha = max(alpha, sampleFrameAlpha(uv + diagonal));
+    alpha = max(alpha, sampleFrameAlpha(uv - diagonal));
+    alpha = max(alpha, sampleFrameAlpha(uv + vec2(diagonal.x, -diagonal.y)));
+    alpha = max(alpha, sampleFrameAlpha(uv + vec2(-diagonal.x, diagonal.y)));
+    return alpha;
+  }
+
+  vec4 frag () {
+    vec4 source = sampleFrame(uv0);
+
+    #if IS_GRAY
+      float gray = 0.2126 * source.r + 0.7152 * source.g + 0.0722 * source.b;
+      source.rgb = vec3(gray);
+    #endif
+
+    // 只把轮廓填到原图透明区域，原图始终覆盖在描边之上。
+    float neighborAlpha = sampleOutlineAlpha(uv0);
+    float outlineAlpha = outlineColor.a * neighborAlpha * (1.0 - source.a);
+    vec4 o = vec4(mix(outlineColor.rgb, source.rgb, source.a), max(source.a, outlineAlpha));
+
+    o *= color;
+    ALPHA_TEST(o);
+    return o;
+  }
+}%

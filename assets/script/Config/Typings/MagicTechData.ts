@@ -1,11 +1,10 @@
 // Auto-generated from MagicTechData.json by sharedata/tools/excel-exporter.
 export interface IMagicTechData {
   id: number;
-  ch_key?: string;
   type_id?: number;
-  name?: string;
+  name?: number;
   icon?: number;
-  desc?: string;
+  desc?: number;
   level?: number;
   sort?: number;
   need_tech_id?: number[];

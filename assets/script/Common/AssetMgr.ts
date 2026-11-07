@@ -1,6 +1,7 @@
 import { _decorator, Asset, assetManager, AssetManager, Component, Font, instantiate, Label, Node, path, Prefab, Sprite, SpriteAtlas, UIOpacity, Vec2 } from 'cc';
 import { DEBUG } from 'cc/env';
 import { Tools } from './Tools';
+import { error } from 'node:console';
 const { ccclass, property } = _decorator;
 
 @ccclass('AssetMgr')
@@ -9,7 +10,7 @@ export class AssetMgr extends Component {
     private static _poolActive: Map<string, Node[]> = new Map<string, Node[]>();
     public static REMOVE_POS = new Vec2(10000, 10000);
     public static remoteBundle: AssetManager.Bundle;
-
+    public static PreloadDir = ["GamePlay", "Windows", "Common"];
     start() {
 
     }
@@ -28,9 +29,25 @@ export class AssetMgr extends Component {
             });
         })
     }
+    // 预加载游戏预制体
+    public static async preloadGamePrefab(proCallFunc?: Function): Promise<void> {
+        await Promise.all(this.PreloadDir.map(dir => new Promise<void>((resolve, reject) => {
+            this.remoteBundle.preloadDir(dir, (finished, total, item) => {
+                if (proCallFunc) {
+                    proCallFunc(finished, total, item);
+                }
+            }, error => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        })));
+    }
     /**资源路径管理（cdn地址） */
     public static getUrl(): string {
-        return ""
+        return "resources/"
     }
     /**游戏配置路径 */
     public static getConfigUrl(): string {
@@ -108,8 +125,8 @@ export class AssetMgr extends Component {
     /**从预制体实例化对象 - 带泛型支持 */
     public static createPrefabFromPoolByPrefab<T extends Component = Component>(prefab: Prefab, componentType?: new () => T) {
         const prefabName = prefab.name;
-        // 如果指定了组件类型，pool key 加上组件名称
-        const poolKey = componentType ? `${prefabName}_${componentType.name}` : prefabName;
+        // 如果指定了组件类型，pool key 加上组件名称。用 getClsName，压缩后 .name 会重名
+        const poolKey = componentType ? `${prefabName}_${Tools.getClsName(componentType)}` : prefabName;
 
         let arrRemove = this._poolRemoveNode.get(poolKey);
         let node: Node;
@@ -155,13 +172,13 @@ export class AssetMgr extends Component {
         pos: Vec2,
         parent: Node,
         componentType: (new () => T),
-        keepWorldTransform: boolean = true,
+        keepWorldTransform: boolean = false,
         isInitPool?: boolean
     ): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             const prefabName = Tools.getPrefabName(url);
-            // 如果指定了组件类型，pool key 加上组件名称
-            const poolKey = componentType ? `${prefabName}_${componentType.name}` : prefabName;
+            // 如果指定了组件类型，pool key 加上组件名称。用 getClsName，压缩后 .name 会重名
+            const poolKey = componentType ? `${prefabName}_${Tools.getClsName(componentType)}` : prefabName;
 
             let arrRemove = this._poolRemoveNode.get(poolKey);
             let node: Node;
@@ -187,11 +204,15 @@ export class AssetMgr extends Component {
                 const uiOpacity = node.getComponent(UIOpacity);
                 if (uiOpacity) uiOpacity.opacity = 255;
                 node.active = true;
-                if (node.parent != parent) {
-                    node.setParent(parent,keepWorldTransform);
-                }
-                node.setPosition(pos.toVec3());
 
+                if (node.parent != parent) {
+                    node.setParent(parent, true);
+                }
+                if (keepWorldTransform) {
+                    node.setWorldPosition(pos.toVec3());
+                } else {
+                    node.setPosition(pos.toVec3());
+                }
                 // 返回组件或节点
                 if (componentType) {
                     let comp = node.getComponent(componentType);
@@ -231,6 +252,8 @@ export class AssetMgr extends Component {
                         const comp = node.getComponent(componentType);
                         resolve(comp);
                     }
+                }).catch(error => {
+                    reject(error);
                 });
             }
         });

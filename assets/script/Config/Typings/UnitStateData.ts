@@ -1,7 +1,6 @@
 // Auto-generated from UnitStateData.json by sharedata/tools/excel-exporter.
 export interface IUnitStateData {
   name: string;
-  ch_key?: string;
   anim_name?: string;
   anim_priority?: number;
   anim_blend_time?: number;

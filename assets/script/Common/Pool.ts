@@ -1,3 +1,5 @@
+import { DEBUG } from 'cc/env';
+
 /**
  * 通用对象池
  * 用法：
@@ -39,6 +41,11 @@ export class Pool<T> {
     /** 回收对象 */
     public put(obj: T): void {
         if (obj == null) return;
+        // 重复回收会让同一个对象之后被 get 出去两次
+        if (this._items.indexOf(obj) >= 0) {
+            if (DEBUG) console.error('[Pool] 重复回收同一个对象', obj);
+            return;
+        }
         if (this._maxSize > 0 && this._items.length >= this._maxSize) return;
         this._reset?.(obj);
         this._items.push(obj);

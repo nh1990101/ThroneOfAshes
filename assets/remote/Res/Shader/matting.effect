@@ -1,0 +1,259 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        imgSize: { value: [100, 100], editor: { displayName: 图片尺寸 } }
+        enableStrokeIn: { value: 0, editor: { slide: true, displayName: 启用内描边, range: [0, 1, 1] }}
+        strokeInColor: { value: [1, 1, 1, 1], editor: { type: color, displayName: "描边颜色" } }
+        strokeInPixel: { value: 2, editor: { displayName: "描边像素宽度", slide: true, range: [0, 10, 1] } }
+        strokeInLv: { value: 2, editor: { slide: true, min: 1, max: 5, step: 1, displayName: 描边精细成程度 }}
+        enableStrokeOut: { value: 0, editor: { slide: true, displayName: 启用外描边, range: [0, 1, 1] }}
+        strokeOutColor: { value: [1, 1, 1, 1], editor: { type: color, displayName: "描边颜色" } }
+        strokeOutPixel: { value: 2, editor: { displayName: "描边像素宽度", slide: true, range: [0, 10, 1] } }
+        strokeOutLv: { value: 2, editor: { slide: true, min: 1, max: 5, step: 1, displayName: 描边精细成程度 }}
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  #if SAMPLE_FROM_RT
+    #include <common/common-define>
+  #endif
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    #if USE_PIXEL_ALIGNMENT
+      pos = cc_matView * pos;
+      pos.xyz = floor(pos.xyz);
+      pos = cc_matProj * pos;
+    #else
+      pos = cc_matViewProj * pos;
+    #endif
+
+    uv0 = a_texCoord;
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+    #endif
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 color;
+
+  #if USE_TEXTURE
+    in vec2 uv0;
+    #pragma builtin(local)
+    layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+
+    uniform UBO {
+      vec4 strokeInColor;
+      vec4 strokeOutColor;
+      vec2 imgSize;
+      float strokeInPixel;
+      float strokeOutPixel;
+      int enableStrokeIn;
+      int enableStrokeOut;
+      int strokeInLv;
+      int strokeOutLv;
+    };
+  #endif
+
+  float sampleAlphaLoop(vec2 centerUv, float rate, vec2 length) {
+    vec2 offsetVec2 = vec2(cos(radians(rate * 360.)), sin(radians(rate * 360.))) * length;
+    return texture(cc_spriteTexture, centerUv + offsetVec2).a;
+  }
+
+  // 采样指定偏移位置最小alpha
+  float sampleMinAlpha(vec2 centerUv, vec2 size, float px, int lv) {
+    vec2 offsetLength = px / size;
+    float minA = 1.;
+    if (lv == 1) {
+      for (float i = 0.; i < 4.; i++) {
+        minA = min(minA, sampleAlphaLoop(centerUv, i / 4., offsetLength));
+      }
+    } else if (lv == 2) {
+      for (float i = 0.; i < 8.; i++) {
+        minA = min(minA, sampleAlphaLoop(centerUv, i / 8., offsetLength));
+      }
+    } else if (lv == 3) {
+      for (float i = 0.; i < 16.; i++) {
+        minA = min(minA, sampleAlphaLoop(centerUv, i / 16., offsetLength));
+      }
+    } else if (lv == 4) {
+      for (float i = 0.; i < 32.; i++) {
+        minA = min(minA, sampleAlphaLoop(centerUv, i / 32., offsetLength));
+      }
+    } else if (lv == 5) {
+      for (float i = 0.; i < 64.; i++) {
+        minA = min(minA, sampleAlphaLoop(centerUv, i / 64., offsetLength));
+      }
+    }
+    return minA;
+  }
+
+  // 采样指定偏移位置最大alpha
+  float sampleMaxAlpha(vec2 centerUv, vec2 size, float px, int lv, bool pixel) {
+    vec2 offsetLength = px / size;
+    float maxA = 0.;
+    if (lv == 1) {
+      for (float i = 0.; i < 4.; i++) {
+        maxA = max(maxA, sampleAlphaLoop(centerUv, i / 4., offsetLength));
+      }
+    } else if (lv == 2) {
+      if (pixel) {
+        for (float i = -1.; i <= 1.; i++) {
+          for (float j = -1.; j<= 1.; j++) {
+            maxA = max(maxA, texture(cc_spriteTexture, centerUv + vec2(i, j) * offsetLength).a);
+          }
+        }
+      } else {
+        for (float i = 0.; i < 8.; i++) {
+          maxA = max(maxA, sampleAlphaLoop(centerUv, i / 8., offsetLength));
+        }
+      }
+    } else if (lv == 3) {
+      for (float i = 0.; i < 16.; i++) {
+        maxA = max(maxA, sampleAlphaLoop(centerUv, i / 16., offsetLength));
+      }
+    } else if (lv == 4) {
+      for (float i = 0.; i < 32.; i++) {
+        maxA = max(maxA, sampleAlphaLoop(centerUv, i / 32., offsetLength));
+      }
+    } else if (lv == 5) {
+      for (float i = 0.; i < 64.; i++) {
+        maxA = max(maxA, sampleAlphaLoop(centerUv, i / 64., offsetLength));
+      }
+    }
+    return maxA;
+  }
+
+  // 内描边（带渐变）
+  vec4 strokeInFn(vec4 o) {
+    // 采样多层距离，计算到边缘的距离
+    float distance = 1.; // 默认为最大距离（中心区域）
+    float samples = 10.; // 增加采样层数使渐变更平滑
+
+    // 固定循环次数，避免动态循环限制
+    for (int i = 1; i <= 10; i++) {
+      float ratio = float(i) / samples;
+      float currentPixel = strokeInPixel * ratio;
+      float alpha = sampleMinAlpha(uv0, imgSize, currentPixel, strokeInLv);
+      if (alpha < 0.99 && distance == 1.) {
+        distance = ratio;
+      }
+    }
+
+    // 使用更柔和的渐变曲线
+    float gradientFactor = distance * distance * (3. - 2. * distance); // 自定义平滑曲线，比 smoothstep 更柔和
+    o.rgb = mix(strokeInColor.rgb, o.rgb, gradientFactor);
+
+    return o;
+  }
+
+  // 外描边（带渐变）
+  vec4 strokeOutFn(vec4 o, bool pixel) {
+
+    if (uv0.x <= 0. || uv0.x >= 1. || uv0.y <= 0. || uv0.y >= 1.) {
+      o.r = 0.;
+      o.g = 0.;
+      o.b = 0.;
+      o.a = 0.;
+    }
+
+    // 如果当前像素本身就有alpha，直接返回
+    if (o.a > 0.01) {
+      return o;
+    }
+
+    // 采样多层，找到最近的有alpha的像素距离
+    float nearestDistance = 1.; // 1表示最远
+    float samples = 10.; // 增加采样层数使渐变更平滑
+
+    // 固定循环次数
+    for (int i = 1; i <= 10; i++) {
+      float ratio = float(i) / samples;
+      float currentPixel = strokeOutPixel * ratio;
+      float maxAlpha = sampleMaxAlpha(uv0, imgSize, currentPixel, strokeOutLv, pixel);
+      if (maxAlpha > 0.01 && nearestDistance == 1.) {
+        nearestDistance = ratio;
+      }
+    }
+
+    // 如果找到了邻近的alpha，根据距离计算渐变
+    if (nearestDistance < 1.) {
+      // 距离越近，描边越明显；使用反向渐变
+      float t = 1. - nearestDistance;
+      float gradientFactor = t * t * (3. - 2. * t); // 自定义平滑曲线
+      o.rgb = strokeOutColor.rgb;
+      o.a = gradientFactor * strokeOutColor.a;
+    }
+
+    return o;
+  }
+
+  vec4 frag () {
+    vec4 o = vec4(1, 1, 1, 1);
+
+    #if USE_TEXTURE
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+      #if IS_GRAY
+        float gray  = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
+        o.r = o.g = o.b = gray;
+      #endif
+
+      if (enableStrokeIn == 1) {
+        // 内描边
+        o = strokeInFn(o);
+      }
+
+      if (enableStrokeOut == 1) {
+        // 外描边
+        #if IS_PIXEL
+          o = strokeOutFn(o, true);
+        #else
+          o = strokeOutFn(o, false);
+        #endif
+      }
+    #endif
+
+    o *= color;
+    ALPHA_TEST(o);
+    return o;
+  }
+}%

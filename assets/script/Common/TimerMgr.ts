@@ -29,6 +29,18 @@ export interface CountdownCallback {
     onUpdate?: Function; // 每帧更新回调
 }
 
+/**
+ * 真实时间倒计时，不受变速影响
+ */
+export interface RealCountdownCallback {
+    callback: Function;
+    thisArg: any;
+    duration: number; // 倒计时总时长（秒）
+    endAt: number; // 结束时间戳（毫秒）
+    countdownId: number;
+    onUpdate?: Function; // 每帧更新回调
+}
+
 @ccclass('TimerMgr')
 export class TimerMgr extends BaseMgr {
     private static _instance: TimerMgr = null;
@@ -42,27 +54,31 @@ export class TimerMgr extends BaseMgr {
     // 倒计时列表
     private _countdowns: Map<number, CountdownCallback> = new Map();
 
+    // 真实时间倒计时列表
+    private _realCountdowns: Map<number, RealCountdownCallback> = new Map();
+
     // 定时器ID生成器
     private _timerIdCounter: number = 0;
 
     // 倒计时ID生成器
     private _countdownIdCounter: number = 0;
 
+    // 真实时间倒计时ID生成器
+    private _realCountdownIdCounter: number = 0;
+
     // 是否暂停所有定时器
     private _globalPaused: boolean = false;
 
-    public static get Instance(): TimerMgr {
-        if (!this._instance) {
-            this._instance = new TimerMgr();
-        }
-        return this._instance;
-    }
+
 
     /**
      * 更新函数，需要在游戏主循环中调用
      * @param dt 帧间隔时间（秒）
      */
     public update(dt: number): void {
+        // 真实倒计时按本机时间走，变速和全局暂停都不影响
+        this._updateRealCountdowns();
+
         if (this._globalPaused) {
             return;
         }
@@ -149,6 +165,33 @@ export class TimerMgr extends BaseMgr {
         // 删除已完成的倒计时
         countdownsToRemove.forEach(countdownId => {
             this._countdowns.delete(countdownId);
+        });
+    }
+
+    /**
+     * 更新真实时间倒计时
+     */
+    private _updateRealCountdowns(): void {
+        const now = Date.now();
+        const countdownsToRemove: number[] = [];
+
+        this._realCountdowns.forEach((countdown, countdownId) => {
+            const remaining = Math.max(0, (countdown.endAt - now) / 1000);
+
+            if (countdown.onUpdate) {
+                countdown.onUpdate.call(countdown.thisArg, remaining, countdown.duration);
+            }
+
+            if (remaining <= 0) {
+                if (countdown.callback) {
+                    countdown.callback.call(countdown.thisArg);
+                }
+                countdownsToRemove.push(countdownId);
+            }
+        });
+
+        countdownsToRemove.forEach(countdownId => {
+            this._realCountdowns.delete(countdownId);
         });
     }
 
@@ -293,6 +336,50 @@ export class TimerMgr extends BaseMgr {
     }
 
     /**
+     * 添加真实时间倒计时，不受变速影响
+     * @param duration 倒计时时长（秒）
+     * @param callback 倒计时结束回调
+     * @param thisArg 回调函数的this指向
+     * @param onUpdate 每帧更新回调，参数为(剩余时间, 总时长)
+     * @returns 倒计时ID
+     */
+    public addRealCountdown(duration: number, callback: Function, thisArg: any = null, onUpdate?: Function): number {
+        const countdownId = ++this._realCountdownIdCounter;
+
+        this._realCountdowns.set(countdownId, {
+            callback: callback,
+            thisArg: thisArg,
+            duration: duration,
+            endAt: Date.now() + duration * 1000,
+            countdownId: countdownId,
+            onUpdate: onUpdate
+        });
+
+        return countdownId;
+    }
+
+    /**
+     * 移除真实时间倒计时
+     * @param countdownId 倒计时ID
+     */
+    public removeRealCountdown(countdownId: number): void {
+        this._realCountdowns.delete(countdownId);
+    }
+
+    /**
+     * 获取真实时间倒计时剩余时间
+     * @param countdownId 倒计时ID
+     * @returns 剩余时间（秒），如果倒计时不存在则返回-1
+     */
+    public getRealCountdownRemaining(countdownId: number): number {
+        const countdown = this._realCountdowns.get(countdownId);
+        if (!countdown) {
+            return -1;
+        }
+        return Math.max(0, (countdown.endAt - Date.now()) / 1000);
+    }
+
+    /**
      * 设置时间缩放
      * @param scale 时间缩放比例，1为正常速度，>1为加速，<1为减速，0为暂停
      */
@@ -337,11 +424,19 @@ export class TimerMgr extends BaseMgr {
     }
 
     /**
+     * 清空所有真实时间倒计时
+     */
+    public clearAllRealCountdowns(): void {
+        this._realCountdowns.clear();
+    }
+
+    /**
      * 清空所有定时器和倒计时
      */
     public clearAll(): void {
         this.clearAllTimers();
         this.clearAllCountdowns();
+        this.clearAllRealCountdowns();
     }
 
     /**

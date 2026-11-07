@@ -1,0 +1,63 @@
+{
+  "ver": "1.0.8",
+  "importer": "sprite-atlas",
+  "imported": true,
+  "uuid": "43c23cac-9600-4273-b878-86c74288914c",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {
+    "ac235": {
+      "importer": "sprite-frame",
+      "uuid": "43c23cac-9600-4273-b878-86c74288914c@ac235",
+      "displayName": "",
+      "id": "ac235",
+      "name": "ui_common_skill_icon_fire",
+      "userData": {
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 2,
+        "trimY": 2,
+        "width": 87,
+        "height": 86,
+        "rawWidth": 87,
+        "rawHeight": 86,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "fe99710a-b16e-45f6-bb7c-205f6cdeaa1f@6c48a",
+        "atlasUuid": "43c23cac-9600-4273-b878-86c74288914c",
+        "trimType": "auto"
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "atlasTextureName": "SkillIcon.png",
+    "format": 2,
+    "uuid": "43c23cac-9600-4273-b878-86c74288914c",
+    "textureUuid": "fe99710a-b16e-45f6-bb7c-205f6cdeaa1f@6c48a"
+  }
+}

@@ -71,17 +71,18 @@ async login() {
 
 ```typescript
 import { ProtoNetworkMgr } from '../WebSocket/ProtoNetworkMgr';
-import { pb } from '../WebSocket/proto/ProtoDefined';
+import type { pbType } from '../WebSocket/proto/ProtoDefined.d';
+import { pbType as protoCodecs } from '../WebSocket/proto/ProtoDefined';
 
 export class GameLogic {
     // 发送Hello请求
     async sendHello() {
         try {
-            const req: pb.IHelloReq = {
+            const req: pbType.IHelloReq = {
                 content: 'Hello from client'
             };
             
-            const resp = await ProtoNetworkMgr.instance.send<pb.IHelloReq, pb.IHelloResp>(
+            const resp = await ProtoNetworkMgr.instance.send<pbType.IHelloReq, pbType.IHelloResp>(
                 'HelloReq',
                 req,
                 5000  // 5秒超时
@@ -98,12 +99,12 @@ export class GameLogic {
     // 使用GM命令
     async useGMCommand(cmd: string, ...args: string[]) {
         try {
-            const req: pb.IUseGMCMDReq = {
+            const req: pbType.IUseGMCMDReq = {
                 cmd: cmd,
                 args: args
             };
             
-            const resp = await ProtoNetworkMgr.instance.send<pb.IUseGMCMDReq, pb.IUseGMCMDResp>(
+            const resp = await ProtoNetworkMgr.instance.send<pbType.IUseGMCMDReq, pbType.IUseGMCMDResp>(
                 'UseGMCMDReq',
                 req
             );
@@ -128,7 +129,7 @@ export class GameEventHandler {
         
         // 监听GM命令初始化通知
         network.addEventListener('NtfGMCMDInit', (event: CustomEvent) => {
-            const data = event.detail as pb.INtfGMCMDInit;
+            const data = event.detail as pbType.INtfGMCMDInit;
             this.onGMCMDInit(data);
         });
         
@@ -136,7 +137,7 @@ export class GameEventHandler {
         // network.addEventListener('NtfXXX', this.onXXX.bind(this));
     }
     
-    onGMCMDInit(data: pb.INtfGMCMDInit) {
+    onGMCMDInit(data: pbType.INtfGMCMDInit) {
         console.log('收到GM命令列表:');
         if (data.cmds) {
             for (const cmd of data.cmds) {
@@ -194,14 +195,14 @@ npm run proto
 ```typescript
 private initProtoConfig() {
     // 注册Hello协议
-    this.registerProto('HelloReq', 'HelloResp', pb.HelloReq, pb.HelloResp);
+    this.registerProto('HelloReq', 'HelloResp', protoCodecs.HelloReq, protoCodecs.HelloResp);
     
     // 注册玩家信息协议
     this.registerProto('GetPlayerInfoReq', 'GetPlayerInfoResp', 
-                      pb.GetPlayerInfoReq, pb.GetPlayerInfoResp);
+                      protoCodecs.GetPlayerInfoReq, protoCodecs.GetPlayerInfoResp);
     
     // 注册通知消息
-    this.registerNotify('NtfPlayerLevelUp', pb.NtfPlayerLevelUp);
+    this.registerNotify('NtfPlayerLevelUp', protoCodecs.NtfPlayerLevelUp);
 }
 ```
 
@@ -210,13 +211,13 @@ private initProtoConfig() {
 ```typescript
 async getPlayerInfo(playerId: number) {
     try {
-        const req: pb.IGetPlayerInfoReq = {
+        const req: pbType.IGetPlayerInfoReq = {
             playerId: playerId
         };
         
         const resp = await ProtoNetworkMgr.instance.send<
-            pb.IGetPlayerInfoReq, 
-            pb.IGetPlayerInfoResp
+            pbType.IGetPlayerInfoReq,
+            pbType.IGetPlayerInfoResp
         >('GetPlayerInfoReq', req);
         
         console.log('玩家信息:', resp);
@@ -230,7 +231,7 @@ async getPlayerInfo(playerId: number) {
 
 // 监听升级通知
 ProtoNetworkMgr.instance.addEventListener('NtfPlayerLevelUp', (event: CustomEvent) => {
-    const data = event.detail as pb.INtfPlayerLevelUp;
+    const data = event.detail as pbType.INtfPlayerLevelUp;
     console.log(`玩家从${data.oldLevel}级升到${data.newLevel}级，获得${data.reward}奖励`);
 });
 ```

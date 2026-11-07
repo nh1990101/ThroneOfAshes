@@ -31,7 +31,7 @@ export class WildRole extends BaseComp {
     /**是否正在移动 */
     private isMoving: boolean = false;
     /**当前朝向 */
-    private currentDir: ROLE_DIR = ROLE_DIR.DOWN;
+    protected currentDir: ROLE_DIR = ROLE_DIR.DOWN;
     /**移动完成回调 */
     private moveCompleteCallback: Function = null;
 
@@ -44,7 +44,6 @@ export class WildRole extends BaseComp {
      * 设置各动作帧数
      */
     protected SetActionFrame() {
-        this.animation.node.setPosition(0, 60)
         this.m_ActionData = new Map<ROLE_ACTION, IActionData>();
         var frameRate = 7;
         this.m_ActionData.set(ROLE_ACTION.IDLE + ROLE_DIR.UP, { frameStart: 0, frameEnd: 2, frameRate: frameRate });
@@ -82,7 +81,7 @@ export class WildRole extends BaseComp {
         var actionData = this.m_ActionData.get(actionName);
         if (actionData) {
             this.animation.setFrameRate(actionData.frameRate);
-            this.animation.play(actionData.frameStart, actionData.frameEnd, isLoop, onComplete, target);
+            this.animation.play(actionData.frameStart, actionData.frameEnd, isLoop, false, onComplete, target);
         }
     }
 
@@ -101,15 +100,15 @@ export class WildRole extends BaseComp {
      */
     public setGrid(grid: MapGridData) {
         // 清除旧格子的占据
-        if (this.currentGrid) {
-            this.currentGrid.clearOccupied();
-        }
+        // if (this.currentGrid) {
+        //     this.currentGrid.clearOccupied();
+        // }
 
         this.currentGrid = grid;
 
         // 设置新格子的占据
         if (grid) {
-            grid.setOccupied(this);
+            // grid.setOccupied(this);
             // 更新角色位置到格子中心
             this.setPositionFromGrid(grid);
         }
@@ -120,14 +119,7 @@ export class WildRole extends BaseComp {
  * 根据格子设置角色位置（处理坐标转换）
  */
     private setPositionFromGrid(grid: MapGridData) {
-        const mapContainer = MapMgr.getInstance().getMapContainer();
-        if (!mapContainer) {
-            console.error('[WildRole] setPositionFromGrid: mapContainer 未初始化');
-            return;
-        }
-
         const worldPos = grid.GetWorldPos();
-
         if (worldPos && this.node.parent) {
             // 转换为角色父容器的本地坐标
             this.node.setWorldPosition(worldPos.toVec3())
@@ -142,12 +134,10 @@ export class WildRole extends BaseComp {
         if (!mapContainer) {
             return false;
         }
-
         const mapTransform = mapContainer.getComponent(UITransform);
         if (!mapTransform) {
             return false;
         }
-
         // grid.GetXPx() 和 GetYPx() 现在返回的是 mapContainer 的本地坐标
         outPos.set(grid.GetXPx(), grid.GetYPx(), 0);
 
@@ -183,13 +173,13 @@ export class WildRole extends BaseComp {
         return new Promise((resolve, reject) => {
             if (!path || path.length === 0) {
                 console.warn('[WildRole] 移动路径为空');
-                reject();
+                resolve();
                 return;
             }
 
             if (this.isMoving) {
                 console.warn('[WildRole] 角色正在移动中');
-                reject();
+                resolve();
                 return;
             }
 
@@ -258,14 +248,14 @@ export class WildRole extends BaseComp {
     /**
      * 单格移动完成回调（抽离出来，避免在 Promise 中创建函数）
      */
-    private onSingleGridMoveComplete(targetGrid: MapGridData) {
+    protected onSingleGridMoveComplete(targetGrid: MapGridData) {
         // 更新格子占据状态
         if (this.currentGrid) {
-            this.currentGrid.clearOccupied();
+            this.currentGrid.removeOccupy(this);
         }
         this.currentGrid = targetGrid;
-        targetGrid.setOccupied(this);
-        EventManager.Instance.dispatch(GameEvent.Finish_Move_Step, targetGrid);
+        targetGrid.addOccupied(this);
+
     }
 
     /**
@@ -373,7 +363,7 @@ export class WildRole extends BaseComp {
 
         // 清除格子占据
         if (this.currentGrid) {
-            this.currentGrid.clearOccupied();
+            // this.currentGrid.clearOccupied();
             this.currentGrid = null;
         }
 

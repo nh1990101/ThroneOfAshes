@@ -1,8 +1,7 @@
 // Auto-generated from MarketTypeData.json by sharedata/tools/excel-exporter.
 export interface IMarketTypeData {
   id: string;
-  ch_key?: string;
-  name?: string;
+  name?: number;
   icon?: number;
   feature_id?: string;
   auto_refresh?: number;

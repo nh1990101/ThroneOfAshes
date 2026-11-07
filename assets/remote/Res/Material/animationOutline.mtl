@@ -1,0 +1,68 @@
+{
+  "__type__": "cc.Material",
+  "_name": "animationOutline",
+  "_objFlags": 0,
+  "__editorExtras__": {},
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "0a8617f0-b5a1-4a46-8c8e-796b2836b0cc",
+    "__expectedType__": "cc.EffectAsset"
+  },
+  "_techIdx": 0,
+  "_defines": [
+    {
+      "USE_TEXTURE": true
+    }
+  ],
+  "_states": [
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    }
+  ],
+  "_props": [
+    {
+      "outlineColor": {
+        "__type__": "cc.Color",
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 255
+      },
+      "outlineWidth": 2,
+      "frameUV": {
+        "__type__": "cc.Vec4",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "w": 1
+      },
+      "frameSize": {
+        "__type__": "cc.Vec2",
+        "x": 100,
+        "y": 100
+      },
+      "frameCenter": {
+        "__type__": "cc.Vec2",
+        "x": 0,
+        "y": 0
+      },
+      "uvStep": {
+        "__type__": "cc.Vec2",
+        "x": 0,
+        "y": 0
+      },
+      "texelSize": {
+        "__type__": "cc.Vec2",
+        "x": 1,
+        "y": 1
+      },
+      "frameRotated": 0
+    }
+  ]
+}

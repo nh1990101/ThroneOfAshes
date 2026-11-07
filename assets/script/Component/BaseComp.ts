@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Button } from 'cc';
+import { _decorator, Component, Node, Button, Slider } from 'cc';
 import { Tools } from '../Common/Tools';
 import { EventManager } from '../Common/EventManager';
 import { EventData } from '../Common/BaseMgr';
@@ -48,7 +48,8 @@ export class BaseComp extends Component {
         this.eventRegister();
     }
     protected onDestroy(): void {
-        super.onDestroy();
+        // Component 只声明了 onDestroy，没有实现。有实现时才往上调。
+        super.onDestroy?.();
         this.clear();
 
     }
@@ -87,6 +88,7 @@ export class BaseComp extends Component {
         if (this.nodeEvents) {
             this.nodeEvents.forEach(event => {
                 if (event.target && event.target.isValid) {
+
                     event.target.on(event.eventType, event.callback, event.thisArg);
                 }
             });

@@ -1,14 +1,15 @@
-import { _decorator, CCFloat, Component, EventTouch, Node, Prefab, ScrollView, UITransform, Vec2 } from 'cc';
+import { _decorator, CCFloat, Component, EventTouch, Layout, Node, Prefab, UITransform, Vec2 } from 'cc';
 import { BaseRenderCell } from '../BaseRenderCell';
 import { Tools } from '../../Common/Tools';
 import { AssetMgr } from '../../Common/AssetMgr';
+import { EdgeResistScrollView } from './EdgeResistScrollView';
 const { ccclass, property } = _decorator;
 /**横向排布拖动*/
 export const SCROLL_HORIZONTAL: number = 1;
 /**竖向排布拖动*/
 export const SCROLL_VERTICAL: number = 2;
 @ccclass('ScrollList')
-export class ScrollList extends ScrollView {
+export class ScrollList extends EdgeResistScrollView {
 
     /**item子节点预制体*/
     @property({ type: Prefab, tooltip: "item子节点预制体" })
@@ -51,6 +52,11 @@ export class ScrollList extends ScrollView {
 
     /**当前选中的数据项*/
     private _selectedData: any = null;
+    /**是否自动居中（内容在滚动方向上小于容器时生效）*/
+    private _isAutoCenter: boolean;
+
+    /**内容居中时，元素在滚动方向上的额外偏移*/
+    private _centerOffSet: number = 0;
 
     /**子节点刷新绑定事件，或者使用item继承的模式*/
     public onItemRender: Function;
@@ -59,7 +65,7 @@ export class ScrollList extends ScrollView {
     autoScrollToSelected: boolean = false;
 
     /**初始化列表后是否自动选中第一个元素 */
-    autoSelectIndex = 0;
+    autoSelectIndex = -1;
 
 
     pools: Node[] = []
@@ -86,13 +92,14 @@ export class ScrollList extends ScrollView {
      * @param direction : 滚动方向，默认上下
      * @param gap : [开始边框距离，结束边框距离，每个之间空隙]
     */
-    public setDataList(itemClass: new () => BaseRenderCell, dataArr: any[], direction: number = SCROLL_VERTICAL, gap?: number[]) {
+    public setDataList(itemClass: new () => BaseRenderCell, dataArr: any[], direction: number = SCROLL_VERTICAL, gap?: number[], isAutoCenter: boolean = true) {
         this._itemClass = itemClass;
         this._dataArr = dataArr;
         this._direction = direction;
         this._gapNum = gap;
         this._selectedDataIndex = -1;
         this._selectedData = null;
+        this._isAutoCenter = isAutoCenter;
         this.createList();
     }
 
@@ -100,7 +107,27 @@ export class ScrollList extends ScrollView {
         this._selectFunc = selectFunc;
     }
 
-    updateList(dataArr: any[]) {
+    updateList(dataArr: any[], itemClass?: new () => BaseRenderCell) {
+        if (!this._direction) {
+            this._direction = this.horizontal ? SCROLL_HORIZONTAL : SCROLL_VERTICAL;
+        }
+        if (!this._gapNum) {
+            var layout = this.content.getComponent(Layout);
+            if (layout) {
+                if (layout.type == SCROLL_VERTICAL) {
+                    this._gapNum = [layout.paddingTop, layout.paddingBottom, layout.spacingX];
+                    this._direction = SCROLL_VERTICAL
+                } else {
+                    this._gapNum = [layout.paddingLeft, layout.paddingRight, layout.spacingX];
+                    this._direction = SCROLL_HORIZONTAL
+                }
+                layout.enabled = false;
+                this._isAutoCenter = layout.alignHorizontal || layout.alignVertical;
+            }
+        }
+        if (itemClass) {
+            this._itemClass = itemClass;
+        }
         if (!this._dataArr || this._dataArr.length != dataArr.length) {
             this._dataArr = dataArr;
             this.createList()
@@ -113,7 +140,7 @@ export class ScrollList extends ScrollView {
                 if (this._direction == SCROLL_VERTICAL) {
                     return a.y > b.y ? -1 : 1
                 } else {
-                    return a.x > b.x ? -1 : 1
+                    return a.x < b.x ? -1 : 1
                 }
             })
             for (let i = 0; i < numCell; i++) {
@@ -156,17 +183,24 @@ export class ScrollList extends ScrollView {
         return pNode;
     }
 
+    /**是否居中。未显式配置时，读取content上Layout的对齐设置*/
+    private isAutoCenter(): boolean {
+        if (this._isAutoCenter != null) {
+            return this._isAutoCenter;
+        }
+        let layout = this.content.getComponent(Layout);
+        return !!(layout && (layout.alignHorizontal || layout.alignVertical));
+    }
+
     /**获得数据后开始创建*/
     private createList() {
         let nodeUIT = this.node.getComponent(UITransform);
-        let _showSize = nodeUIT.height;//.height;
         //获得预制体的高度
         if (!this._itemSize) {
             let pNode = AssetMgr.createPrefabFromPoolByPrefab(this.itemPrefab);
             let pUIT = pNode.getComponent(UITransform) //this.createCell(0);
             if (this._direction == SCROLL_HORIZONTAL) {
                 this._itemSize = pUIT.width;
-                _showSize = nodeUIT.width;
             }
             else {
                 this._itemSize = pUIT.height;
@@ -174,23 +208,10 @@ export class ScrollList extends ScrollView {
             AssetMgr.removeNode(pNode);
             // pNode.destroy();
         }
+        //可视范围（滚动方向上的容器尺寸）
+        let _showSize = this._direction == SCROLL_HORIZONTAL ? nodeUIT.width : nodeUIT.height;
 
-        //可视范围，对应可以创建多少个实体单例item
-        this._numItem = Math.floor(_showSize / this._itemSize) + 2;
-        if (this._dataArr.length < this._numItem) {
-            this._numItem = this._dataArr.length;
-        }
-
-        while (this._itemArr.length > 0) {
-            this.removeCell(this._itemArr[this._itemArr.length - 1])
-        }
-
-        this._itemArr.length = 0;
-        for (let index = 0; index < this._numItem; index++) {
-            this.createCell(index)
-        }
-
-        //设置容器大小
+        //设置容器大小（只跟数据条数有关，必须在创建子节点之前算好）
         let contentSize = this._itemSize * this._dataArr.length;
         //前面距离边框
         if (this._gapNum && this._gapNum[0]) {
@@ -210,6 +231,27 @@ export class ScrollList extends ScrollView {
         }
         else {
             contentUIT.height = contentSize;
+        }
+
+        //内容小于容器时，根据配置自动居中（子节点坐标依赖这个值，必须先于创建）
+        this._centerOffSet = 0;
+        if (this.isAutoCenter() && contentSize < _showSize) {
+            this._centerOffSet = (_showSize - contentSize) / 2;
+        }
+
+        //可视范围，对应可以创建多少个实体单例item
+        this._numItem = Math.floor(_showSize / this._itemSize) + 2;
+        if (this._dataArr.length < this._numItem) {
+            this._numItem = this._dataArr.length;
+        }
+
+        while (this._itemArr.length > 0) {
+            this.removeCell(this._itemArr[this._itemArr.length - 1])
+        }
+
+        this._itemArr.length = 0;
+        for (let index = 0; index < this._numItem; index++) {
+            this.createCell(index)
         }
 
         this._itemIndex = this._dataIndex = this._itemArr.length - 1;
@@ -325,7 +367,6 @@ export class ScrollList extends ScrollView {
             topPos = -topPos;
             size = -this._itemSize;
         }
-
         //判断向结束端滚动，滚动点和初始点对比
         if ((this._direction == SCROLL_VERTICAL && nowPos > size + topPos) ||
             (this._direction == SCROLL_HORIZONTAL && nowPos < size + topPos)) {
@@ -395,7 +436,7 @@ export class ScrollList extends ScrollView {
 
     /**设置坐标*/
     private setPos(node: Node, index: number) {
-        let pos = this.countPosByIndex(index);
+        let pos = this.countPosByIndex(index) + this._centerOffSet;
         if (this._direction == SCROLL_HORIZONTAL) {
             node.setPosition(pos, this.offSetPos);
         }

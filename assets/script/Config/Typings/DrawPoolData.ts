@@ -1,8 +1,7 @@
 // Auto-generated from DrawPoolData.json by sharedata/tools/excel-exporter.
 export interface IDrawPoolData {
   id: number;
-  ch_key?: string;
-  name?: string;
+  name?: number;
   is_open?: boolean;
   feature_id?: string;
   ticket_cost?: number[];

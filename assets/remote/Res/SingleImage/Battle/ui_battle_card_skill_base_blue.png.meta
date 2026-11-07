@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "91594c88-f74b-414e-9f3d-fe5a42117230",
+  "uuid": "3729fca5-a30f-4c11-81e9-0b3d8d311339",
   "files": [
     ".json",
     ".png"
@@ -10,14 +10,14 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "91594c88-f74b-414e-9f3d-fe5a42117230@6c48a",
+      "uuid": "3729fca5-a30f-4c11-81e9-0b3d8d311339@6c48a",
       "displayName": "ui_battle_card_skill_base_blue",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "91594c88-f74b-414e-9f3d-fe5a42117230",
+        "imageUuidOrDatabaseUri": "3729fca5-a30f-4c11-81e9-0b3d8d311339",
         "isUuid": true,
         "visible": false,
         "minfilter": "linear",
@@ -34,7 +34,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "91594c88-f74b-414e-9f3d-fe5a42117230@f9941",
+      "uuid": "3729fca5-a30f-4c11-81e9-0b3d8d311339@f9941",
       "displayName": "ui_battle_card_skill_base_blue",
       "id": "f9941",
       "name": "spriteFrame",
@@ -113,7 +113,7 @@
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "91594c88-f74b-414e-9f3d-fe5a42117230@6c48a",
+        "imageUuidOrDatabaseUri": "3729fca5-a30f-4c11-81e9-0b3d8d311339@6c48a",
         "atlasUuid": "",
         "trimType": "auto"
       },
@@ -129,6 +129,6 @@
     "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": false,
     "hasAlpha": true,
-    "redirect": "91594c88-f74b-414e-9f3d-fe5a42117230@6c48a"
+    "redirect": "3729fca5-a30f-4c11-81e9-0b3d8d311339@6c48a"
   }
 }

@@ -1,4 +1,5 @@
-import { _decorator, Vec2, Vec3 } from 'cc';
+import { _decorator, Pool, Vec2, Vec3 } from 'cc';
+import { PoolMgr } from '../../Common/Pool';
 const { ccclass, property } = _decorator;
 
 /**
@@ -36,7 +37,7 @@ export class HexagonData {
     public isDeployment: boolean = false;
     // ==================== 游戏状态 ====================
     /** 占据该格子的单位ID（null表示空） */
-    public occupiedUnitId: number | null = null;
+    public occupiedUnitId: string | null = null;
 
     /** 是否可见（战争迷雾） */
     public visible: boolean = true;
@@ -49,7 +50,7 @@ export class HexagonData {
 
     // ==================== 六边形尺寸常量 ====================
     /** 六边形宽度（像素） - 可通过UpdateGridPixelSize修改 */
-    public static widthPx: number = 98;
+    public static widthPx: number = 90;
 
     /** 六边形高度（像素） - 可通过UpdateGridPixelSize修改 */
     public static heightPx: number = 86;
@@ -76,16 +77,16 @@ export class HexagonData {
         [0, +1],   // SOUTHWEST - 左下 (西南)
         [+1, +1]   // SOUTHEAST - 右下 (东南)
     ];
-    
 
-    // ==================== 构造函数 ====================
+
+
     /**
-     * 创建六边形数据
-     * @param q 轴坐标 q
-     * @param r 轴坐标 r
-     * @param walkable 是否可移动
-     */
-    constructor(q: number = 0, r: number = 0, walkable: boolean = true, isDeployment: boolean = false) {
+  * 创建六边形数据
+  * @param q 轴坐标 q
+  * @param r 轴坐标 r
+  * @param walkable 是否可移动
+  */
+    public setData(q: number = 0, r: number = 0, walkable: boolean = true, isDeployment: boolean = false) {
         this.q = q;
         this.r = r;
         this.pos = { q: q, r: r };
@@ -148,9 +149,9 @@ export class HexagonData {
      * 转换为世界坐标 Vec3
      * @param z z 轴坐标
      */
-    public toPixel3D(z: number = 0): Vec3 {
+    public toPixel3D(): Vec3 {
         const pixel = this.toPixel();
-        return new Vec3(pixel.x, pixel.y, z);
+        return pixel.toVec3();
     }
 
     /**
@@ -166,8 +167,9 @@ export class HexagonData {
         // 根据行的奇偶性计算列（q）
         const offsetX = (r % 2) * (HexagonData.widthPx / 2);
         const q = Math.round((x - offsetX) / HexagonData.widthPx);
-
-        return new HexagonData(q, r);
+        var hexData = PoolMgr.get(HexagonData);
+        hexData.setData(q, r);
+        return hexData;
     }
 
     /**
@@ -233,11 +235,11 @@ export class HexagonData {
         // 根据当前行的奇偶性选择对应的偏移表
         const directions = (this.r % 2 === 0) ? HexagonData.DIRECTIONS_EVEN : HexagonData.DIRECTIONS_ODD;
         const offset = directions[direction];
-        return new HexagonData(
-            this.q + offset[0],
+        var hexData = PoolMgr.get(HexagonData);
+        hexData.setData(this.q + offset[0],
             this.r + offset[1],
-            this.walkable
-        );
+            this.walkable);
+        return hexData;
     }
 
     /**
@@ -280,12 +282,28 @@ export class HexagonData {
     }
 
     /**
-     * 静态方法：计算两个坐标之间的距离
+     * 奇数行右移的偏移坐标转换为轴坐标
+     */
+    private static offsetToAxial(q: number, r: number): HexagonPos {
+        return { q: q - (r - (r & 1)) / 2, r };
+    }
+
+    /**
+     * 轴坐标转换为奇数行右移的偏移坐标
+     */
+    private static axialToOffset(q: number, r: number): HexagonPos {
+        return { q: q + (r - (r & 1)) / 2, r };
+    }
+
+    /**
+     * 静态方法：计算两个奇数行右移偏移坐标之间的距离
      */
     public static distance(q1: number, r1: number, q2: number, r2: number): number {
-        const dq = Math.abs(q1 - q2);
-        const dr = Math.abs(r1 - r2);
-        const ds = Math.abs((-q1 - r1) - (-q2 - r2));
+        const a = HexagonData.offsetToAxial(q1, r1);
+        const b = HexagonData.offsetToAxial(q2, r2);
+        const dq = Math.abs(a.q - b.q);
+        const dr = Math.abs(a.r - b.r);
+        const ds = Math.abs((-a.q - a.r) - (-b.q - b.r));
         return (dq + dr + ds) / 2;
     }
 
@@ -324,14 +342,14 @@ export class HexagonData {
     /**
      * 设置占据的单位
      */
-    public setOccupiedUnit(unitId: number | null): void {
+    public setOccupiedUnit(unitId: string | null): void {
         this.occupiedUnitId = unitId;
     }
 
     /**
      * 获取占据的单位ID
      */
-    public getOccupiedUnit(): number | null {
+    public getOccupiedUnit(): string | null {
         return this.occupiedUnitId;
     }
 
@@ -375,10 +393,14 @@ export class HexagonData {
      */
     public static getReachableArea(center: HexagonData, range: number): HexagonData[] {
         const results: HexagonData[] = [];
+        const centerAxial = HexagonData.offsetToAxial(center.q, center.r);
 
         for (let q = -range; q <= range; q++) {
             for (let r = Math.max(-range, -q - range); r <= Math.min(range, -q + range); r++) {
-                results.push(new HexagonData(center.q + q, center.r + r));
+                const offset = HexagonData.axialToOffset(centerAxial.q + q, centerAxial.r + r);
+                let hexData = PoolMgr.get(HexagonData);
+                hexData.setData(offset.q, offset.r);
+                results.push(hexData);
             }
         }
 
@@ -396,13 +418,18 @@ export class HexagonData {
         if (N === 0) return [start.clone()];
 
         const results: HexagonData[] = [];
+        const startAxial = HexagonData.offsetToAxial(start.q, start.r);
+        const endAxial = HexagonData.offsetToAxial(end.q, end.r);
 
         for (let i = 0; i <= N; i++) {
             const t = i / N;
-            const q = start.q * (1 - t) + end.q * t;
-            const r = start.r * (1 - t) + end.r * t;
+            const q = startAxial.q * (1 - t) + endAxial.q * t;
+            const r = startAxial.r * (1 - t) + endAxial.r * t;
             const rounded = HexagonData.axialRound(q, r);
-            results.push(new HexagonData(rounded.q, rounded.r));
+            const offset = HexagonData.axialToOffset(rounded.q, rounded.r);
+            var hexData = PoolMgr.get(HexagonData);
+            hexData.setData(offset.q, offset.r);
+            results.push(hexData);
         }
 
         return results;
@@ -417,15 +444,22 @@ export class HexagonData {
         if (radius === 0) return [center.clone()];
 
         const results: HexagonData[] = [];
-        let hex = new HexagonData(
-            center.q + HexagonData.DIRECTIONS_ODD[4][0] * radius,
-            center.r + HexagonData.DIRECTIONS_ODD[4][1] * radius
-        );
+        const axialDirections: Array<[number, number]> = [
+            [+1, 0], [+1, -1], [0, -1], [-1, 0], [-1, +1], [0, +1],
+        ];
+        const centerAxial = HexagonData.offsetToAxial(center.q, center.r);
+        let q = centerAxial.q + axialDirections[4][0] * radius;
+        let r = centerAxial.r + axialDirections[4][1] * radius;
 
         for (let dir = 0; dir < 6; dir++) {
+            const direction = axialDirections[dir];
             for (let step = 0; step < radius; step++) {
-                results.push(hex.clone());
-                hex = hex.getNeighborAt(dir);
+                const offset = HexagonData.axialToOffset(q, r);
+                let hexData = PoolMgr.get(HexagonData);
+                hexData.setData(offset.q, offset.r);
+                results.push(hexData);
+                q += direction[0];
+                r += direction[1];
             }
         }
 
@@ -444,7 +478,8 @@ export class HexagonData {
      * 克隆当前六边形数据
      */
     public clone(): HexagonData {
-        const cloned = new HexagonData(this.q, this.r, this.walkable);
+        const cloned = PoolMgr.get(HexagonData);
+        cloned.setData(this.q, this.r, this.walkable);
         cloned.occupiedUnitId = this.occupiedUnitId;
         cloned.visible = this.visible;
         cloned.selected = this.selected;
@@ -478,6 +513,8 @@ export class HexagonData {
      */
     public static fromHashKey(key: string): HexagonData {
         const [q, r] = key.split(',').map(Number);
-        return new HexagonData(q, r);
+        var hexData = PoolMgr.get(HexagonData);
+        hexData.setData(q, r);
+        return hexData;
     }
 }

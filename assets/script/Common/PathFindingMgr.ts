@@ -1,6 +1,7 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, Pool } from 'cc';
 import { BaseMgr } from './BaseMgr';
 import { HexagonData } from '../GamePlay/Battle/HexagonData';
+import { PoolMgr } from './Pool';
 const { ccclass, property } = _decorator;
 
 /**
@@ -103,13 +104,13 @@ export class PathFindingMgr extends BaseMgr {
      * @param start 起点六边形
      * @param end 终点六边形
      * @param gridMap 地图数据（key为"q,r"格式）
-     * @param ignoreEndOccupied 是否忽略终点被占据（用于攻击移动）
+     * @param includeOccupied 是否忽略格子占据状态（为 true 时允许穿过所有被占据格子）
      * @returns 路径数组（包含起点和终点），如果无法到达返回空数组
      */
     public findPath(
         start: HexagonData,
         end: HexagonData,
-        ignoreEndOccupied: boolean = false,
+        includeOccupied: boolean = false,
         gridMap: Map<string, HexagonData> = this._gridMap
     ): HexagonData[] {
         // 验证起点和终点
@@ -131,7 +132,7 @@ export class PathFindingMgr extends BaseMgr {
             return [];
         }
 
-        if (!endCell.walkable && !ignoreEndOccupied) {
+        if (!endCell.walkable) {
             console.warn('[PathFinding] 终点不可行走');
             return [];
         }
@@ -169,19 +170,9 @@ export class PathFindingMgr extends BaseMgr {
                 if (!neighborCell) continue;
                 if (closedSet.has(neighborKey)) continue;
 
-                // 检查是否可通行
-                const isEnd = neighborCell.equals(endCell);
-                if (!isEnd) {
-                    // 非终点：必须可行走且未被占据
-                    if (!neighborCell.walkable || !neighborCell.isEmpty()) {
-                        continue;
-                    }
-                } else if (!ignoreEndOccupied) {
-                    // 终点：如果不忽略占据，则必须为空
-                    if (!neighborCell.isEmpty()) {
-                        continue;
-                    }
-                }
+                // 检查是否可通行；忽略占据状态时，所有被占据格子均可穿过
+                if (!neighborCell.walkable) continue;
+                if (!includeOccupied && !neighborCell.isEmpty()) continue;
 
                 // 计算新的 g 值
                 const tentativeG = current.g + 1; // 移动代价固定为1
@@ -194,7 +185,9 @@ export class PathFindingMgr extends BaseMgr {
                     const neighborNode = new PathNode(neighborCell, tentativeG, h, current);
                     openList.push(neighborNode);
                 }
+                // PoolMgr.put(neighbor);
             }
+
         }
 
         // 无法找到路径
@@ -223,7 +216,7 @@ export class PathFindingMgr extends BaseMgr {
      * @param start 起点
      * @param moveRange 移动力
      * @param gridMap 地图数据
-     * @param includeOccupied 是否包含被占据的格子（作为终点）
+     * @param includeOccupied 是否忽略格子占据状态（为 true 时被占据格子可通行并计入范围）
      * @returns 可达格子数组
      */
     public getReachableRange(
@@ -273,23 +266,14 @@ export class PathFindingMgr extends BaseMgr {
                 if (visited.has(neighborKey)) continue;
                 if (!neighborCell.walkable) continue;
 
-                // 检查是否被占据
-                const isOccupied = !neighborCell.isEmpty();
-                if (isOccupied && !includeOccupied) {
-                    // 如果被占据且不包含占据格，标记为已访问但不入队
+                // 不忽略占据状态时，被占据格子不可达且不可穿过
+                if (!includeOccupied && !neighborCell.isEmpty()) {
                     visited.add(neighborKey);
                     continue;
                 }
 
                 visited.add(neighborKey);
-
-                // 如果被占据，可以作为终点但不能穿过
-                if (isOccupied) {
-                    reachable.push(neighborCell);
-                } else {
-                    // 未被占据，可以继续扩展
-                    queue.push({ hex: neighborCell, cost: current.cost + 1 });
-                }
+                queue.push({ hex: neighborCell, cost: current.cost + 1 });
             }
         }
 

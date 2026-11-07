@@ -3,78 +3,73 @@ import { BaseMgr } from '../../Common/BaseMgr';
 import { ConfigMgr } from '../../Config/ConfigMgr';
 import { MapGridData } from './MapGridData';
 import { UIMananger } from '../../Component/UIMananger';
-import { MapBlock } from './MapBlock';
-import { MapObject } from './MapObject';
-import { AssetMgr } from '../../Common/AssetMgr';
-import { GameUrl } from '../../Common/GameUrl';
-import { IMapObject } from './MapConfig';
-import test from 'node:test';
-import { WildRole } from './WildRole';
 import { Tools } from '../../Common/Tools';
 import { PoolMgr } from '../../Common/Pool';
+import { GameCamera } from './GameCamera';
+import { ConfigTools } from '../../Config/ConfigTools';
+import { GlobalData } from '../../Common/GlobalData';
+import { IAutoTriggerData } from '../../Config/Typings/AutoTriggerData';
+import { ISelectEventsData } from '../../Config/Typings/SelectEventsData';
+import { ITransactionEventsData } from '../../Config/Typings/TransactionEventsData';
+import { ISpecialEventsData } from '../../Config/Typings/SpecialEventsData';
+import { GameEvent, MAP_OBJECT_FINISH_TYPE, MAP_RES_INTERATION_TYPE, ParamDefined, ParamValueType } from '../../Common/GameEnum';
+import { EventManager } from '../../Common/EventManager';
+import { IDropData } from '../../Config/Typings/DropData';
+import { lang, LangMgr } from '../../Common/LangMgr';
+import { MapObjUserData } from './Data/MapObjUserData';
+import { PlayerData } from './Data/PlayerData';
+import { BattleWin } from '../Battle/BattleWin';
+import { IMonsterAttrData } from '../../Config/Typings/MonsterAttrData';
+import { WildMapWin } from './WildMapWin';
+import { WildBattleCheckWin } from './Windows/WildBattleCheckWin';
+import { WildDealWin } from './Windows/WildDealWin';
+import { IMapConfig } from './MapConfig';
+import { IMapResourcesData } from '../../Config/Typings/MapResourcesData';
+import { randIdx } from '../../Common/fn';
+import { IUnitRandomData } from '../../Config/Typings/UnitRandomData';
+import { IBATTLE_DATA, IBATTLE_UNIT_DATA } from '../Battle/BattleMgr';
 const { ccclass, property } = _decorator;
-
+/**交互的地图物体数据结构 */
+export interface MAP_OBJ_HANDLE {
+    mapResCfg: IMapResourcesData;
+    mapUID: string;
+}
 @ccclass('MapMgr')
 export class MapMgr extends BaseMgr {
     public curMapId: number;
 
     /** 地图容器节点引用 */
     private mapContainer: Node = null;
-    /**地图物体容器 */
-    private objectContainer: Node = null;
 
     /** 地图格子数据（key: "x,y"） */
     private gridMap: Map<string, MapGridData> = new Map();
 
-    /** 地图摄像机引用 */
-    private mapCamera: Camera = null;
-
-    private testCenterPoint: Node = null;
-
-
-    /**摄像机边界限制 */
-    private cameraBounds = {
-        minX: 0,
-        maxX: 0,
-        minY: 0,
-        maxY: 0
-    };
-
-    /**视口范围（用于地图块加载优化） */
-    private viewportPadding: number = 2; // 视口外扩格子数（不是像素）
-
-    /**当前可见的地图块 */
-    private visibleBlocks: Map<string, MapBlock> = new Map();
-
-    /**当前可见的地图物体 */
-    private visibleMapObjects: Map<IMapObject, MapObject> = new Map();
+    // 是否显示触碰区域
+    public isShowTouchArea: boolean;
+    // 交互中的地图物体
+    public mapObjectHandling: MAP_OBJ_HANDLE;
 
     /**记录每个物体占的地图格子 */
-    private _mapObjOccupyGrids: Map<IMapObject, MapGridData[]> = new Map();
+    private _mapObjOccupyGrids: Map<MapObjUserData, MapGridData[]> = new Map();
+    /**以UID找地图物体 */
+    private _mapObjByUID: Map<string, MapObjUserData> = new Map();
 
     /**地图物件 */
     // private mapObjects: Map<IMapObject, MapObject> = new Map();
 
-    /**地图块总尺寸信息 */
-    private mapBlockInfo = {
-        totalBlocksX: 0,
-        totalBlocksY: 0,
-        blockPixelSize: 0
-    };
+
 
     public initEvent(): void {
         super.initEvent();
         PoolMgr.register(MapGridData, (obj) => { obj.Clear() });
+        PoolMgr.register(MapObjUserData, (obj) => { obj.Clear() });
     }
 
     /**
      * 初始化地图引用
      */
-    public initMapReferences(mapContainer: Node, objectContainer: Node, mapCamera: Camera, testCenterPoint: Node) {
+    public initMapReferences(mapContainer: Node) {
         this.mapContainer = mapContainer;
-        this.objectContainer = objectContainer;
-        this.mapCamera = mapCamera;
-        this.testCenterPoint = testCenterPoint;
     }
     /**
         * 创建格子数据
@@ -111,83 +106,69 @@ export class MapMgr extends BaseMgr {
     /**设置地图物体占格数据 */
     private SetupMapObjData() {
         var mapCfg = this.getMapCfg();
-
+        GlobalData.wildData.monsterMax = 0;
         const mapObjects = mapCfg.config.objects;
         mapObjects.forEach(obj => {
             var arrOccupyGrid = [];
-            var occupyX = Math.floor(obj.occupyX / 2);
-            var occupyY = Math.floor(obj.occupyY / 2);
-            var startGridX = obj.gridX - occupyX;
-            var endGridX = obj.gridX + occupyX;
-            var startGridY = obj.gridY - occupyY;
-            var endGridY = obj.gridY + occupyY;
-            for (let x = startGridX; x <= endGridX; x++) {
-                for (let y = startGridY; y <= endGridY; y++) {
-                    var gridData = this.getGrid(x, y);
+            var mapResCfg = ConfigMgr.instance.MapResourcesData.get(Number(obj.id));
+            // 统计当前地图怪物波数
+            if (mapResCfg && mapResCfg.interaction_type == MAP_RES_INTERATION_TYPE.BattleEventsData) {
+                GlobalData.wildData.monsterMax++;
+            }
+            // 计算占格区域的左下角
+            let occupyLeft: number, occupyBottom: number;
+
+            if (obj.occupyX % 2 === 0) {
+                // 偶数格：左下角 = gridX - floor(occupyX/2) + 1
+                occupyLeft = obj.gridX - Math.floor(obj.occupyX / 2) + 1;
+            } else {
+                // 奇数格：左下角 = gridX - floor(occupyX/2)
+                occupyLeft = obj.gridX - Math.floor(obj.occupyX / 2);
+            }
+
+            if (obj.occupyY % 2 === 0) {
+                // 偶数格：左下角 = gridY - floor(occupyY/2) + 1
+                occupyBottom = obj.gridY - Math.floor(obj.occupyY / 2) + 1;
+            } else {
+                // 奇数格：左下角 = gridY - floor(occupyY/2)
+                occupyBottom = obj.gridY - Math.floor(obj.occupyY / 2);
+            }
+
+            var mapObjUid = MapObjUserData.FormatUID(this.curMapId, obj.gridX, obj.gridY, obj.id);
+
+            // 获取状态数据
+            var mapObjstate = GlobalData.wildData.getMapObjState(mapObjUid);
+            if (mapObjstate && mapObjstate.isDissapear) {
+                return;
+            }
+            const userData = PoolMgr.get(MapObjUserData);
+            userData.setData(obj, this.curMapId);
+            if (mapObjstate.occupiedPlayerId) {
+                userData.SetOccupy(mapObjstate.occupiedPlayerId, GlobalData.playerData.Race);
+            }
+            // 从左下角开始，占据 occupyX * occupyY 个格子
+            for (let dx = 0; dx < obj.occupyX; dx++) {
+                for (let dy = 0; dy < obj.occupyY; dy++) {
+                    const x = occupyLeft + dx;
+                    const y = occupyBottom + dy;
+                    let gridData = this.getGrid(x, y);
                     if (gridData) {
-                        gridData.setOccupied(obj);
+                        gridData.addOccupied(userData);
                         gridData.walkable = obj.walkable;
                         Tools.insertArr(arrOccupyGrid, gridData);
                     }
                 }
             }
-            this._mapObjOccupyGrids.set(obj, arrOccupyGrid);
+            this._mapObjOccupyGrids.set(userData, arrOccupyGrid);
+            this._mapObjByUID.set(userData.uId, userData);
         })
     }
-    /**更新摄像机边界值 */
-    public UpdateCameraBounds() {
-        // 计算摄像机边界（以 mapContainer 锚点为中心）
-        const mapTransform = this.mapContainer.getComponent(UITransform);
-        this.cameraBounds.minX = -mapTransform.width / 2;
-        this.cameraBounds.maxX = mapTransform.width / 2;
-        this.cameraBounds.minY = -mapTransform.height / 2;
-        this.cameraBounds.maxY = mapTransform.height / 2;
-        // console.log(`[WildMapWin] 摄像机边界: (${this.cameraBounds.minX}, ${this.cameraBounds.minY}) 到 (${this.cameraBounds.maxX}, ${this.cameraBounds.maxY})`);
 
-    }
-    /**摄像机边界约束坐标转换 */
-    public CameraBoundsTranceLocalPos(cameraLocalPos: Vec2) {
-        // 获取相机视口大小
-        const rootTransform = UIMananger.instance.getComponent(UITransform);
-        if (!rootTransform) return;
-
-        const screenWidth = rootTransform.width * this.mapCamera.rect.width;
-        const screenHeight = rootTransform.height * this.mapCamera.rect.height;
-
-        // 计算正交相机的世界坐标视口
-        const viewHeight = this.mapCamera.orthoHeight * 2;
-        const viewWidth = viewHeight * (screenWidth / screenHeight);
-
-        const halfViewWidth = viewWidth / 2;
-        const halfViewHeight = viewHeight / 2;
-
-        // UI坐标到世界坐标的转换比例
-        // const worldToUIRatio = viewHeight / screenHeight;
-
-        // 应用边界限制
-        var newX = cameraLocalPos.x;
-        var newY = cameraLocalPos.y;
-        cameraLocalPos.x = Math.max(this.cameraBounds.minX + halfViewWidth, Math.min(newX, this.cameraBounds.maxX - halfViewWidth));
-        cameraLocalPos.y = Math.max(this.cameraBounds.minY + halfViewHeight, Math.min(newY, this.cameraBounds.maxY - halfViewHeight));
-
-        return cameraLocalPos;
-    }
-    public CameraBoundsTranceWorldPos(cameraWorldPos: Vec2) {
-        var localPos = this.mapCamera.node.parent.getComponent(UITransform).convertToNodeSpaceAR(cameraWorldPos.toVec3())
-        return this.CameraBoundsTranceLocalPos(localPos.toVec2());
-    }
     /**
      * 获取地图容器
      */
     public getMapContainer(): Node {
         return this.mapContainer;
-    }
-
-    /**
-     * 获取地图摄像机
-     */
-    public getMapCamera(): Camera {
-        return this.mapCamera;
     }
 
     /**
@@ -221,23 +202,20 @@ export class MapMgr extends BaseMgr {
     }
     public Clear() {
         this.clearAllGrids();
-        // 清理可见的地图块
-        this.visibleBlocks.forEach(block => {
-            block.HideMapCell();
-            AssetMgr.removeNode(block.node);
-        });
-        this.visibleBlocks.clear();
-        //清除地图物体
-        this.visibleMapObjects.forEach(mapObj => {
-            AssetMgr.removeNode(mapObj.node);
-        })
-        this.visibleMapObjects.clear();
+        // this.mapObjectHandling = null;
+        this._mapObjOccupyGrids.clear();
+        this._mapObjByUID.clear();
     }
     /**
      * 清空所有格子数据
      */
     public clearAllGrids() {
         this.gridMap.forEach(grid => {
+            grid.occupyUnit.forEach((unit: any) => {
+                if (unit instanceof MapObjUserData) {
+                    this._mapObjOccupyGrids.delete(unit);   // 顺带清悬空 key
+                }
+            });
             PoolMgr.put<MapGridData>(grid);
         })
         this.gridMap.clear();
@@ -258,13 +236,14 @@ export class MapMgr extends BaseMgr {
      * @returns 格子数据，如果无效则返回 null
      */
     public screenPosToGrid(screenPos: Vec2): MapGridData | null {
-        if (!this.mapCamera || !this.mapContainer) {
+
+        if (!GameCamera.instance.camera || !this.mapContainer) {
             console.error('[MapMgr] screenPosToGrid: mapCamera 或 mapContainer 未初始化');
             return null;
         }
 
         // 屏幕坐标 → 世界坐标
-        const worldPos = this.mapCamera.screenToWorld(new Vec3(screenPos.x, screenPos.y, 0));
+        const worldPos = GameCamera.instance.camera.screenToWorld(new Vec3(screenPos.x, screenPos.y, 0));
         return this.WorldPosToGrid(worldPos);
 
     }
@@ -303,8 +282,8 @@ export class MapMgr extends BaseMgr {
         const mapHeight = mapInfo.mapPixelHeight;
 
         // mapContainer 锚点在中心，需要加上偏移
-        const offsetX = localPos.x + mapWidth / 2;
-        const offsetY = localPos.y + mapHeight / 2;
+        const offsetX = localPos.x + mapWidth / 2;//- mapInfo.gridWidth * 0.5;
+        const offsetY = localPos.y + mapHeight / 2;//- mapInfo.gridHeight * 0.5;
 
 
         // 计算格子坐标
@@ -316,11 +295,11 @@ export class MapMgr extends BaseMgr {
         return this.getGrid(gridX, gridY);
     }
     /**
-     * 格子坐标转世界坐标（格子中心点）
+     * 格子坐标转地图容器坐标（格子中心点）
      * 返回的是相对于 mapContainer 本地坐标系的坐标
      * mapContainer 的锚点在 (0.5, 0.5)，所以需要从左下角开始计算
      */
-    public gridToWorldPos(gridX: number, gridY: number): Vec2 {
+    public gridToMapPos(gridX: number, gridY: number): Vec2 {
         const mapCfg = this.getMapCfg();
         if (!mapCfg) {
             console.error('[MapMgr] gridToWorldPos: mapCfg 未初始化');
@@ -339,289 +318,223 @@ export class MapMgr extends BaseMgr {
             -mapHeight / 2 + gridY * MapGridData.HEIGHT_PX + MapGridData.HEIGHT_PX / 2
         );
     }
-    /**创建地图块 */
-    createMapBock() {
-        const mapInfo = this.getMapCfg().config.mapInfo;
-        const tileSize = mapInfo.tileSize;
 
-        // 计算逻辑格子总数
-        const logicCols = Math.floor(mapInfo.mapPixelWidth / MapGridData.WIDTH_PX);
-        const logicRows = Math.floor(mapInfo.mapPixelHeight / MapGridData.HEIGHT_PX);
-
-        console.log(`[WildMapWin] 地图块尺寸 tileSize: ${tileSize}`);
-        console.log(`[WildMapWin] 逻辑格子尺寸: ${MapGridData.WIDTH_PX} x ${MapGridData.HEIGHT_PX}`);
-        console.log(`[WildMapWin] 地图块总数: ${mapInfo.totalRows} x ${mapInfo.totalCols}`);
-        console.log(`[WildMapWin] 逻辑格子总数: ${logicCols} x ${logicRows}`);
-
-        // 保存地图块信息
-        this.mapBlockInfo.blockPixelSize = tileSize;
-        this.mapBlockInfo.totalBlocksX = mapInfo.totalRows || 6;
-        this.mapBlockInfo.totalBlocksY = mapInfo.totalCols || 6;
-
-        // 初始加载视口内的地图块（基于角色初始位置）
-        this.updateVisibleBlocks();
-
-        console.log(`[WildMapWin] 地图块信息: totalBlocksX=${this.mapBlockInfo.totalBlocksX}, totalBlocksY=${this.mapBlockInfo.totalBlocksY}, blockPixelSize=${this.mapBlockInfo.blockPixelSize}`);
+    public GetOccupyGridsByMapObj(mapObj: MapObjUserData) {
+        return this._mapObjOccupyGrids.get(mapObj) || [];
     }
+    public GetMapObjByUID(mapUID: string) {
+        return this._mapObjByUID.get(mapUID);
+    }
+    public RemoveMapObj(mapObj: MapObjUserData) {
+        var grids = this.GetOccupyGridsByMapObj(mapObj);
+        if (grids) {
+            grids.forEach(grid => {
+                grid.removeOccupy(mapObj);
+            })
+        }
+    }
+    /**处理地图物体（单机模式）*/
+    public HandleMapObjectByClient(mapObj: MapObjUserData, role: PlayerData) {
+        if (!mapObj) {
+            return;
+        }
+        var id = mapObj.cfg.id;
+        var cfg = ConfigMgr.instance.MapResourcesData.get(id);
+        if (!cfg) {
+            return;
+        }
+        var targetCfg = ConfigTools.instance.GetWildMapObjectDataByChapterId(id, GlobalData.wildData.chapter);
 
-    /**
-     * 更新可见的地图块（基于摄像机视口）
-     */
-    public updateVisibleBlocks() {
-        if (!this.mapCamera) {
-            console.warn('[WildMapWin] mapCamera 未初始化');
+        if (!targetCfg) {
+            return;
+        }
+        //执行动作
+        var strContent = "";
+
+        // 检测地图物体交互次数
+        var mapObjState = GlobalData.wildData.getMapObjState(mapObj.uId);
+        var isCanUse = !cfg.relive_time || mapObjState.usedTime < cfg.relive_time;
+        var isRelive = cfg.relive_cd && mapObjState.nextReliveTime <= GlobalData.serverData.getServerTime();
+        if (!isCanUse && !isRelive) {
+            console.log("触发次数不足")
             return;
         }
 
-        const cameraPos = this.mapCamera.node.worldPosition;
-        const tileSize = this.mapBlockInfo.blockPixelSize;
+        this.mapObjectHandling = { mapResCfg: cfg, mapUID: mapObj.uId };
+        switch (cfg.interaction_type) {
+            case MAP_RES_INTERATION_TYPE.AutoTriggerData:
+                const autoTrigger = <IAutoTriggerData>targetCfg;
+                // 随机掉落（服务器处理）
+                var arrDrops = [];
+                ConfigMgr.instance.DropData.forEach(item => {
+                    if (item.group_id == autoTrigger.drop) {
+                        arrDrops.push(item);
+                    }
+                })
 
-        // 从根节点的 UITransform 获取屏幕尺寸
-        const rootTransform = UIMananger.instance.getComponent(UITransform);
-        if (!rootTransform) {
-            console.warn('[WildMapWin] 根节点 UITransform 未找到');
-            return;
-        }
-
-        // 根据相机的 rect 和屏幕尺寸计算实际视口大小
-        const screenWidth = rootTransform.width * this.mapCamera.rect.width;
-        const screenHeight = rootTransform.height * this.mapCamera.rect.height;
-
-        // 计算地图的起始坐标（左下角）
-        const mapTransform = this.mapContainer.getComponent(UITransform);
-        const mapStartX = -mapTransform.width / 2;
-        const mapStartY = -mapTransform.height / 2;
-
-
-        // 计算正交相机的世界坐标视口
-        const viewHeight = this.mapCamera.orthoHeight * 2;
-        const viewWidth = viewHeight * (screenWidth / screenHeight);
-
-        // 计算视口范围在地图中的位置（世界坐标）
-        const viewMinX = cameraPos.x - viewWidth / 2;
-        const viewMaxX = cameraPos.x + viewWidth / 2;
-        const viewMinY = cameraPos.y - viewHeight / 2;
-        const viewMaxY = cameraPos.y + viewHeight / 2;
-
-        // 转换为地图块索引（从地图左下角开始计算）
-        const minBlockX = Math.floor((viewMinX - mapStartX) / tileSize) - this.viewportPadding;
-        const maxBlockX = Math.ceil((viewMaxX - mapStartX) / tileSize) + this.viewportPadding;
-        const minBlockY = Math.floor((viewMinY - mapStartY) / tileSize) - this.viewportPadding;
-        const maxBlockY = Math.ceil((viewMaxY - mapStartY) / tileSize) + this.viewportPadding;
-
-        // 限制在地图范围内
-        const startX = Math.max(0, minBlockX);
-        const endX = Math.min(this.mapBlockInfo.totalBlocksX - 1, maxBlockX);
-        const startY = Math.max(0, minBlockY);
-        const endY = Math.min(this.mapBlockInfo.totalBlocksY - 1, maxBlockY);
-
-        console.log(`[WildMapWin] 加载地图块范围: X(${startX} - ${endX}), Y(${startY} - ${endY})`);
-
-        // 记录本次应该可见的地图块
-        const shouldBeVisible = new Set<string>();
-
-        // 加载视口内的地图块
-        for (let x = startX; x <= endX; x++) {
-            for (let y = startY; y <= endY; y++) {
-                const key = `${x},${y}`;
-                shouldBeVisible.add(key);
-
-                // 如果地图块不存在，创建它
-                if (!this.visibleBlocks.has(key)) {
-                    this.createMapBlockTile(x, y);
+                if (arrDrops) {
+                    var dropData = (arrDrops[0] as IDropData)
+                    var itemCfg = ConfigMgr.instance.ItemData.get(dropData.item);
+                    strContent = lang(itemCfg.name) + dropData.num;
                 }
-            }
+                this.HandleMapOjectFinishChat(this.mapObjectHandling, role, strContent);
+                break;
+            case MAP_RES_INTERATION_TYPE.SelectEventsData:
+                const selectEvent = <ISelectEventsData>targetCfg;
+                // 随机道具获取
+                var itemCfg = ConfigMgr.instance.ItemData.get(selectEvent.item_list[0]);
+                if (itemCfg) {
+                    strContent = lang(itemCfg.name) + selectEvent.item_count[0];
+                }
+                this.HandleMapOjectFinishChat(this.mapObjectHandling, role, strContent);
+                break;
+            case MAP_RES_INTERATION_TYPE.TransactionEventsData:
+                const transactionEvent = <ITransactionEventsData>targetCfg;
+                UIMananger.instance.showWin(WildDealWin, cfg);
+                break;
+            case MAP_RES_INTERATION_TYPE.SpecialEventsData:
+                const specialEvent = <ISpecialEventsData>targetCfg;
+                break;
+            case MAP_RES_INTERATION_TYPE.BattleEventsData:
+                const monsterAttrsInfos = <IMonsterAttrData>targetCfg;//as IMonsterAttrData;
+                // 弹窗确认
+                if (monsterAttrsInfos.is_confirm) {
+                    UIMananger.instance.showWin(WildBattleCheckWin, monsterAttrsInfos, cfg)
+                } else {
+                    UIMananger.instance.showWin(BattleWin, this.GetBattleDataByMonsterAttrData(monsterAttrsInfos));
+                }
+                break;
         }
 
-        // 隐藏/回收不在视口内的地图块
-        const toRemove: string[] = [];
-        this.visibleBlocks.forEach((block, key) => {
-            if (!shouldBeVisible.has(key)) {
-                block.HideMapCell();
-                AssetMgr.removeNode(block.node);
-                toRemove.push(key);
-            }
-        });
 
-        // 从可见列表中移除
-        toRemove.forEach(key => this.visibleBlocks.delete(key));
 
     }
-    /**地图物体可视化检测 */
-    public UpdateVisibleMapObj() {
-        const cameraPos = this.mapCamera.node.worldPosition;
+    /**通过单位属性表获取战斗数据 */
+    public GetBattleDataByMonsterAttrData(monsterAttrsData: IMonsterAttrData): IBATTLE_DATA {
+        var gridPos = monsterAttrsData.coordinates;
 
-        // 从根节点的 UITransform 获取屏幕尺寸
-        const rootTransform = UIMananger.instance.getComponent(UITransform);
-        if (!rootTransform) {
-            console.warn('[WildMapWin] 根节点 UITransform 未找到');
+        var list = [];
+
+        for (var i = 0; i < gridPos.length; i++) {
+            var posId = gridPos[i]
+
+            var dataIndex = i * 2;
+            var unitId = monsterAttrsData.units_list[dataIndex];
+            var unitCount = monsterAttrsData.units_list[dataIndex + 1];
+            var unitData: IBATTLE_UNIT_DATA = { unitAttrId: unitId, posId: posId, num: unitCount, lv: monsterAttrsData.soldier_lv_coef }
+            list.push(unitData);
+        }
+
+        return { enermyUnits: list, myUnits: null };
+    }
+    /**完成地图物体交互后 */
+    public HandleMapOjectFinishChat(mapHandler: MAP_OBJ_HANDLE, role: PlayerData, flyNoticeContent: string) {
+        if (!mapHandler) {
             return;
         }
-        // 根据相机的 rect 和屏幕尺寸计算实际视口大小
-        const screenWidth = rootTransform.width * this.mapCamera.rect.width;
-        const screenHeight = rootTransform.height * this.mapCamera.rect.height;
-
-        // 计算正交相机的世界坐标视口
-        const viewHeight = this.mapCamera.orthoHeight * 2;
-        const viewWidth = viewHeight * (screenWidth / screenHeight);
-
-        // 计算视口范围在地图中的位置（世界坐标）
-        const viewMinX = cameraPos.x - viewWidth / 2;
-        const viewMaxX = cameraPos.x + viewWidth / 2;
-        const viewMinY = cameraPos.y - viewHeight / 2;
-        const viewMaxY = cameraPos.y + viewHeight / 2;
-
-        // 记录本次应该可见的地图物体
-        const shouldBeVisible = new Set<IMapObject>();
-
-        var worldPosMin = v3(viewMinX, viewMinY);
-        var wolrdPosMax = v3(viewMaxX, viewMaxY);
-
-        // this.testCenterPoint.setWorldPosition(worldPosMin);
-
-        var minGridPos = this.WorldPosToGrid(worldPosMin);
-
-        var MaxGridPos = this.WorldPosToGrid(wolrdPosMax);
-
-
-        console.log(`起始格子坐标：${minGridPos.gridX},${minGridPos.gridY},结束格子坐标${MaxGridPos.gridX},${MaxGridPos.gridY}`)
-        var arrPromise = []
-        for (let x = minGridPos.gridX; x < MaxGridPos.gridX; x++) {
-            for (let y = minGridPos.gridY; y < MaxGridPos.gridY; y++) {
-                let mapData = this.getGrid(x, y);
-                if (mapData && mapData.occupyUnit && !(mapData.occupyUnit instanceof WildRole)) {
-                    if (!shouldBeVisible.has(mapData.occupyUnit)) {
-                        shouldBeVisible.add(mapData.occupyUnit)
-                        if (!this.visibleMapObjects.get(mapData.occupyUnit)) {
-                            arrPromise.push(this.createMapObjects(x, y).then(mapObj => {
-                                if (mapObj) {
-                                    this.visibleMapObjects.set(mapData.occupyUnit, mapObj);
-                                }
-                            }));
+        var cfg = mapHandler.mapResCfg;
+        if (!cfg) {
+            return;
+        }
+        var wildData = GlobalData.wildData.getMapObjState(mapHandler.mapUID);
+        wildData.usedTime++;
+        // 如果可以刷新使用次数就更新下次刷新时间
+        if (wildData.usedTime >= cfg.relive_time && cfg.relive_cd) {
+            wildData.nextReliveTime = cfg.relive_cd + GlobalData.serverData.getServerTime();
+        }
+        if (cfg.finish_effect && cfg.finish_effect.length > 0) {
+            cfg.finish_effect.forEach(effect => {
+                switch (effect) {
+                    case MAP_OBJECT_FINISH_TYPE.DISSAPEAR:
+                        GlobalData.wildData.setMapObjDissapear(mapHandler.mapUID, true);
+                        EventManager.Instance.dispatch(GameEvent.RemoveMapObj, mapHandler.mapUID);
+                        break;
+                    case MAP_OBJECT_FINISH_TYPE.FLY_NOTCIE:
+                        if (flyNoticeContent) {
+                            UIMananger.instance.showFlyNotice(`${lang(12, { name: flyNoticeContent })}`);
                         }
+                        break;
+                    case MAP_OBJECT_FINISH_TYPE.FLAG:
+                        GlobalData.wildData.setMapObjOccupy(mapHandler.mapUID, role.uId);
+                        EventManager.Instance.dispatch(GameEvent.OccupyMapObj, mapHandler.mapUID, role);
+                        break;
+                }
+            })
+        }
+        this.mapObjectHandling = null;
+    }
+    /**检测暗雷 */
+    public onCheckMoveFight() {
+        GlobalData.wildData.surferFightStep++;
+        var numStep = GlobalData.wildData.surferFightStep;
+        // numStep++;
+        var arr = ConfigMgr.instance.getParam(ParamDefined.PVE_RANDOM_ENERMY_STEP_NUM, ParamValueType.INT);
+        var minStep = arr[0];
+        var maxStep = arr[1];
+        var isFight = false;
+        if (minStep < numStep) {
+            if (numStep > maxStep) {
+                // 大于这个步数必定遇怪
+                isFight = true;
+            } else {
+                // 随机遇怪
+                var result = Math.random() > 0.5
+                isFight = result;
+            }
+        }
+        if (isFight) {
+            console.log("触发暗雷")
+        }
+        return isFight;
+    }
+    /**随机暗雷怪 */
+    public GetRandomMonsters(): IBATTLE_DATA {
+        var mapData = ConfigTools.instance.getMapDataByChaper();
+        if (mapData) {
+            var randomGroup = mapData.random_units_list;
+            if (randomGroup) {
+                var randomListIds = ConfigMgr.instance.UnitRandomDataIndex.UnitRandomDataIndex[randomGroup];
+                if (randomListIds) {
+                    var randomList: IUnitRandomData[] = [];
+                    var coordinates = null;
+                    for (let key in randomListIds) {
+                        let randomId = randomListIds[key]
+                        var randomCfg = ConfigMgr.instance.UnitRandomData.get(randomId);
+                        randomList.push(randomCfg);
+                        if (!coordinates) {
+                            coordinates = Tools.shuffle(randomCfg.coordinates);
+                        }
+                    }
+
+                    if (randomList.length > 0) {
+                        let resultArr = [];
+                        randomList.forEach(unitRandomCfg => {
+                            let randomUnitList = [];
+                            for (let i = 0; i < unitRandomCfg.unit_attr.length; i++) {
+
+                                var unitAttrId = unitRandomCfg.unit_attr[i];
+                                var weight = unitRandomCfg.weight[i];
+                                randomUnitList.push({ unitId: unitAttrId, weight: weight });
+                            }
+                            let resultIndex = Tools.getRandomForWeight(randomUnitList);
+
+
+                            resultArr.push({ unitAttrId: resultIndex.unitId, num: Tools.getRandomRange(unitRandomCfg.count_min, unitRandomCfg.count_max) })
+                        })
+
+
+                        var listResultUnits = [];
+                        var index = 0;
+                        resultArr.forEach(unitResult => {
+                            listResultUnits.push({ unitAttrId: unitResult.unitAttrId, posId: coordinates[index], num: unitResult.num, lv: 1 })
+                            index++;
+                        })
+                        return { enermyUnits: listResultUnits, myUnits: null };
                     }
                 }
             }
         }
-        Promise.all(arrPromise).then(() => {
-            // 隐藏/回收不在视口内的地图块
-            const toRemove: IMapObject[] = [];
-            this.visibleMapObjects.forEach((mapObj, key) => {
-                if (!shouldBeVisible.has(key)) {
-                    AssetMgr.removeNode(mapObj.node);
-                    toRemove.push(key);
-                    // this.mapObjects.delete(key);
-                }
-            });
-
-            // 从可见列表中移除
-            toRemove.forEach(key => this.visibleMapObjects.delete(key));
-        })
-
-    }
-
-    /**
-       * 创建单个地图块
-       */
-    private async createMapBlockTile(x: number, y: number) {
-        const key = `${x},${y}`;
-
-        // 防止重复创建
-        if (this.visibleBlocks.has(key)) return;
-
-        // 计算地图块位置（从地图左下角开始）
-        const mapTransform = this.mapContainer.getComponent(UITransform);
-        const startX = -mapTransform.width / 2;
-        const startY = -mapTransform.height / 2;
-        const tileSize = this.mapBlockInfo.blockPixelSize;
-
-        // MapBlock 的锚点是 (0.5, 0.5)，所以需要加上半个块的偏移
-        const blockPos = new Vec2(
-            startX + x * tileSize + tileSize / 2,
-            startY + y * tileSize + tileSize / 2
-        );
-
-        const block = await AssetMgr.createPrefabFromPool(
-            GameUrl.WildMapPrefab.format("MapBlock"),
-            blockPos,
-            this.mapContainer,
-            MapBlock
-        );
-
-        block.SetData(this.getMapCfg().config.mapInfo.mapName, new Vec2(x, y));
-        block.ShowMapCell();
-
-        // 添加到可见列表
-        this.visibleBlocks.set(key, block);
-    }
-    /**
-     * 创建地图物件
-     */
-    private createMapObjects(x: number, y: number) {
-        var gridData = this.getGrid(x, y);
-        if (gridData && gridData.occupyUnit) {
-            // var mapObj = this.mapObjects.get(gridData.occupyUnit)
-            // if (mapObj) {
-            //     return new Promise<MapObject>(resolve => {
-            //         if (!mapObj.node.active) {
-            //             mapObj.node.active = true;
-            //             mapObj.SetData(gridData.occupyUnit)
-            //         }
-            //         resolve(mapObj)
-            //     });
-            // }
-            return this.createMapObject(gridData.occupyUnit);
-        }
-    }
-    /**
-       * 创建单个地图物件
-       */
-    private async createMapObject(objData: IMapObject) {
-        return new Promise<MapObject>(resolve => {
-
-            const worldPos = this.getGrid(objData.gridX, objData.gridY)?.GetWorldPos() || Vec2.ZERO;
-
-            AssetMgr.createPrefabFromPool(
-                GameUrl.WildMapPrefab.format("MapObject"),
-                worldPos,
-                this.objectContainer,
-                MapObject
-            ).then(mapObj => {
-                mapObj.SetData(objData);
-                mapObj.node.setWorldPosition(worldPos.toVec3());
-
-                resolve(mapObj);
-
-            })
-        })
-
-    }
-    /**
-  * 更新所有节点的层级排序（Y排序）
-  * Y坐标越小，zIndex越大（越靠前显示）
-  */
-    public updateAllNodesSortOrder() {
-        // 收集所有需要排序的节点
-        const sortableNodes: { node: Node, y: number }[] = [];
-
-        this.objectContainer.children.forEach(child => {
-            sortableNodes.push({
-                node: child,
-                y: child.position.y
-            });
-        })
-
-        // 按Y坐标排序（Y越小越靠前）
-        sortableNodes.sort((a, b) => b.y - a.y);
-
-        // 设置zIndex
-        sortableNodes.forEach((item, index) => {
-            item.node.setSiblingIndex(index);
-        });
-    }
-
-    public GetOccupyGridsByMapObj(mapObj: IMapObject) {
-        return this._mapObjOccupyGrids.get(mapObj) || [];
     }
 }
+
 

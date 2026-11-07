@@ -1,4 +1,4 @@
-import { _decorator, Component, Material, Node, Sprite, SpriteAtlas, SpriteFrame, tween, Tween, UITransform, v2, Vec2, Vec3, view } from 'cc';
+import { _decorator, Component, js, Material, Node, Sprite, SpriteAtlas, SpriteFrame, tween, Tween, UITransform, v2, Vec2, Vec3, view } from 'cc';
 import { AssetMgr } from './AssetMgr';
 import { GameColor } from './GameColor';
 const { ccclass, property } = _decorator;
@@ -119,7 +119,16 @@ export class Tools {
         // 匹配常见的图片和资源文件后缀
         const extensionPattern = /\.(png|jpg|jpeg|gif|webp|bmp|svg|ico|tiff|psd|prefab|json|atlas|mp3|wav|ogg|mp4|avi|mov)$/i;
 
-        return path.replace(extensionPattern, replace);
+        // 如果路径匹配到后缀，则替换；否则直接返回原路径
+        if (extensionPattern.test(path)) {
+            return path.replace(extensionPattern, replace);
+        }
+
+        return path + replace;
+    }
+    /**格式化资源单图图标 */
+    static formatIconResUrl(res_Path: string, res_name: string) {
+        return `${res_Path}/${res_name}/spriteFrame`
     }
     static setCostFormat(own: number, need: number, enoughColor = GameColor.GAME_GREEN, notEnoughColor = GameColor.GAME_RED) {
         return [`${own}/${need}`, own >= need ? enoughColor : notEnoughColor]
@@ -197,7 +206,7 @@ export class Tools {
     * 获取UI节点的世界坐标（考虑锚点）
     * @param node UI节点
     */
-    public static getUIWorldPosition(node: Node,worldPos:Vec3): Vec2 {
+    public static getUIWorldPosition(node: Node, worldPos: Vec3): Vec2 {
         if (!node) return v2(0, 0);
         return node.getComponent(UITransform)?.convertToWorldSpaceAR(worldPos).toVec2();
     }
@@ -250,17 +259,191 @@ export class Tools {
         });
         this.scheduledCallbacks.clear();
     }
+    /**坐标索引字符串格式化 */
+    public static formatPosKey(x: number, y: number) {
+        return `${x},${y}`;
+    }
+    /**根据数组权重获取随机数组元素 */
+    public static getRandomForWeight<T extends { weight: number }>(arr: T[]): T {
+        if (!arr || arr.length === 0) {
+            return null;
+        }
+        if (arr.length === 1) {
+            return arr[0];
+        }
 
+        let total = 0;
+        for (let i = 0; i < arr.length; i++) {
+            total += arr[i].weight;
+        }
 
+        // 权重全部无效时，退化为等概率随机
+        if (total <= 0) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        let rand = Math.random() * total;
+        for (let i = 0; i < arr.length; i++) {
+            rand -= arr[i].weight;
+            if (rand < 0) {
+                return arr[i];
+            }
+        }
+
+        // 浮点误差兜底：返回最后一个有效权重的元素
+        for (let i = arr.length - 1; i >= 0; i--) {
+            if (arr[i].weight > 0) {
+                return arr[i];
+            }
+        }
+        return arr[arr.length - 1];
+    }
+    /**
+     * 获取一个随机范围数据
+     * @param min 最小值
+     * @param max 最大值
+     * @param isFloat 是否返回浮点数，默认 false 返回整数
+     * @returns 整数时为闭区间 [min, max]，浮点数时为 [min, max)
+     */
+    public static getRandomRange(min: number, max: number, isFloat: boolean = false): number {
+        if (min > max) {
+            const temp = min;
+            min = max;
+            max = temp;
+        }
+        if (isFloat) {
+            return min + Math.random() * (max - min);
+        }
+        return Math.floor(min + Math.random() * (max - min + 1));
+    }
+    /**
+     * 数组乱序（Fisher-Yates 洗牌），不修改原数组
+     * @param arr 原数组
+     * @param out 可选的目标数组（复用已有数组可避免频繁 GC），会先清空
+     * @returns 乱序后的新数组；out 传入时返回 out 本身
+     */
+    public static shuffle<T>(arr: T[], out?: T[]): T[] {
+        const result = out || [];
+        result.length = 0;
+        if (!arr || arr.length === 0) {
+            return result;
+        }
+
+        for (let i = 0; i < arr.length; i++) {
+            result[i] = arr[i];
+        }
+
+        // 从后往前，把当前元素与前面随机位置的元素交换
+        for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = result[i];
+            result[i] = result[j];
+            result[j] = temp;
+        }
+
+        return result;
+    }
+
+    /**
+     * 取类的稳定名称。
+     * 发布版本压缩后 cls.name 会被改成 a/b/t 之类的短名，两个类可能重名，不能当 key 用。
+     * js.getClassName 读的是 @ccclass('Xxx') 里写死的字符串，各版本一致。
+     */
+    public static getClsName(cls: Function): string {
+        return js.getClassName(cls);
+    }
+
+    /**
+     * 克隆对象（深拷贝）
+     * 支持：基本类型、普通对象、数组、Map、Set、Date、TypedArray/ArrayBuffer
+     * 处理循环引用与共享引用（同一个源对象在结果里仍然指向同一个副本）
+     * 注意：只用于纯数据，Node/Component/Asset 等引擎对象请用 instantiate
+     * @param obj 源对象，如 BattleTeamData
+     * @returns 结构完全独立的新对象
+     */
+    public static cloneObj<T>(obj: T): T {
+        if (obj === null || typeof obj !== 'object') {
+            return obj;
+        }
+        return Tools.cloneDeepImpl(obj as any, new Map()) as T;
+    }
+
+    private static cloneDeepImpl(obj: any, memo: Map<any, any>): any {
+        // 已经克隆过（循环引用 / 共享引用）
+        if (memo.has(obj)) {
+            return memo.get(obj);
+        }
+
+        // 数组
+        if (Array.isArray(obj)) {
+            const newArr: any[] = new Array(obj.length);
+            memo.set(obj, newArr);
+            for (let i = 0; i < obj.length; i++) {
+                newArr[i] = Tools.cloneDeepImpl(obj[i], memo);
+            }
+            return newArr;
+        }
+
+        // Date
+        if (obj instanceof Date) {
+            const newDate = new Date(obj.getTime());
+            memo.set(obj, newDate);
+            return newDate;
+        }
+
+        // Map（键和值都深拷贝，和 JSON 方案不同，这里不会丢数据）
+        if (obj instanceof Map) {
+            const newMap = new Map();
+            memo.set(obj, newMap);
+            obj.forEach((value: any, key: any) => {
+                newMap.set(Tools.cloneDeepImpl(key, memo), Tools.cloneDeepImpl(value, memo));
+            });
+            return newMap;
+        }
+
+        // Set
+        if (obj instanceof Set) {
+            const newSet = new Set();
+            memo.set(obj, newSet);
+            obj.forEach((value: any) => {
+                newSet.add(Tools.cloneDeepImpl(value, memo));
+            });
+            return newSet;
+        }
+
+        // TypedArray / DataView / ArrayBuffer：直接走原生 copy，否则只复制属性会得到不可用的对象
+        if (ArrayBuffer.isView(obj)) {
+            const newView = (obj as any).slice
+                ? (obj as any).slice()
+                : new (obj.constructor as any)(obj.buffer.slice(0));
+            memo.set(obj, newView);
+            return newView;
+        }
+        if (obj instanceof ArrayBuffer) {
+            const newBuf = obj.slice(0);
+            memo.set(obj, newBuf);
+            return newBuf;
+        }
+
+        // 普通对象 / 类实例：保留原型，只复制自身可枚举属性
+        const result = Object.create(Object.getPrototypeOf(obj));
+        memo.set(obj, result);
+        const keys = Object.keys(obj);
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            result[key] = Tools.cloneDeepImpl(obj[key], memo);
+        }
+        return result;
+    }
 }
 
 
 type ComponentConstructor<T> = new (...args: any[]) => T;
 
 export function safeGetComponent<T extends Component>(node: Node, type: ComponentConstructor<T>): T {
-  const existing = node.getComponent(type);
-  if (existing) return existing;
-  return node.addComponent(type);
+    const existing = node.getComponent(type);
+    if (existing) return existing;
+    return node.addComponent(type);
 }
 
 

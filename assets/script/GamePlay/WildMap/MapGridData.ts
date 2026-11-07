@@ -1,7 +1,9 @@
-import { _decorator, Component, Node, UITransform, Vec2 } from 'cc';
+import { _decorator, Component, Node, Pool, UITransform, Vec2 } from 'cc';
 import { MapMgr } from './MapMgr';
 import { ROLE_DIR } from '../../Common/GameEnum';
-import { IMapObject } from './MapConfig';
+import { MapObjUserData } from './Data/MapObjUserData';
+import { PoolMgr } from '../../Common/Pool';
+import { Tools } from '../../Common/Tools';
 const { ccclass, property } = _decorator;
 /**
  * 地图格子数据（逻辑移动格子）
@@ -21,7 +23,7 @@ export class MapGridData {
     /**是否被占据 */
     public occupied: boolean = false;
     /**占据此格子的单位 */
-    public occupyUnit: any = null;
+    public occupyUnit: any[] = [];
 
 
     constructor() {
@@ -35,7 +37,7 @@ export class MapGridData {
         this.gridY = y;
         this.walkable = walkable;
         this.occupied = false;
-        this.occupyUnit = null;
+        this.occupyUnit = [];
     }
 
     /**
@@ -43,8 +45,8 @@ export class MapGridData {
      * 返回相对于 mapContainer 的本地坐标
      */
     public GetXPx(): number {
-        const worldPos = MapMgr.getInstance().gridToWorldPos(this.gridX, this.gridY);
-        return worldPos.x;
+        const mapPos = MapMgr.getInstance().gridToMapPos(this.gridX, this.gridY);
+        return mapPos.x;
     }
 
     /**
@@ -52,14 +54,14 @@ export class MapGridData {
      * 返回相对于 mapContainer 的本地坐标
      */
     public GetYPx(): number {
-        const worldPos = MapMgr.getInstance().gridToWorldPos(this.gridX, this.gridY);
-        return worldPos.y;
+        const mapPos = MapMgr.getInstance().gridToMapPos(this.gridX, this.gridY);
+        return mapPos.y;
     }
 
     /**获取格子世界坐标 */
     public GetWorldPos(): Vec2 {
-        var local = MapMgr.getInstance().gridToWorldPos(this.gridX, this.gridY).toVec3();
-        return MapMgr.getInstance().getMapContainer()?.getComponent(UITransform)?.convertToWorldSpaceAR(local).toVec2();
+        var mapPos = MapMgr.getInstance().gridToMapPos(this.gridX, this.gridY).toVec3();
+        return MapMgr.getInstance().getMapContainer()?.getComponent(UITransform)?.convertToWorldSpaceAR(mapPos).toVec2();
     }
 
     /**获取哈希键（用于Map存储） */
@@ -110,19 +112,51 @@ export class MapGridData {
 
     /**检查是否为空（可行走且未被占据） */
     public isEmpty(): boolean {
-        return this.walkable && !this.occupied;
+        return this.walkable;// && !this.occupied;
     }
 
     /**设置占据状态 */
-    public setOccupied(unit: any) {
+    public addOccupied(unit: any) {
         this.occupied = true;
-        this.occupyUnit = unit;
+        if (this.occupyUnit.indexOf(unit) < 0) {
+            this.occupyUnit.push(unit);
+        }
+    }
+    /**移除占据 */
+    public removeOccupy(unit: any) {
+        var index = this.occupyUnit.indexOf(unit);
+        if (index > -1) {
+            this.occupyUnit.splice(index, 1);
+        }
+        this.occupied = this.occupyUnit && this.occupyUnit.length < 1;
+    }
+    /**检测是否占据了某个单位 */
+    public CheckHasOccupy(unit: any) {
+        var index = this.occupyUnit.indexOf(unit);
+        return index > -1;
     }
 
+
+    /**获取占有的 IMapObject 类型的对象 */
+    public GetMapObject(): MapObjUserData | undefined {
+        if (this.CheckOccupied()) {
+            for (let i = 0; i < this.occupyUnit.length; i++) {
+                const unit = this.occupyUnit[i];
+                if (unit instanceof MapObjUserData) {
+                    return unit;
+                }
+            }
+        }
+        return undefined;
+    }
     /**清除占据状态 */
     public clearOccupied() {
         this.occupied = false;
-        this.occupyUnit = null;
+        this.occupyUnit = [];
+    }
+    /**检测是否被占单位 */
+    public CheckOccupied() {
+        return this.occupyUnit.length > 0;
     }
     public Clear() {
         this.clearOccupied();
@@ -131,7 +165,7 @@ export class MapGridData {
         this.gridY = 0;
     }
     public toString() {
-        return `${this.gridX},${this.gridY}`;
+        return Tools.formatPosKey(this.gridX, this.gridY);
     }
     /**
        * 计算移动方向（八方向）
@@ -199,16 +233,40 @@ export class MapGridData {
             return ROLE_DIR.LEFT;
         }
     }
-    /**检测是否到达物体附近（靠近占格位置） */
-    public static CheckIsArriveMapObject(curPosGrid: MapGridData, targetObjectData: IMapObject) {
+    /**
+     * 检测是否到达物体附近（靠近占格位置）
+     * @param curPosGrid 当前位置格子
+     * @param targetObjectData 目标物体数据
+     * @param distance 距离范围（0=格子本身，1=周边一圈，2=周边两圈，默认1）
+     */
+    public static CheckIsArriveMapObject(curPosGrid: MapGridData, targetObjectData: MapObjUserData, distance: number = 1) {
         var mgr = MapMgr.getInstance();
-        var neighbors8 = curPosGrid.getNeighbors8();
-        for (let i = 0; i < neighbors8.length; i++) {
-            let grid = mgr.getGrid(neighbors8[i].x, neighbors8[i].y);
-            if (grid && grid.occupyUnit == targetObjectData) {
-                return true;
+
+        // distance = 0: 只检查当前格子
+        if (distance === 0) {
+            return curPosGrid.CheckHasOccupy(targetObjectData);
+        }
+
+        // distance >= 1: 检查指定距离范围内的所有格子
+        for (let dx = -distance; dx <= distance; dx++) {
+            for (let dy = -distance; dy <= distance; dy++) {
+                // 跳过当前格子本身（除非distance=0，但这种情况已在上面处理）
+                if (dx === 0 && dy === 0) continue;
+
+                // 计算切比雪夫距离（棋盘距离，八方向最大步数）
+                const chebyshevDist = Math.max(Math.abs(dx), Math.abs(dy));
+                if (chebyshevDist > distance) continue;
+
+                const gridX = curPosGrid.gridX + dx;
+                const gridY = curPosGrid.gridY + dy;
+                const grid = mgr.getGrid(gridX, gridY);
+
+                if (grid && grid.CheckHasOccupy(targetObjectData)) {
+                    return true;
+                }
             }
         }
+
         return false;
     }
 }
