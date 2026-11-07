@@ -1,0 +1,3005 @@
+[
+    {
+        "id": 21001001,
+        "group_id": 21001,
+        "group_key": "SR英雄属性_等级系数",
+        "level_id": 1,
+        "atk_rate": 1,
+        "def_rate": 1,
+        "intelligence_rate": 1,
+        "command_rate": 1,
+        "move_rate": 1
+    },
+    {
+        "id": 21001002,
+        "group_id": 21001,
+        "level_id": 2,
+        "atk_rate": 1.02,
+        "def_rate": 1.02,
+        "intelligence_rate": 1.02,
+        "command_rate": 1.02,
+        "move_rate": 1.02
+    },
+    {
+        "id": 21001003,
+        "group_id": 21001,
+        "level_id": 3,
+        "atk_rate": 1.04,
+        "def_rate": 1.04,
+        "intelligence_rate": 1.04,
+        "command_rate": 1.04,
+        "move_rate": 1.04
+    },
+    {
+        "id": 21001004,
+        "group_id": 21001,
+        "level_id": 4,
+        "atk_rate": 1.06,
+        "def_rate": 1.06,
+        "intelligence_rate": 1.06,
+        "command_rate": 1.06,
+        "move_rate": 1.06
+    },
+    {
+        "id": 21001005,
+        "group_id": 21001,
+        "level_id": 5,
+        "atk_rate": 1.08,
+        "def_rate": 1.08,
+        "intelligence_rate": 1.08,
+        "command_rate": 1.08,
+        "move_rate": 1.08
+    },
+    {
+        "id": 21001006,
+        "group_id": 21001,
+        "level_id": 6,
+        "atk_rate": 1.1,
+        "def_rate": 1.1,
+        "intelligence_rate": 1.1,
+        "command_rate": 1.1,
+        "move_rate": 1.1
+    },
+    {
+        "id": 21001007,
+        "group_id": 21001,
+        "level_id": 7,
+        "atk_rate": 1.12,
+        "def_rate": 1.12,
+        "intelligence_rate": 1.12,
+        "command_rate": 1.12,
+        "move_rate": 1.12
+    },
+    {
+        "id": 21001008,
+        "group_id": 21001,
+        "level_id": 8,
+        "atk_rate": 1.14,
+        "def_rate": 1.14,
+        "intelligence_rate": 1.14,
+        "command_rate": 1.14,
+        "move_rate": 1.14
+    },
+    {
+        "id": 21001009,
+        "group_id": 21001,
+        "level_id": 9,
+        "atk_rate": 1.16,
+        "def_rate": 1.16,
+        "intelligence_rate": 1.16,
+        "command_rate": 1.16,
+        "move_rate": 1.16
+    },
+    {
+        "id": 21001010,
+        "group_id": 21001,
+        "level_id": 10,
+        "atk_rate": 1.18,
+        "def_rate": 1.18,
+        "intelligence_rate": 1.18,
+        "command_rate": 1.18,
+        "move_rate": 1.18
+    },
+    {
+        "id": 21001011,
+        "group_id": 21001,
+        "level_id": 11,
+        "atk_rate": 1.2,
+        "def_rate": 1.2,
+        "intelligence_rate": 1.2,
+        "command_rate": 1.2,
+        "move_rate": 1.2
+    },
+    {
+        "id": 21001012,
+        "group_id": 21001,
+        "level_id": 12,
+        "atk_rate": 1.22,
+        "def_rate": 1.22,
+        "intelligence_rate": 1.22,
+        "command_rate": 1.22,
+        "move_rate": 1.22
+    },
+    {
+        "id": 21001013,
+        "group_id": 21001,
+        "level_id": 13,
+        "atk_rate": 1.24,
+        "def_rate": 1.24,
+        "intelligence_rate": 1.24,
+        "command_rate": 1.24,
+        "move_rate": 1.24
+    },
+    {
+        "id": 21001014,
+        "group_id": 21001,
+        "level_id": 14,
+        "atk_rate": 1.26,
+        "def_rate": 1.26,
+        "intelligence_rate": 1.26,
+        "command_rate": 1.26,
+        "move_rate": 1.26
+    },
+    {
+        "id": 21001015,
+        "group_id": 21001,
+        "level_id": 15,
+        "atk_rate": 1.28,
+        "def_rate": 1.28,
+        "intelligence_rate": 1.28,
+        "command_rate": 1.28,
+        "move_rate": 1.28
+    },
+    {
+        "id": 21001016,
+        "group_id": 21001,
+        "level_id": 16,
+        "atk_rate": 1.3,
+        "def_rate": 1.3,
+        "intelligence_rate": 1.3,
+        "command_rate": 1.3,
+        "move_rate": 1.3
+    },
+    {
+        "id": 21001017,
+        "group_id": 21001,
+        "level_id": 17,
+        "atk_rate": 1.32,
+        "def_rate": 1.32,
+        "intelligence_rate": 1.32,
+        "command_rate": 1.32,
+        "move_rate": 1.32
+    },
+    {
+        "id": 21001018,
+        "group_id": 21001,
+        "level_id": 18,
+        "atk_rate": 1.34,
+        "def_rate": 1.34,
+        "intelligence_rate": 1.34,
+        "command_rate": 1.34,
+        "move_rate": 1.34
+    },
+    {
+        "id": 21001019,
+        "group_id": 21001,
+        "level_id": 19,
+        "atk_rate": 1.36,
+        "def_rate": 1.36,
+        "intelligence_rate": 1.36,
+        "command_rate": 1.36,
+        "move_rate": 1.36
+    },
+    {
+        "id": 21001020,
+        "group_id": 21001,
+        "level_id": 20,
+        "atk_rate": 1.38,
+        "def_rate": 1.38,
+        "intelligence_rate": 1.38,
+        "command_rate": 1.38,
+        "move_rate": 1.38
+    },
+    {
+        "id": 21001021,
+        "group_id": 21001,
+        "level_id": 21,
+        "atk_rate": 1.4,
+        "def_rate": 1.4,
+        "intelligence_rate": 1.4,
+        "command_rate": 1.4,
+        "move_rate": 1.4
+    },
+    {
+        "id": 21001022,
+        "group_id": 21001,
+        "level_id": 22,
+        "atk_rate": 1.42,
+        "def_rate": 1.42,
+        "intelligence_rate": 1.42,
+        "command_rate": 1.42,
+        "move_rate": 1.42
+    },
+    {
+        "id": 21001023,
+        "group_id": 21001,
+        "level_id": 23,
+        "atk_rate": 1.44,
+        "def_rate": 1.44,
+        "intelligence_rate": 1.44,
+        "command_rate": 1.44,
+        "move_rate": 1.44
+    },
+    {
+        "id": 21001024,
+        "group_id": 21001,
+        "level_id": 24,
+        "atk_rate": 1.46,
+        "def_rate": 1.46,
+        "intelligence_rate": 1.46,
+        "command_rate": 1.46,
+        "move_rate": 1.46
+    },
+    {
+        "id": 21001025,
+        "group_id": 21001,
+        "level_id": 25,
+        "atk_rate": 1.48,
+        "def_rate": 1.48,
+        "intelligence_rate": 1.48,
+        "command_rate": 1.48,
+        "move_rate": 1.48
+    },
+    {
+        "id": 21001026,
+        "group_id": 21001,
+        "level_id": 26,
+        "atk_rate": 1.5,
+        "def_rate": 1.5,
+        "intelligence_rate": 1.5,
+        "command_rate": 1.5,
+        "move_rate": 1.5
+    },
+    {
+        "id": 21001027,
+        "group_id": 21001,
+        "level_id": 27,
+        "atk_rate": 1.52,
+        "def_rate": 1.52,
+        "intelligence_rate": 1.52,
+        "command_rate": 1.52,
+        "move_rate": 1.52
+    },
+    {
+        "id": 21001028,
+        "group_id": 21001,
+        "level_id": 28,
+        "atk_rate": 1.54,
+        "def_rate": 1.54,
+        "intelligence_rate": 1.54,
+        "command_rate": 1.54,
+        "move_rate": 1.54
+    },
+    {
+        "id": 21001029,
+        "group_id": 21001,
+        "level_id": 29,
+        "atk_rate": 1.56,
+        "def_rate": 1.56,
+        "intelligence_rate": 1.56,
+        "command_rate": 1.56,
+        "move_rate": 1.56
+    },
+    {
+        "id": 21001030,
+        "group_id": 21001,
+        "level_id": 30,
+        "atk_rate": 1.58,
+        "def_rate": 1.58,
+        "intelligence_rate": 1.58,
+        "command_rate": 1.58,
+        "move_rate": 1.58
+    },
+    {
+        "id": 21001031,
+        "group_id": 21001,
+        "level_id": 31,
+        "atk_rate": 1.6,
+        "def_rate": 1.6,
+        "intelligence_rate": 1.6,
+        "command_rate": 1.6,
+        "move_rate": 1.6
+    },
+    {
+        "id": 21001032,
+        "group_id": 21001,
+        "level_id": 32,
+        "atk_rate": 1.62,
+        "def_rate": 1.62,
+        "intelligence_rate": 1.62,
+        "command_rate": 1.62,
+        "move_rate": 1.62
+    },
+    {
+        "id": 21001033,
+        "group_id": 21001,
+        "level_id": 33,
+        "atk_rate": 1.64,
+        "def_rate": 1.64,
+        "intelligence_rate": 1.64,
+        "command_rate": 1.64,
+        "move_rate": 1.64
+    },
+    {
+        "id": 21001034,
+        "group_id": 21001,
+        "level_id": 34,
+        "atk_rate": 1.66,
+        "def_rate": 1.66,
+        "intelligence_rate": 1.66,
+        "command_rate": 1.66,
+        "move_rate": 1.66
+    },
+    {
+        "id": 21001035,
+        "group_id": 21001,
+        "level_id": 35,
+        "atk_rate": 1.68,
+        "def_rate": 1.68,
+        "intelligence_rate": 1.68,
+        "command_rate": 1.68,
+        "move_rate": 1.68
+    },
+    {
+        "id": 21001036,
+        "group_id": 21001,
+        "level_id": 36,
+        "atk_rate": 1.7,
+        "def_rate": 1.7,
+        "intelligence_rate": 1.7,
+        "command_rate": 1.7,
+        "move_rate": 1.7
+    },
+    {
+        "id": 21001037,
+        "group_id": 21001,
+        "level_id": 37,
+        "atk_rate": 1.72,
+        "def_rate": 1.72,
+        "intelligence_rate": 1.72,
+        "command_rate": 1.72,
+        "move_rate": 1.72
+    },
+    {
+        "id": 21001038,
+        "group_id": 21001,
+        "level_id": 38,
+        "atk_rate": 1.74,
+        "def_rate": 1.74,
+        "intelligence_rate": 1.74,
+        "command_rate": 1.74,
+        "move_rate": 1.74
+    },
+    {
+        "id": 21001039,
+        "group_id": 21001,
+        "level_id": 39,
+        "atk_rate": 1.76,
+        "def_rate": 1.76,
+        "intelligence_rate": 1.76,
+        "command_rate": 1.76,
+        "move_rate": 1.76
+    },
+    {
+        "id": 21001040,
+        "group_id": 21001,
+        "level_id": 40,
+        "atk_rate": 1.78,
+        "def_rate": 1.78,
+        "intelligence_rate": 1.78,
+        "command_rate": 1.78,
+        "move_rate": 1.78
+    },
+    {
+        "id": 21001041,
+        "group_id": 21001,
+        "level_id": 41,
+        "atk_rate": 1.8,
+        "def_rate": 1.8,
+        "intelligence_rate": 1.8,
+        "command_rate": 1.8,
+        "move_rate": 1.8
+    },
+    {
+        "id": 21001042,
+        "group_id": 21001,
+        "level_id": 42,
+        "atk_rate": 1.82,
+        "def_rate": 1.82,
+        "intelligence_rate": 1.82,
+        "command_rate": 1.82,
+        "move_rate": 1.82
+    },
+    {
+        "id": 21001043,
+        "group_id": 21001,
+        "level_id": 43,
+        "atk_rate": 1.84,
+        "def_rate": 1.84,
+        "intelligence_rate": 1.84,
+        "command_rate": 1.84,
+        "move_rate": 1.84
+    },
+    {
+        "id": 21001044,
+        "group_id": 21001,
+        "level_id": 44,
+        "atk_rate": 1.86,
+        "def_rate": 1.86,
+        "intelligence_rate": 1.86,
+        "command_rate": 1.86,
+        "move_rate": 1.86
+    },
+    {
+        "id": 21001045,
+        "group_id": 21001,
+        "level_id": 45,
+        "atk_rate": 1.88,
+        "def_rate": 1.88,
+        "intelligence_rate": 1.88,
+        "command_rate": 1.88,
+        "move_rate": 1.88
+    },
+    {
+        "id": 21001046,
+        "group_id": 21001,
+        "level_id": 46,
+        "atk_rate": 1.9,
+        "def_rate": 1.9,
+        "intelligence_rate": 1.9,
+        "command_rate": 1.9,
+        "move_rate": 1.9
+    },
+    {
+        "id": 21001047,
+        "group_id": 21001,
+        "level_id": 47,
+        "atk_rate": 1.92,
+        "def_rate": 1.92,
+        "intelligence_rate": 1.92,
+        "command_rate": 1.92,
+        "move_rate": 1.92
+    },
+    {
+        "id": 21001048,
+        "group_id": 21001,
+        "level_id": 48,
+        "atk_rate": 1.94,
+        "def_rate": 1.94,
+        "intelligence_rate": 1.94,
+        "command_rate": 1.94,
+        "move_rate": 1.94
+    },
+    {
+        "id": 21001049,
+        "group_id": 21001,
+        "level_id": 49,
+        "atk_rate": 1.96,
+        "def_rate": 1.96,
+        "intelligence_rate": 1.96,
+        "command_rate": 1.96,
+        "move_rate": 1.96
+    },
+    {
+        "id": 21001050,
+        "group_id": 21001,
+        "level_id": 50,
+        "atk_rate": 1.98,
+        "def_rate": 1.98,
+        "intelligence_rate": 1.98,
+        "command_rate": 1.98,
+        "move_rate": 1.98
+    },
+    {
+        "id": 21001051,
+        "group_id": 21001,
+        "level_id": 51,
+        "atk_rate": 2,
+        "def_rate": 2,
+        "intelligence_rate": 2,
+        "command_rate": 2,
+        "move_rate": 2
+    },
+    {
+        "id": 21001052,
+        "group_id": 21001,
+        "level_id": 52,
+        "atk_rate": 2.02,
+        "def_rate": 2.02,
+        "intelligence_rate": 2.02,
+        "command_rate": 2.02,
+        "move_rate": 2.02
+    },
+    {
+        "id": 21001053,
+        "group_id": 21001,
+        "level_id": 53,
+        "atk_rate": 2.04,
+        "def_rate": 2.04,
+        "intelligence_rate": 2.04,
+        "command_rate": 2.04,
+        "move_rate": 2.04
+    },
+    {
+        "id": 21001054,
+        "group_id": 21001,
+        "level_id": 54,
+        "atk_rate": 2.06,
+        "def_rate": 2.06,
+        "intelligence_rate": 2.06,
+        "command_rate": 2.06,
+        "move_rate": 2.06
+    },
+    {
+        "id": 21001055,
+        "group_id": 21001,
+        "level_id": 55,
+        "atk_rate": 2.08,
+        "def_rate": 2.08,
+        "intelligence_rate": 2.08,
+        "command_rate": 2.08,
+        "move_rate": 2.08
+    },
+    {
+        "id": 21001056,
+        "group_id": 21001,
+        "level_id": 56,
+        "atk_rate": 2.1,
+        "def_rate": 2.1,
+        "intelligence_rate": 2.1,
+        "command_rate": 2.1,
+        "move_rate": 2.1
+    },
+    {
+        "id": 21001057,
+        "group_id": 21001,
+        "level_id": 57,
+        "atk_rate": 2.12,
+        "def_rate": 2.12,
+        "intelligence_rate": 2.12,
+        "command_rate": 2.12,
+        "move_rate": 2.12
+    },
+    {
+        "id": 21001058,
+        "group_id": 21001,
+        "level_id": 58,
+        "atk_rate": 2.14,
+        "def_rate": 2.14,
+        "intelligence_rate": 2.14,
+        "command_rate": 2.14,
+        "move_rate": 2.14
+    },
+    {
+        "id": 21001059,
+        "group_id": 21001,
+        "level_id": 59,
+        "atk_rate": 2.16,
+        "def_rate": 2.16,
+        "intelligence_rate": 2.16,
+        "command_rate": 2.16,
+        "move_rate": 2.16
+    },
+    {
+        "id": 21001060,
+        "group_id": 21001,
+        "level_id": 60,
+        "atk_rate": 2.18,
+        "def_rate": 2.18,
+        "intelligence_rate": 2.18,
+        "command_rate": 2.18,
+        "move_rate": 2.18
+    },
+    {
+        "id": 21001061,
+        "group_id": 21001,
+        "level_id": 61,
+        "atk_rate": 2.2,
+        "def_rate": 2.2,
+        "intelligence_rate": 2.2,
+        "command_rate": 2.2,
+        "move_rate": 2.2
+    },
+    {
+        "id": 21001062,
+        "group_id": 21001,
+        "level_id": 62,
+        "atk_rate": 2.22,
+        "def_rate": 2.22,
+        "intelligence_rate": 2.22,
+        "command_rate": 2.22,
+        "move_rate": 2.22
+    },
+    {
+        "id": 21001063,
+        "group_id": 21001,
+        "level_id": 63,
+        "atk_rate": 2.24,
+        "def_rate": 2.24,
+        "intelligence_rate": 2.24,
+        "command_rate": 2.24,
+        "move_rate": 2.24
+    },
+    {
+        "id": 21001064,
+        "group_id": 21001,
+        "level_id": 64,
+        "atk_rate": 2.26,
+        "def_rate": 2.26,
+        "intelligence_rate": 2.26,
+        "command_rate": 2.26,
+        "move_rate": 2.26
+    },
+    {
+        "id": 21001065,
+        "group_id": 21001,
+        "level_id": 65,
+        "atk_rate": 2.28,
+        "def_rate": 2.28,
+        "intelligence_rate": 2.28,
+        "command_rate": 2.28,
+        "move_rate": 2.28
+    },
+    {
+        "id": 21001066,
+        "group_id": 21001,
+        "level_id": 66,
+        "atk_rate": 2.3,
+        "def_rate": 2.3,
+        "intelligence_rate": 2.3,
+        "command_rate": 2.3,
+        "move_rate": 2.3
+    },
+    {
+        "id": 21001067,
+        "group_id": 21001,
+        "level_id": 67,
+        "atk_rate": 2.32,
+        "def_rate": 2.32,
+        "intelligence_rate": 2.32,
+        "command_rate": 2.32,
+        "move_rate": 2.32
+    },
+    {
+        "id": 21001068,
+        "group_id": 21001,
+        "level_id": 68,
+        "atk_rate": 2.34,
+        "def_rate": 2.34,
+        "intelligence_rate": 2.34,
+        "command_rate": 2.34,
+        "move_rate": 2.34
+    },
+    {
+        "id": 21001069,
+        "group_id": 21001,
+        "level_id": 69,
+        "atk_rate": 2.36,
+        "def_rate": 2.36,
+        "intelligence_rate": 2.36,
+        "command_rate": 2.36,
+        "move_rate": 2.36
+    },
+    {
+        "id": 21001070,
+        "group_id": 21001,
+        "level_id": 70,
+        "atk_rate": 2.38,
+        "def_rate": 2.38,
+        "intelligence_rate": 2.38,
+        "command_rate": 2.38,
+        "move_rate": 2.38
+    },
+    {
+        "id": 21001071,
+        "group_id": 21001,
+        "level_id": 71,
+        "atk_rate": 2.4,
+        "def_rate": 2.4,
+        "intelligence_rate": 2.4,
+        "command_rate": 2.4,
+        "move_rate": 2.4
+    },
+    {
+        "id": 21001072,
+        "group_id": 21001,
+        "level_id": 72,
+        "atk_rate": 2.42,
+        "def_rate": 2.42,
+        "intelligence_rate": 2.42,
+        "command_rate": 2.42,
+        "move_rate": 2.42
+    },
+    {
+        "id": 21001073,
+        "group_id": 21001,
+        "level_id": 73,
+        "atk_rate": 2.44,
+        "def_rate": 2.44,
+        "intelligence_rate": 2.44,
+        "command_rate": 2.44,
+        "move_rate": 2.44
+    },
+    {
+        "id": 21001074,
+        "group_id": 21001,
+        "level_id": 74,
+        "atk_rate": 2.46,
+        "def_rate": 2.46,
+        "intelligence_rate": 2.46,
+        "command_rate": 2.46,
+        "move_rate": 2.46
+    },
+    {
+        "id": 21001075,
+        "group_id": 21001,
+        "level_id": 75,
+        "atk_rate": 2.48,
+        "def_rate": 2.48,
+        "intelligence_rate": 2.48,
+        "command_rate": 2.48,
+        "move_rate": 2.48
+    },
+    {
+        "id": 21001076,
+        "group_id": 21001,
+        "level_id": 76,
+        "atk_rate": 2.5,
+        "def_rate": 2.5,
+        "intelligence_rate": 2.5,
+        "command_rate": 2.5,
+        "move_rate": 2.5
+    },
+    {
+        "id": 21001077,
+        "group_id": 21001,
+        "level_id": 77,
+        "atk_rate": 2.52,
+        "def_rate": 2.52,
+        "intelligence_rate": 2.52,
+        "command_rate": 2.52,
+        "move_rate": 2.52
+    },
+    {
+        "id": 21001078,
+        "group_id": 21001,
+        "level_id": 78,
+        "atk_rate": 2.54,
+        "def_rate": 2.54,
+        "intelligence_rate": 2.54,
+        "command_rate": 2.54,
+        "move_rate": 2.54
+    },
+    {
+        "id": 21001079,
+        "group_id": 21001,
+        "level_id": 79,
+        "atk_rate": 2.56,
+        "def_rate": 2.56,
+        "intelligence_rate": 2.56,
+        "command_rate": 2.56,
+        "move_rate": 2.56
+    },
+    {
+        "id": 21001080,
+        "group_id": 21001,
+        "level_id": 80,
+        "atk_rate": 2.58,
+        "def_rate": 2.58,
+        "intelligence_rate": 2.58,
+        "command_rate": 2.58,
+        "move_rate": 2.58
+    },
+    {
+        "id": 21001081,
+        "group_id": 21001,
+        "level_id": 81,
+        "atk_rate": 2.6,
+        "def_rate": 2.6,
+        "intelligence_rate": 2.6,
+        "command_rate": 2.6,
+        "move_rate": 2.6
+    },
+    {
+        "id": 21001082,
+        "group_id": 21001,
+        "level_id": 82,
+        "atk_rate": 2.62,
+        "def_rate": 2.62,
+        "intelligence_rate": 2.62,
+        "command_rate": 2.62,
+        "move_rate": 2.62
+    },
+    {
+        "id": 21001083,
+        "group_id": 21001,
+        "level_id": 83,
+        "atk_rate": 2.64,
+        "def_rate": 2.64,
+        "intelligence_rate": 2.64,
+        "command_rate": 2.64,
+        "move_rate": 2.64
+    },
+    {
+        "id": 21001084,
+        "group_id": 21001,
+        "level_id": 84,
+        "atk_rate": 2.66,
+        "def_rate": 2.66,
+        "intelligence_rate": 2.66,
+        "command_rate": 2.66,
+        "move_rate": 2.66
+    },
+    {
+        "id": 21001085,
+        "group_id": 21001,
+        "level_id": 85,
+        "atk_rate": 2.68,
+        "def_rate": 2.68,
+        "intelligence_rate": 2.68,
+        "command_rate": 2.68,
+        "move_rate": 2.68
+    },
+    {
+        "id": 21001086,
+        "group_id": 21001,
+        "level_id": 86,
+        "atk_rate": 2.7,
+        "def_rate": 2.7,
+        "intelligence_rate": 2.7,
+        "command_rate": 2.7,
+        "move_rate": 2.7
+    },
+    {
+        "id": 21001087,
+        "group_id": 21001,
+        "level_id": 87,
+        "atk_rate": 2.72,
+        "def_rate": 2.72,
+        "intelligence_rate": 2.72,
+        "command_rate": 2.72,
+        "move_rate": 2.72
+    },
+    {
+        "id": 21001088,
+        "group_id": 21001,
+        "level_id": 88,
+        "atk_rate": 2.74,
+        "def_rate": 2.74,
+        "intelligence_rate": 2.74,
+        "command_rate": 2.74,
+        "move_rate": 2.74
+    },
+    {
+        "id": 21001089,
+        "group_id": 21001,
+        "level_id": 89,
+        "atk_rate": 2.76,
+        "def_rate": 2.76,
+        "intelligence_rate": 2.76,
+        "command_rate": 2.76,
+        "move_rate": 2.76
+    },
+    {
+        "id": 21001090,
+        "group_id": 21001,
+        "level_id": 90,
+        "atk_rate": 2.78,
+        "def_rate": 2.78,
+        "intelligence_rate": 2.78,
+        "command_rate": 2.78,
+        "move_rate": 2.78
+    },
+    {
+        "id": 21001091,
+        "group_id": 21001,
+        "level_id": 91,
+        "atk_rate": 2.8,
+        "def_rate": 2.8,
+        "intelligence_rate": 2.8,
+        "command_rate": 2.8,
+        "move_rate": 2.8
+    },
+    {
+        "id": 21001092,
+        "group_id": 21001,
+        "level_id": 92,
+        "atk_rate": 2.82,
+        "def_rate": 2.82,
+        "intelligence_rate": 2.82,
+        "command_rate": 2.82,
+        "move_rate": 2.82
+    },
+    {
+        "id": 21001093,
+        "group_id": 21001,
+        "level_id": 93,
+        "atk_rate": 2.84,
+        "def_rate": 2.84,
+        "intelligence_rate": 2.84,
+        "command_rate": 2.84,
+        "move_rate": 2.84
+    },
+    {
+        "id": 21001094,
+        "group_id": 21001,
+        "level_id": 94,
+        "atk_rate": 2.86,
+        "def_rate": 2.86,
+        "intelligence_rate": 2.86,
+        "command_rate": 2.86,
+        "move_rate": 2.86
+    },
+    {
+        "id": 21001095,
+        "group_id": 21001,
+        "level_id": 95,
+        "atk_rate": 2.88,
+        "def_rate": 2.88,
+        "intelligence_rate": 2.88,
+        "command_rate": 2.88,
+        "move_rate": 2.88
+    },
+    {
+        "id": 21001096,
+        "group_id": 21001,
+        "level_id": 96,
+        "atk_rate": 2.9,
+        "def_rate": 2.9,
+        "intelligence_rate": 2.9,
+        "command_rate": 2.9,
+        "move_rate": 2.9
+    },
+    {
+        "id": 21001097,
+        "group_id": 21001,
+        "level_id": 97,
+        "atk_rate": 2.92,
+        "def_rate": 2.92,
+        "intelligence_rate": 2.92,
+        "command_rate": 2.92,
+        "move_rate": 2.92
+    },
+    {
+        "id": 21001098,
+        "group_id": 21001,
+        "level_id": 98,
+        "atk_rate": 2.94,
+        "def_rate": 2.94,
+        "intelligence_rate": 2.94,
+        "command_rate": 2.94,
+        "move_rate": 2.94
+    },
+    {
+        "id": 21001099,
+        "group_id": 21001,
+        "level_id": 99,
+        "atk_rate": 2.96,
+        "def_rate": 2.96,
+        "intelligence_rate": 2.96,
+        "command_rate": 2.96,
+        "move_rate": 2.96
+    },
+    {
+        "id": 21001100,
+        "group_id": 21001,
+        "level_id": 100,
+        "atk_rate": 2.98,
+        "def_rate": 2.98,
+        "intelligence_rate": 2.98,
+        "command_rate": 2.98,
+        "move_rate": 2.98
+    },
+    {
+        "id": 22001001,
+        "group_id": 22001,
+        "group_key": "SSR英雄属性_等级系数",
+        "level_id": 1,
+        "atk_rate": 1,
+        "def_rate": 1,
+        "intelligence_rate": 1,
+        "command_rate": 1,
+        "move_rate": 1
+    },
+    {
+        "id": 22001002,
+        "group_id": 22001,
+        "level_id": 2,
+        "atk_rate": 1.03,
+        "def_rate": 1.03,
+        "intelligence_rate": 1.03,
+        "command_rate": 1.03,
+        "move_rate": 1.03
+    },
+    {
+        "id": 22001003,
+        "group_id": 22001,
+        "level_id": 3,
+        "atk_rate": 1.06,
+        "def_rate": 1.06,
+        "intelligence_rate": 1.06,
+        "command_rate": 1.06,
+        "move_rate": 1.06
+    },
+    {
+        "id": 22001004,
+        "group_id": 22001,
+        "level_id": 4,
+        "atk_rate": 1.09,
+        "def_rate": 1.09,
+        "intelligence_rate": 1.09,
+        "command_rate": 1.09,
+        "move_rate": 1.09
+    },
+    {
+        "id": 22001005,
+        "group_id": 22001,
+        "level_id": 5,
+        "atk_rate": 1.12,
+        "def_rate": 1.12,
+        "intelligence_rate": 1.12,
+        "command_rate": 1.12,
+        "move_rate": 1.12
+    },
+    {
+        "id": 22001006,
+        "group_id": 22001,
+        "level_id": 6,
+        "atk_rate": 1.15,
+        "def_rate": 1.15,
+        "intelligence_rate": 1.15,
+        "command_rate": 1.15,
+        "move_rate": 1.15
+    },
+    {
+        "id": 22001007,
+        "group_id": 22001,
+        "level_id": 7,
+        "atk_rate": 1.18,
+        "def_rate": 1.18,
+        "intelligence_rate": 1.18,
+        "command_rate": 1.18,
+        "move_rate": 1.18
+    },
+    {
+        "id": 22001008,
+        "group_id": 22001,
+        "level_id": 8,
+        "atk_rate": 1.21,
+        "def_rate": 1.21,
+        "intelligence_rate": 1.21,
+        "command_rate": 1.21,
+        "move_rate": 1.21
+    },
+    {
+        "id": 22001009,
+        "group_id": 22001,
+        "level_id": 9,
+        "atk_rate": 1.24,
+        "def_rate": 1.24,
+        "intelligence_rate": 1.24,
+        "command_rate": 1.24,
+        "move_rate": 1.24
+    },
+    {
+        "id": 22001010,
+        "group_id": 22001,
+        "level_id": 10,
+        "atk_rate": 1.27,
+        "def_rate": 1.27,
+        "intelligence_rate": 1.27,
+        "command_rate": 1.27,
+        "move_rate": 1.27
+    },
+    {
+        "id": 22001011,
+        "group_id": 22001,
+        "level_id": 11,
+        "atk_rate": 1.3,
+        "def_rate": 1.3,
+        "intelligence_rate": 1.3,
+        "command_rate": 1.3,
+        "move_rate": 1.3
+    },
+    {
+        "id": 22001012,
+        "group_id": 22001,
+        "level_id": 12,
+        "atk_rate": 1.33,
+        "def_rate": 1.33,
+        "intelligence_rate": 1.33,
+        "command_rate": 1.33,
+        "move_rate": 1.33
+    },
+    {
+        "id": 22001013,
+        "group_id": 22001,
+        "level_id": 13,
+        "atk_rate": 1.36,
+        "def_rate": 1.36,
+        "intelligence_rate": 1.36,
+        "command_rate": 1.36,
+        "move_rate": 1.36
+    },
+    {
+        "id": 22001014,
+        "group_id": 22001,
+        "level_id": 14,
+        "atk_rate": 1.39,
+        "def_rate": 1.39,
+        "intelligence_rate": 1.39,
+        "command_rate": 1.39,
+        "move_rate": 1.39
+    },
+    {
+        "id": 22001015,
+        "group_id": 22001,
+        "level_id": 15,
+        "atk_rate": 1.42,
+        "def_rate": 1.42,
+        "intelligence_rate": 1.42,
+        "command_rate": 1.42,
+        "move_rate": 1.42
+    },
+    {
+        "id": 22001016,
+        "group_id": 22001,
+        "level_id": 16,
+        "atk_rate": 1.45,
+        "def_rate": 1.45,
+        "intelligence_rate": 1.45,
+        "command_rate": 1.45,
+        "move_rate": 1.45
+    },
+    {
+        "id": 22001017,
+        "group_id": 22001,
+        "level_id": 17,
+        "atk_rate": 1.48,
+        "def_rate": 1.48,
+        "intelligence_rate": 1.48,
+        "command_rate": 1.48,
+        "move_rate": 1.48
+    },
+    {
+        "id": 22001018,
+        "group_id": 22001,
+        "level_id": 18,
+        "atk_rate": 1.51,
+        "def_rate": 1.51,
+        "intelligence_rate": 1.51,
+        "command_rate": 1.51,
+        "move_rate": 1.51
+    },
+    {
+        "id": 22001019,
+        "group_id": 22001,
+        "level_id": 19,
+        "atk_rate": 1.54,
+        "def_rate": 1.54,
+        "intelligence_rate": 1.54,
+        "command_rate": 1.54,
+        "move_rate": 1.54
+    },
+    {
+        "id": 22001020,
+        "group_id": 22001,
+        "level_id": 20,
+        "atk_rate": 1.57,
+        "def_rate": 1.57,
+        "intelligence_rate": 1.57,
+        "command_rate": 1.57,
+        "move_rate": 1.57
+    },
+    {
+        "id": 22001021,
+        "group_id": 22001,
+        "level_id": 21,
+        "atk_rate": 1.6,
+        "def_rate": 1.6,
+        "intelligence_rate": 1.6,
+        "command_rate": 1.6,
+        "move_rate": 1.6
+    },
+    {
+        "id": 22001022,
+        "group_id": 22001,
+        "level_id": 22,
+        "atk_rate": 1.63,
+        "def_rate": 1.63,
+        "intelligence_rate": 1.63,
+        "command_rate": 1.63,
+        "move_rate": 1.63
+    },
+    {
+        "id": 22001023,
+        "group_id": 22001,
+        "level_id": 23,
+        "atk_rate": 1.66,
+        "def_rate": 1.66,
+        "intelligence_rate": 1.66,
+        "command_rate": 1.66,
+        "move_rate": 1.66
+    },
+    {
+        "id": 22001024,
+        "group_id": 22001,
+        "level_id": 24,
+        "atk_rate": 1.69,
+        "def_rate": 1.69,
+        "intelligence_rate": 1.69,
+        "command_rate": 1.69,
+        "move_rate": 1.69
+    },
+    {
+        "id": 22001025,
+        "group_id": 22001,
+        "level_id": 25,
+        "atk_rate": 1.72,
+        "def_rate": 1.72,
+        "intelligence_rate": 1.72,
+        "command_rate": 1.72,
+        "move_rate": 1.72
+    },
+    {
+        "id": 22001026,
+        "group_id": 22001,
+        "level_id": 26,
+        "atk_rate": 1.75,
+        "def_rate": 1.75,
+        "intelligence_rate": 1.75,
+        "command_rate": 1.75,
+        "move_rate": 1.75
+    },
+    {
+        "id": 22001027,
+        "group_id": 22001,
+        "level_id": 27,
+        "atk_rate": 1.78,
+        "def_rate": 1.78,
+        "intelligence_rate": 1.78,
+        "command_rate": 1.78,
+        "move_rate": 1.78
+    },
+    {
+        "id": 22001028,
+        "group_id": 22001,
+        "level_id": 28,
+        "atk_rate": 1.81,
+        "def_rate": 1.81,
+        "intelligence_rate": 1.81,
+        "command_rate": 1.81,
+        "move_rate": 1.81
+    },
+    {
+        "id": 22001029,
+        "group_id": 22001,
+        "level_id": 29,
+        "atk_rate": 1.84,
+        "def_rate": 1.84,
+        "intelligence_rate": 1.84,
+        "command_rate": 1.84,
+        "move_rate": 1.84
+    },
+    {
+        "id": 22001030,
+        "group_id": 22001,
+        "level_id": 30,
+        "atk_rate": 1.87,
+        "def_rate": 1.87,
+        "intelligence_rate": 1.87,
+        "command_rate": 1.87,
+        "move_rate": 1.87
+    },
+    {
+        "id": 22001031,
+        "group_id": 22001,
+        "level_id": 31,
+        "atk_rate": 1.9,
+        "def_rate": 1.9,
+        "intelligence_rate": 1.9,
+        "command_rate": 1.9,
+        "move_rate": 1.9
+    },
+    {
+        "id": 22001032,
+        "group_id": 22001,
+        "level_id": 32,
+        "atk_rate": 1.93,
+        "def_rate": 1.93,
+        "intelligence_rate": 1.93,
+        "command_rate": 1.93,
+        "move_rate": 1.93
+    },
+    {
+        "id": 22001033,
+        "group_id": 22001,
+        "level_id": 33,
+        "atk_rate": 1.96,
+        "def_rate": 1.96,
+        "intelligence_rate": 1.96,
+        "command_rate": 1.96,
+        "move_rate": 1.96
+    },
+    {
+        "id": 22001034,
+        "group_id": 22001,
+        "level_id": 34,
+        "atk_rate": 1.99,
+        "def_rate": 1.99,
+        "intelligence_rate": 1.99,
+        "command_rate": 1.99,
+        "move_rate": 1.99
+    },
+    {
+        "id": 22001035,
+        "group_id": 22001,
+        "level_id": 35,
+        "atk_rate": 2.02,
+        "def_rate": 2.02,
+        "intelligence_rate": 2.02,
+        "command_rate": 2.02,
+        "move_rate": 2.02
+    },
+    {
+        "id": 22001036,
+        "group_id": 22001,
+        "level_id": 36,
+        "atk_rate": 2.05,
+        "def_rate": 2.05,
+        "intelligence_rate": 2.05,
+        "command_rate": 2.05,
+        "move_rate": 2.05
+    },
+    {
+        "id": 22001037,
+        "group_id": 22001,
+        "level_id": 37,
+        "atk_rate": 2.08,
+        "def_rate": 2.08,
+        "intelligence_rate": 2.08,
+        "command_rate": 2.08,
+        "move_rate": 2.08
+    },
+    {
+        "id": 22001038,
+        "group_id": 22001,
+        "level_id": 38,
+        "atk_rate": 2.11,
+        "def_rate": 2.11,
+        "intelligence_rate": 2.11,
+        "command_rate": 2.11,
+        "move_rate": 2.11
+    },
+    {
+        "id": 22001039,
+        "group_id": 22001,
+        "level_id": 39,
+        "atk_rate": 2.14,
+        "def_rate": 2.14,
+        "intelligence_rate": 2.14,
+        "command_rate": 2.14,
+        "move_rate": 2.14
+    },
+    {
+        "id": 22001040,
+        "group_id": 22001,
+        "level_id": 40,
+        "atk_rate": 2.17,
+        "def_rate": 2.17,
+        "intelligence_rate": 2.17,
+        "command_rate": 2.17,
+        "move_rate": 2.17
+    },
+    {
+        "id": 22001041,
+        "group_id": 22001,
+        "level_id": 41,
+        "atk_rate": 2.2,
+        "def_rate": 2.2,
+        "intelligence_rate": 2.2,
+        "command_rate": 2.2,
+        "move_rate": 2.2
+    },
+    {
+        "id": 22001042,
+        "group_id": 22001,
+        "level_id": 42,
+        "atk_rate": 2.23,
+        "def_rate": 2.23,
+        "intelligence_rate": 2.23,
+        "command_rate": 2.23,
+        "move_rate": 2.23
+    },
+    {
+        "id": 22001043,
+        "group_id": 22001,
+        "level_id": 43,
+        "atk_rate": 2.26,
+        "def_rate": 2.26,
+        "intelligence_rate": 2.26,
+        "command_rate": 2.26,
+        "move_rate": 2.26
+    },
+    {
+        "id": 22001044,
+        "group_id": 22001,
+        "level_id": 44,
+        "atk_rate": 2.29,
+        "def_rate": 2.29,
+        "intelligence_rate": 2.29,
+        "command_rate": 2.29,
+        "move_rate": 2.29
+    },
+    {
+        "id": 22001045,
+        "group_id": 22001,
+        "level_id": 45,
+        "atk_rate": 2.32,
+        "def_rate": 2.32,
+        "intelligence_rate": 2.32,
+        "command_rate": 2.32,
+        "move_rate": 2.32
+    },
+    {
+        "id": 22001046,
+        "group_id": 22001,
+        "level_id": 46,
+        "atk_rate": 2.35,
+        "def_rate": 2.35,
+        "intelligence_rate": 2.35,
+        "command_rate": 2.35,
+        "move_rate": 2.35
+    },
+    {
+        "id": 22001047,
+        "group_id": 22001,
+        "level_id": 47,
+        "atk_rate": 2.38,
+        "def_rate": 2.38,
+        "intelligence_rate": 2.38,
+        "command_rate": 2.38,
+        "move_rate": 2.38
+    },
+    {
+        "id": 22001048,
+        "group_id": 22001,
+        "level_id": 48,
+        "atk_rate": 2.41,
+        "def_rate": 2.41,
+        "intelligence_rate": 2.41,
+        "command_rate": 2.41,
+        "move_rate": 2.41
+    },
+    {
+        "id": 22001049,
+        "group_id": 22001,
+        "level_id": 49,
+        "atk_rate": 2.44,
+        "def_rate": 2.44,
+        "intelligence_rate": 2.44,
+        "command_rate": 2.44,
+        "move_rate": 2.44
+    },
+    {
+        "id": 22001050,
+        "group_id": 22001,
+        "level_id": 50,
+        "atk_rate": 2.47,
+        "def_rate": 2.47,
+        "intelligence_rate": 2.47,
+        "command_rate": 2.47,
+        "move_rate": 2.47
+    },
+    {
+        "id": 22001051,
+        "group_id": 22001,
+        "level_id": 51,
+        "atk_rate": 2.5,
+        "def_rate": 2.5,
+        "intelligence_rate": 2.5,
+        "command_rate": 2.5,
+        "move_rate": 2.5
+    },
+    {
+        "id": 22001052,
+        "group_id": 22001,
+        "level_id": 52,
+        "atk_rate": 2.53,
+        "def_rate": 2.53,
+        "intelligence_rate": 2.53,
+        "command_rate": 2.53,
+        "move_rate": 2.53
+    },
+    {
+        "id": 22001053,
+        "group_id": 22001,
+        "level_id": 53,
+        "atk_rate": 2.56,
+        "def_rate": 2.56,
+        "intelligence_rate": 2.56,
+        "command_rate": 2.56,
+        "move_rate": 2.56
+    },
+    {
+        "id": 22001054,
+        "group_id": 22001,
+        "level_id": 54,
+        "atk_rate": 2.59,
+        "def_rate": 2.59,
+        "intelligence_rate": 2.59,
+        "command_rate": 2.59,
+        "move_rate": 2.59
+    },
+    {
+        "id": 22001055,
+        "group_id": 22001,
+        "level_id": 55,
+        "atk_rate": 2.62,
+        "def_rate": 2.62,
+        "intelligence_rate": 2.62,
+        "command_rate": 2.62,
+        "move_rate": 2.62
+    },
+    {
+        "id": 22001056,
+        "group_id": 22001,
+        "level_id": 56,
+        "atk_rate": 2.65,
+        "def_rate": 2.65,
+        "intelligence_rate": 2.65,
+        "command_rate": 2.65,
+        "move_rate": 2.65
+    },
+    {
+        "id": 22001057,
+        "group_id": 22001,
+        "level_id": 57,
+        "atk_rate": 2.68,
+        "def_rate": 2.68,
+        "intelligence_rate": 2.68,
+        "command_rate": 2.68,
+        "move_rate": 2.68
+    },
+    {
+        "id": 22001058,
+        "group_id": 22001,
+        "level_id": 58,
+        "atk_rate": 2.71,
+        "def_rate": 2.71,
+        "intelligence_rate": 2.71,
+        "command_rate": 2.71,
+        "move_rate": 2.71
+    },
+    {
+        "id": 22001059,
+        "group_id": 22001,
+        "level_id": 59,
+        "atk_rate": 2.74,
+        "def_rate": 2.74,
+        "intelligence_rate": 2.74,
+        "command_rate": 2.74,
+        "move_rate": 2.74
+    },
+    {
+        "id": 22001060,
+        "group_id": 22001,
+        "level_id": 60,
+        "atk_rate": 2.77,
+        "def_rate": 2.77,
+        "intelligence_rate": 2.77,
+        "command_rate": 2.77,
+        "move_rate": 2.77
+    },
+    {
+        "id": 22001061,
+        "group_id": 22001,
+        "level_id": 61,
+        "atk_rate": 2.8,
+        "def_rate": 2.8,
+        "intelligence_rate": 2.8,
+        "command_rate": 2.8,
+        "move_rate": 2.8
+    },
+    {
+        "id": 22001062,
+        "group_id": 22001,
+        "level_id": 62,
+        "atk_rate": 2.83,
+        "def_rate": 2.83,
+        "intelligence_rate": 2.83,
+        "command_rate": 2.83,
+        "move_rate": 2.83
+    },
+    {
+        "id": 22001063,
+        "group_id": 22001,
+        "level_id": 63,
+        "atk_rate": 2.86,
+        "def_rate": 2.86,
+        "intelligence_rate": 2.86,
+        "command_rate": 2.86,
+        "move_rate": 2.86
+    },
+    {
+        "id": 22001064,
+        "group_id": 22001,
+        "level_id": 64,
+        "atk_rate": 2.89,
+        "def_rate": 2.89,
+        "intelligence_rate": 2.89,
+        "command_rate": 2.89,
+        "move_rate": 2.89
+    },
+    {
+        "id": 22001065,
+        "group_id": 22001,
+        "level_id": 65,
+        "atk_rate": 2.92,
+        "def_rate": 2.92,
+        "intelligence_rate": 2.92,
+        "command_rate": 2.92,
+        "move_rate": 2.92
+    },
+    {
+        "id": 22001066,
+        "group_id": 22001,
+        "level_id": 66,
+        "atk_rate": 2.95,
+        "def_rate": 2.95,
+        "intelligence_rate": 2.95,
+        "command_rate": 2.95,
+        "move_rate": 2.95
+    },
+    {
+        "id": 22001067,
+        "group_id": 22001,
+        "level_id": 67,
+        "atk_rate": 2.98,
+        "def_rate": 2.98,
+        "intelligence_rate": 2.98,
+        "command_rate": 2.98,
+        "move_rate": 2.98
+    },
+    {
+        "id": 22001068,
+        "group_id": 22001,
+        "level_id": 68,
+        "atk_rate": 3.01,
+        "def_rate": 3.01,
+        "intelligence_rate": 3.01,
+        "command_rate": 3.01,
+        "move_rate": 3.01
+    },
+    {
+        "id": 22001069,
+        "group_id": 22001,
+        "level_id": 69,
+        "atk_rate": 3.04,
+        "def_rate": 3.04,
+        "intelligence_rate": 3.04,
+        "command_rate": 3.04,
+        "move_rate": 3.04
+    },
+    {
+        "id": 22001070,
+        "group_id": 22001,
+        "level_id": 70,
+        "atk_rate": 3.07,
+        "def_rate": 3.07,
+        "intelligence_rate": 3.07,
+        "command_rate": 3.07,
+        "move_rate": 3.07
+    },
+    {
+        "id": 22001071,
+        "group_id": 22001,
+        "level_id": 71,
+        "atk_rate": 3.1,
+        "def_rate": 3.1,
+        "intelligence_rate": 3.1,
+        "command_rate": 3.1,
+        "move_rate": 3.1
+    },
+    {
+        "id": 22001072,
+        "group_id": 22001,
+        "level_id": 72,
+        "atk_rate": 3.13,
+        "def_rate": 3.13,
+        "intelligence_rate": 3.13,
+        "command_rate": 3.13,
+        "move_rate": 3.13
+    },
+    {
+        "id": 22001073,
+        "group_id": 22001,
+        "level_id": 73,
+        "atk_rate": 3.16,
+        "def_rate": 3.16,
+        "intelligence_rate": 3.16,
+        "command_rate": 3.16,
+        "move_rate": 3.16
+    },
+    {
+        "id": 22001074,
+        "group_id": 22001,
+        "level_id": 74,
+        "atk_rate": 3.19,
+        "def_rate": 3.19,
+        "intelligence_rate": 3.19,
+        "command_rate": 3.19,
+        "move_rate": 3.19
+    },
+    {
+        "id": 22001075,
+        "group_id": 22001,
+        "level_id": 75,
+        "atk_rate": 3.22,
+        "def_rate": 3.22,
+        "intelligence_rate": 3.22,
+        "command_rate": 3.22,
+        "move_rate": 3.22
+    },
+    {
+        "id": 22001076,
+        "group_id": 22001,
+        "level_id": 76,
+        "atk_rate": 3.25,
+        "def_rate": 3.25,
+        "intelligence_rate": 3.25,
+        "command_rate": 3.25,
+        "move_rate": 3.25
+    },
+    {
+        "id": 22001077,
+        "group_id": 22001,
+        "level_id": 77,
+        "atk_rate": 3.28,
+        "def_rate": 3.28,
+        "intelligence_rate": 3.28,
+        "command_rate": 3.28,
+        "move_rate": 3.28
+    },
+    {
+        "id": 22001078,
+        "group_id": 22001,
+        "level_id": 78,
+        "atk_rate": 3.31,
+        "def_rate": 3.31,
+        "intelligence_rate": 3.31,
+        "command_rate": 3.31,
+        "move_rate": 3.31
+    },
+    {
+        "id": 22001079,
+        "group_id": 22001,
+        "level_id": 79,
+        "atk_rate": 3.34,
+        "def_rate": 3.34,
+        "intelligence_rate": 3.34,
+        "command_rate": 3.34,
+        "move_rate": 3.34
+    },
+    {
+        "id": 22001080,
+        "group_id": 22001,
+        "level_id": 80,
+        "atk_rate": 3.37,
+        "def_rate": 3.37,
+        "intelligence_rate": 3.37,
+        "command_rate": 3.37,
+        "move_rate": 3.37
+    },
+    {
+        "id": 22001081,
+        "group_id": 22001,
+        "level_id": 81,
+        "atk_rate": 3.4,
+        "def_rate": 3.4,
+        "intelligence_rate": 3.4,
+        "command_rate": 3.4,
+        "move_rate": 3.4
+    },
+    {
+        "id": 22001082,
+        "group_id": 22001,
+        "level_id": 82,
+        "atk_rate": 3.43,
+        "def_rate": 3.43,
+        "intelligence_rate": 3.43,
+        "command_rate": 3.43,
+        "move_rate": 3.43
+    },
+    {
+        "id": 22001083,
+        "group_id": 22001,
+        "level_id": 83,
+        "atk_rate": 3.46,
+        "def_rate": 3.46,
+        "intelligence_rate": 3.46,
+        "command_rate": 3.46,
+        "move_rate": 3.46
+    },
+    {
+        "id": 22001084,
+        "group_id": 22001,
+        "level_id": 84,
+        "atk_rate": 3.49,
+        "def_rate": 3.49,
+        "intelligence_rate": 3.49,
+        "command_rate": 3.49,
+        "move_rate": 3.49
+    },
+    {
+        "id": 22001085,
+        "group_id": 22001,
+        "level_id": 85,
+        "atk_rate": 3.52,
+        "def_rate": 3.52,
+        "intelligence_rate": 3.52,
+        "command_rate": 3.52,
+        "move_rate": 3.52
+    },
+    {
+        "id": 22001086,
+        "group_id": 22001,
+        "level_id": 86,
+        "atk_rate": 3.55,
+        "def_rate": 3.55,
+        "intelligence_rate": 3.55,
+        "command_rate": 3.55,
+        "move_rate": 3.55
+    },
+    {
+        "id": 22001087,
+        "group_id": 22001,
+        "level_id": 87,
+        "atk_rate": 3.58,
+        "def_rate": 3.58,
+        "intelligence_rate": 3.58,
+        "command_rate": 3.58,
+        "move_rate": 3.58
+    },
+    {
+        "id": 22001088,
+        "group_id": 22001,
+        "level_id": 88,
+        "atk_rate": 3.61,
+        "def_rate": 3.61,
+        "intelligence_rate": 3.61,
+        "command_rate": 3.61,
+        "move_rate": 3.61
+    },
+    {
+        "id": 22001089,
+        "group_id": 22001,
+        "level_id": 89,
+        "atk_rate": 3.64,
+        "def_rate": 3.64,
+        "intelligence_rate": 3.64,
+        "command_rate": 3.64,
+        "move_rate": 3.64
+    },
+    {
+        "id": 22001090,
+        "group_id": 22001,
+        "level_id": 90,
+        "atk_rate": 3.67,
+        "def_rate": 3.67,
+        "intelligence_rate": 3.67,
+        "command_rate": 3.67,
+        "move_rate": 3.67
+    },
+    {
+        "id": 22001091,
+        "group_id": 22001,
+        "level_id": 91,
+        "atk_rate": 3.7,
+        "def_rate": 3.7,
+        "intelligence_rate": 3.7,
+        "command_rate": 3.7,
+        "move_rate": 3.7
+    },
+    {
+        "id": 22001092,
+        "group_id": 22001,
+        "level_id": 92,
+        "atk_rate": 3.73,
+        "def_rate": 3.73,
+        "intelligence_rate": 3.73,
+        "command_rate": 3.73,
+        "move_rate": 3.73
+    },
+    {
+        "id": 22001093,
+        "group_id": 22001,
+        "level_id": 93,
+        "atk_rate": 3.76,
+        "def_rate": 3.76,
+        "intelligence_rate": 3.76,
+        "command_rate": 3.76,
+        "move_rate": 3.76
+    },
+    {
+        "id": 22001094,
+        "group_id": 22001,
+        "level_id": 94,
+        "atk_rate": 3.79,
+        "def_rate": 3.79,
+        "intelligence_rate": 3.79,
+        "command_rate": 3.79,
+        "move_rate": 3.79
+    },
+    {
+        "id": 22001095,
+        "group_id": 22001,
+        "level_id": 95,
+        "atk_rate": 3.82,
+        "def_rate": 3.82,
+        "intelligence_rate": 3.82,
+        "command_rate": 3.82,
+        "move_rate": 3.82
+    },
+    {
+        "id": 22001096,
+        "group_id": 22001,
+        "level_id": 96,
+        "atk_rate": 3.85,
+        "def_rate": 3.85,
+        "intelligence_rate": 3.85,
+        "command_rate": 3.85,
+        "move_rate": 3.85
+    },
+    {
+        "id": 22001097,
+        "group_id": 22001,
+        "level_id": 97,
+        "atk_rate": 3.88,
+        "def_rate": 3.88,
+        "intelligence_rate": 3.88,
+        "command_rate": 3.88,
+        "move_rate": 3.88
+    },
+    {
+        "id": 22001098,
+        "group_id": 22001,
+        "level_id": 98,
+        "atk_rate": 3.91,
+        "def_rate": 3.91,
+        "intelligence_rate": 3.91,
+        "command_rate": 3.91,
+        "move_rate": 3.91
+    },
+    {
+        "id": 22001099,
+        "group_id": 22001,
+        "level_id": 99,
+        "atk_rate": 3.94,
+        "def_rate": 3.94,
+        "intelligence_rate": 3.94,
+        "command_rate": 3.94,
+        "move_rate": 3.94
+    },
+    {
+        "id": 22001100,
+        "group_id": 22001,
+        "level_id": 100,
+        "atk_rate": 3.97,
+        "def_rate": 3.97,
+        "intelligence_rate": 3.97,
+        "command_rate": 3.97,
+        "move_rate": 3.97
+    },
+    {
+        "id": 24001001,
+        "group_id": 24001,
+        "group_key": "SSSR英雄属性_等级系数",
+        "level_id": 1,
+        "atk_rate": 1,
+        "def_rate": 1,
+        "intelligence_rate": 1,
+        "command_rate": 1,
+        "move_rate": 1
+    },
+    {
+        "id": 24001002,
+        "group_id": 24001,
+        "level_id": 2,
+        "atk_rate": 1.03,
+        "def_rate": 1.03,
+        "intelligence_rate": 1.03,
+        "command_rate": 1.03,
+        "move_rate": 1.03
+    },
+    {
+        "id": 24001003,
+        "group_id": 24001,
+        "level_id": 3,
+        "atk_rate": 1.06,
+        "def_rate": 1.06,
+        "intelligence_rate": 1.06,
+        "command_rate": 1.06,
+        "move_rate": 1.06
+    },
+    {
+        "id": 24001004,
+        "group_id": 24001,
+        "level_id": 4,
+        "atk_rate": 1.09,
+        "def_rate": 1.09,
+        "intelligence_rate": 1.09,
+        "command_rate": 1.09,
+        "move_rate": 1.09
+    },
+    {
+        "id": 24001005,
+        "group_id": 24001,
+        "level_id": 5,
+        "atk_rate": 1.12,
+        "def_rate": 1.12,
+        "intelligence_rate": 1.12,
+        "command_rate": 1.12,
+        "move_rate": 1.12
+    },
+    {
+        "id": 24001006,
+        "group_id": 24001,
+        "level_id": 6,
+        "atk_rate": 1.15,
+        "def_rate": 1.15,
+        "intelligence_rate": 1.15,
+        "command_rate": 1.15,
+        "move_rate": 1.15
+    },
+    {
+        "id": 24001007,
+        "group_id": 24001,
+        "level_id": 7,
+        "atk_rate": 1.18,
+        "def_rate": 1.18,
+        "intelligence_rate": 1.18,
+        "command_rate": 1.18,
+        "move_rate": 1.18
+    },
+    {
+        "id": 24001008,
+        "group_id": 24001,
+        "level_id": 8,
+        "atk_rate": 1.21,
+        "def_rate": 1.21,
+        "intelligence_rate": 1.21,
+        "command_rate": 1.21,
+        "move_rate": 1.21
+    },
+    {
+        "id": 24001009,
+        "group_id": 24001,
+        "level_id": 9,
+        "atk_rate": 1.24,
+        "def_rate": 1.24,
+        "intelligence_rate": 1.24,
+        "command_rate": 1.24,
+        "move_rate": 1.24
+    },
+    {
+        "id": 24001010,
+        "group_id": 24001,
+        "level_id": 10,
+        "atk_rate": 1.27,
+        "def_rate": 1.27,
+        "intelligence_rate": 1.27,
+        "command_rate": 1.27,
+        "move_rate": 1.27
+    },
+    {
+        "id": 24001011,
+        "group_id": 24001,
+        "level_id": 11,
+        "atk_rate": 1.3,
+        "def_rate": 1.3,
+        "intelligence_rate": 1.3,
+        "command_rate": 1.3,
+        "move_rate": 1.3
+    },
+    {
+        "id": 24001012,
+        "group_id": 24001,
+        "level_id": 12,
+        "atk_rate": 1.33,
+        "def_rate": 1.33,
+        "intelligence_rate": 1.33,
+        "command_rate": 1.33,
+        "move_rate": 1.33
+    },
+    {
+        "id": 24001013,
+        "group_id": 24001,
+        "level_id": 13,
+        "atk_rate": 1.36,
+        "def_rate": 1.36,
+        "intelligence_rate": 1.36,
+        "command_rate": 1.36,
+        "move_rate": 1.36
+    },
+    {
+        "id": 24001014,
+        "group_id": 24001,
+        "level_id": 14,
+        "atk_rate": 1.39,
+        "def_rate": 1.39,
+        "intelligence_rate": 1.39,
+        "command_rate": 1.39,
+        "move_rate": 1.39
+    },
+    {
+        "id": 24001015,
+        "group_id": 24001,
+        "level_id": 15,
+        "atk_rate": 1.42,
+        "def_rate": 1.42,
+        "intelligence_rate": 1.42,
+        "command_rate": 1.42,
+        "move_rate": 1.42
+    },
+    {
+        "id": 24001016,
+        "group_id": 24001,
+        "level_id": 16,
+        "atk_rate": 1.45,
+        "def_rate": 1.45,
+        "intelligence_rate": 1.45,
+        "command_rate": 1.45,
+        "move_rate": 1.45
+    },
+    {
+        "id": 24001017,
+        "group_id": 24001,
+        "level_id": 17,
+        "atk_rate": 1.48,
+        "def_rate": 1.48,
+        "intelligence_rate": 1.48,
+        "command_rate": 1.48,
+        "move_rate": 1.48
+    },
+    {
+        "id": 24001018,
+        "group_id": 24001,
+        "level_id": 18,
+        "atk_rate": 1.51,
+        "def_rate": 1.51,
+        "intelligence_rate": 1.51,
+        "command_rate": 1.51,
+        "move_rate": 1.51
+    },
+    {
+        "id": 24001019,
+        "group_id": 24001,
+        "level_id": 19,
+        "atk_rate": 1.54,
+        "def_rate": 1.54,
+        "intelligence_rate": 1.54,
+        "command_rate": 1.54,
+        "move_rate": 1.54
+    },
+    {
+        "id": 24001020,
+        "group_id": 24001,
+        "level_id": 20,
+        "atk_rate": 1.57,
+        "def_rate": 1.57,
+        "intelligence_rate": 1.57,
+        "command_rate": 1.57,
+        "move_rate": 1.57
+    },
+    {
+        "id": 24001021,
+        "group_id": 24001,
+        "level_id": 21,
+        "atk_rate": 1.6,
+        "def_rate": 1.6,
+        "intelligence_rate": 1.6,
+        "command_rate": 1.6,
+        "move_rate": 1.6
+    },
+    {
+        "id": 24001022,
+        "group_id": 24001,
+        "level_id": 22,
+        "atk_rate": 1.63,
+        "def_rate": 1.63,
+        "intelligence_rate": 1.63,
+        "command_rate": 1.63,
+        "move_rate": 1.63
+    },
+    {
+        "id": 24001023,
+        "group_id": 24001,
+        "level_id": 23,
+        "atk_rate": 1.66,
+        "def_rate": 1.66,
+        "intelligence_rate": 1.66,
+        "command_rate": 1.66,
+        "move_rate": 1.66
+    },
+    {
+        "id": 24001024,
+        "group_id": 24001,
+        "level_id": 24,
+        "atk_rate": 1.69,
+        "def_rate": 1.69,
+        "intelligence_rate": 1.69,
+        "command_rate": 1.69,
+        "move_rate": 1.69
+    },
+    {
+        "id": 24001025,
+        "group_id": 24001,
+        "level_id": 25,
+        "atk_rate": 1.72,
+        "def_rate": 1.72,
+        "intelligence_rate": 1.72,
+        "command_rate": 1.72,
+        "move_rate": 1.72
+    },
+    {
+        "id": 24001026,
+        "group_id": 24001,
+        "level_id": 26,
+        "atk_rate": 1.75,
+        "def_rate": 1.75,
+        "intelligence_rate": 1.75,
+        "command_rate": 1.75,
+        "move_rate": 1.75
+    },
+    {
+        "id": 24001027,
+        "group_id": 24001,
+        "level_id": 27,
+        "atk_rate": 1.78,
+        "def_rate": 1.78,
+        "intelligence_rate": 1.78,
+        "command_rate": 1.78,
+        "move_rate": 1.78
+    },
+    {
+        "id": 24001028,
+        "group_id": 24001,
+        "level_id": 28,
+        "atk_rate": 1.81,
+        "def_rate": 1.81,
+        "intelligence_rate": 1.81,
+        "command_rate": 1.81,
+        "move_rate": 1.81
+    },
+    {
+        "id": 24001029,
+        "group_id": 24001,
+        "level_id": 29,
+        "atk_rate": 1.84,
+        "def_rate": 1.84,
+        "intelligence_rate": 1.84,
+        "command_rate": 1.84,
+        "move_rate": 1.84
+    },
+    {
+        "id": 24001030,
+        "group_id": 24001,
+        "level_id": 30,
+        "atk_rate": 1.87,
+        "def_rate": 1.87,
+        "intelligence_rate": 1.87,
+        "command_rate": 1.87,
+        "move_rate": 1.87
+    },
+    {
+        "id": 24001031,
+        "group_id": 24001,
+        "level_id": 31,
+        "atk_rate": 1.9,
+        "def_rate": 1.9,
+        "intelligence_rate": 1.9,
+        "command_rate": 1.9,
+        "move_rate": 1.9
+    },
+    {
+        "id": 24001032,
+        "group_id": 24001,
+        "level_id": 32,
+        "atk_rate": 1.93,
+        "def_rate": 1.93,
+        "intelligence_rate": 1.93,
+        "command_rate": 1.93,
+        "move_rate": 1.93
+    },
+    {
+        "id": 24001033,
+        "group_id": 24001,
+        "level_id": 33,
+        "atk_rate": 1.96,
+        "def_rate": 1.96,
+        "intelligence_rate": 1.96,
+        "command_rate": 1.96,
+        "move_rate": 1.96
+    },
+    {
+        "id": 24001034,
+        "group_id": 24001,
+        "level_id": 34,
+        "atk_rate": 1.99,
+        "def_rate": 1.99,
+        "intelligence_rate": 1.99,
+        "command_rate": 1.99,
+        "move_rate": 1.99
+    },
+    {
+        "id": 24001035,
+        "group_id": 24001,
+        "level_id": 35,
+        "atk_rate": 2.02,
+        "def_rate": 2.02,
+        "intelligence_rate": 2.02,
+        "command_rate": 2.02,
+        "move_rate": 2.02
+    },
+    {
+        "id": 24001036,
+        "group_id": 24001,
+        "level_id": 36,
+        "atk_rate": 2.05,
+        "def_rate": 2.05,
+        "intelligence_rate": 2.05,
+        "command_rate": 2.05,
+        "move_rate": 2.05
+    },
+    {
+        "id": 24001037,
+        "group_id": 24001,
+        "level_id": 37,
+        "atk_rate": 2.08,
+        "def_rate": 2.08,
+        "intelligence_rate": 2.08,
+        "command_rate": 2.08,
+        "move_rate": 2.08
+    },
+    {
+        "id": 24001038,
+        "group_id": 24001,
+        "level_id": 38,
+        "atk_rate": 2.11,
+        "def_rate": 2.11,
+        "intelligence_rate": 2.11,
+        "command_rate": 2.11,
+        "move_rate": 2.11
+    },
+    {
+        "id": 24001039,
+        "group_id": 24001,
+        "level_id": 39,
+        "atk_rate": 2.14,
+        "def_rate": 2.14,
+        "intelligence_rate": 2.14,
+        "command_rate": 2.14,
+        "move_rate": 2.14
+    },
+    {
+        "id": 24001040,
+        "group_id": 24001,
+        "level_id": 40,
+        "atk_rate": 2.17,
+        "def_rate": 2.17,
+        "intelligence_rate": 2.17,
+        "command_rate": 2.17,
+        "move_rate": 2.17
+    },
+    {
+        "id": 24001041,
+        "group_id": 24001,
+        "level_id": 41,
+        "atk_rate": 2.2,
+        "def_rate": 2.2,
+        "intelligence_rate": 2.2,
+        "command_rate": 2.2,
+        "move_rate": 2.2
+    },
+    {
+        "id": 24001042,
+        "group_id": 24001,
+        "level_id": 42,
+        "atk_rate": 2.23,
+        "def_rate": 2.23,
+        "intelligence_rate": 2.23,
+        "command_rate": 2.23,
+        "move_rate": 2.23
+    },
+    {
+        "id": 24001043,
+        "group_id": 24001,
+        "level_id": 43,
+        "atk_rate": 2.26,
+        "def_rate": 2.26,
+        "intelligence_rate": 2.26,
+        "command_rate": 2.26,
+        "move_rate": 2.26
+    },
+    {
+        "id": 24001044,
+        "group_id": 24001,
+        "level_id": 44,
+        "atk_rate": 2.29,
+        "def_rate": 2.29,
+        "intelligence_rate": 2.29,
+        "command_rate": 2.29,
+        "move_rate": 2.29
+    },
+    {
+        "id": 24001045,
+        "group_id": 24001,
+        "level_id": 45,
+        "atk_rate": 2.32,
+        "def_rate": 2.32,
+        "intelligence_rate": 2.32,
+        "command_rate": 2.32,
+        "move_rate": 2.32
+    },
+    {
+        "id": 24001046,
+        "group_id": 24001,
+        "level_id": 46,
+        "atk_rate": 2.35,
+        "def_rate": 2.35,
+        "intelligence_rate": 2.35,
+        "command_rate": 2.35,
+        "move_rate": 2.35
+    },
+    {
+        "id": 24001047,
+        "group_id": 24001,
+        "level_id": 47,
+        "atk_rate": 2.38,
+        "def_rate": 2.38,
+        "intelligence_rate": 2.38,
+        "command_rate": 2.38,
+        "move_rate": 2.38
+    },
+    {
+        "id": 24001048,
+        "group_id": 24001,
+        "level_id": 48,
+        "atk_rate": 2.41,
+        "def_rate": 2.41,
+        "intelligence_rate": 2.41,
+        "command_rate": 2.41,
+        "move_rate": 2.41
+    },
+    {
+        "id": 24001049,
+        "group_id": 24001,
+        "level_id": 49,
+        "atk_rate": 2.44,
+        "def_rate": 2.44,
+        "intelligence_rate": 2.44,
+        "command_rate": 2.44,
+        "move_rate": 2.44
+    },
+    {
+        "id": 24001050,
+        "group_id": 24001,
+        "level_id": 50,
+        "atk_rate": 2.47,
+        "def_rate": 2.47,
+        "intelligence_rate": 2.47,
+        "command_rate": 2.47,
+        "move_rate": 2.47
+    },
+    {
+        "id": 24001051,
+        "group_id": 24001,
+        "level_id": 51,
+        "atk_rate": 2.5,
+        "def_rate": 2.5,
+        "intelligence_rate": 2.5,
+        "command_rate": 2.5,
+        "move_rate": 2.5
+    },
+    {
+        "id": 24001052,
+        "group_id": 24001,
+        "level_id": 52,
+        "atk_rate": 2.53,
+        "def_rate": 2.53,
+        "intelligence_rate": 2.53,
+        "command_rate": 2.53,
+        "move_rate": 2.53
+    },
+    {
+        "id": 24001053,
+        "group_id": 24001,
+        "level_id": 53,
+        "atk_rate": 2.56,
+        "def_rate": 2.56,
+        "intelligence_rate": 2.56,
+        "command_rate": 2.56,
+        "move_rate": 2.56
+    },
+    {
+        "id": 24001054,
+        "group_id": 24001,
+        "level_id": 54,
+        "atk_rate": 2.59,
+        "def_rate": 2.59,
+        "intelligence_rate": 2.59,
+        "command_rate": 2.59,
+        "move_rate": 2.59
+    },
+    {
+        "id": 24001055,
+        "group_id": 24001,
+        "level_id": 55,
+        "atk_rate": 2.62,
+        "def_rate": 2.62,
+        "intelligence_rate": 2.62,
+        "command_rate": 2.62,
+        "move_rate": 2.62
+    },
+    {
+        "id": 24001056,
+        "group_id": 24001,
+        "level_id": 56,
+        "atk_rate": 2.65,
+        "def_rate": 2.65,
+        "intelligence_rate": 2.65,
+        "command_rate": 2.65,
+        "move_rate": 2.65
+    },
+    {
+        "id": 24001057,
+        "group_id": 24001,
+        "level_id": 57,
+        "atk_rate": 2.68,
+        "def_rate": 2.68,
+        "intelligence_rate": 2.68,
+        "command_rate": 2.68,
+        "move_rate": 2.68
+    },
+    {
+        "id": 24001058,
+        "group_id": 24001,
+        "level_id": 58,
+        "atk_rate": 2.71,
+        "def_rate": 2.71,
+        "intelligence_rate": 2.71,
+        "command_rate": 2.71,
+        "move_rate": 2.71
+    },
+    {
+        "id": 24001059,
+        "group_id": 24001,
+        "level_id": 59,
+        "atk_rate": 2.74,
+        "def_rate": 2.74,
+        "intelligence_rate": 2.74,
+        "command_rate": 2.74,
+        "move_rate": 2.74
+    },
+    {
+        "id": 24001060,
+        "group_id": 24001,
+        "level_id": 60,
+        "atk_rate": 2.77,
+        "def_rate": 2.77,
+        "intelligence_rate": 2.77,
+        "command_rate": 2.77,
+        "move_rate": 2.77
+    },
+    {
+        "id": 24001061,
+        "group_id": 24001,
+        "level_id": 61,
+        "atk_rate": 2.8,
+        "def_rate": 2.8,
+        "intelligence_rate": 2.8,
+        "command_rate": 2.8,
+        "move_rate": 2.8
+    },
+    {
+        "id": 24001062,
+        "group_id": 24001,
+        "level_id": 62,
+        "atk_rate": 2.83,
+        "def_rate": 2.83,
+        "intelligence_rate": 2.83,
+        "command_rate": 2.83,
+        "move_rate": 2.83
+    },
+    {
+        "id": 24001063,
+        "group_id": 24001,
+        "level_id": 63,
+        "atk_rate": 2.86,
+        "def_rate": 2.86,
+        "intelligence_rate": 2.86,
+        "command_rate": 2.86,
+        "move_rate": 2.86
+    },
+    {
+        "id": 24001064,
+        "group_id": 24001,
+        "level_id": 64,
+        "atk_rate": 2.89,
+        "def_rate": 2.89,
+        "intelligence_rate": 2.89,
+        "command_rate": 2.89,
+        "move_rate": 2.89
+    },
+    {
+        "id": 24001065,
+        "group_id": 24001,
+        "level_id": 65,
+        "atk_rate": 2.92,
+        "def_rate": 2.92,
+        "intelligence_rate": 2.92,
+        "command_rate": 2.92,
+        "move_rate": 2.92
+    },
+    {
+        "id": 24001066,
+        "group_id": 24001,
+        "level_id": 66,
+        "atk_rate": 2.95,
+        "def_rate": 2.95,
+        "intelligence_rate": 2.95,
+        "command_rate": 2.95,
+        "move_rate": 2.95
+    },
+    {
+        "id": 24001067,
+        "group_id": 24001,
+        "level_id": 67,
+        "atk_rate": 2.98,
+        "def_rate": 2.98,
+        "intelligence_rate": 2.98,
+        "command_rate": 2.98,
+        "move_rate": 2.98
+    },
+    {
+        "id": 24001068,
+        "group_id": 24001,
+        "level_id": 68,
+        "atk_rate": 3.01,
+        "def_rate": 3.01,
+        "intelligence_rate": 3.01,
+        "command_rate": 3.01,
+        "move_rate": 3.01
+    },
+    {
+        "id": 24001069,
+        "group_id": 24001,
+        "level_id": 69,
+        "atk_rate": 3.04,
+        "def_rate": 3.04,
+        "intelligence_rate": 3.04,
+        "command_rate": 3.04,
+        "move_rate": 3.04
+    },
+    {
+        "id": 24001070,
+        "group_id": 24001,
+        "level_id": 70,
+        "atk_rate": 3.07,
+        "def_rate": 3.07,
+        "intelligence_rate": 3.07,
+        "command_rate": 3.07,
+        "move_rate": 3.07
+    },
+    {
+        "id": 24001071,
+        "group_id": 24001,
+        "level_id": 71,
+        "atk_rate": 3.1,
+        "def_rate": 3.1,
+        "intelligence_rate": 3.1,
+        "command_rate": 3.1,
+        "move_rate": 3.1
+    },
+    {
+        "id": 24001072,
+        "group_id": 24001,
+        "level_id": 72,
+        "atk_rate": 3.13,
+        "def_rate": 3.13,
+        "intelligence_rate": 3.13,
+        "command_rate": 3.13,
+        "move_rate": 3.13
+    },
+    {
+        "id": 24001073,
+        "group_id": 24001,
+        "level_id": 73,
+        "atk_rate": 3.16,
+        "def_rate": 3.16,
+        "intelligence_rate": 3.16,
+        "command_rate": 3.16,
+        "move_rate": 3.16
+    },
+    {
+        "id": 24001074,
+        "group_id": 24001,
+        "level_id": 74,
+        "atk_rate": 3.19,
+        "def_rate": 3.19,
+        "intelligence_rate": 3.19,
+        "command_rate": 3.19,
+        "move_rate": 3.19
+    },
+    {
+        "id": 24001075,
+        "group_id": 24001,
+        "level_id": 75,
+        "atk_rate": 3.22,
+        "def_rate": 3.22,
+        "intelligence_rate": 3.22,
+        "command_rate": 3.22,
+        "move_rate": 3.22
+    },
+    {
+        "id": 24001076,
+        "group_id": 24001,
+        "level_id": 76,
+        "atk_rate": 3.25,
+        "def_rate": 3.25,
+        "intelligence_rate": 3.25,
+        "command_rate": 3.25,
+        "move_rate": 3.25
+    },
+    {
+        "id": 24001077,
+        "group_id": 24001,
+        "level_id": 77,
+        "atk_rate": 3.28,
+        "def_rate": 3.28,
+        "intelligence_rate": 3.28,
+        "command_rate": 3.28,
+        "move_rate": 3.28
+    },
+    {
+        "id": 24001078,
+        "group_id": 24001,
+        "level_id": 78,
+        "atk_rate": 3.31,
+        "def_rate": 3.31,
+        "intelligence_rate": 3.31,
+        "command_rate": 3.31,
+        "move_rate": 3.31
+    },
+    {
+        "id": 24001079,
+        "group_id": 24001,
+        "level_id": 79,
+        "atk_rate": 3.34,
+        "def_rate": 3.34,
+        "intelligence_rate": 3.34,
+        "command_rate": 3.34,
+        "move_rate": 3.34
+    },
+    {
+        "id": 24001080,
+        "group_id": 24001,
+        "level_id": 80,
+        "atk_rate": 3.37,
+        "def_rate": 3.37,
+        "intelligence_rate": 3.37,
+        "command_rate": 3.37,
+        "move_rate": 3.37
+    },
+    {
+        "id": 24001081,
+        "group_id": 24001,
+        "level_id": 81,
+        "atk_rate": 3.4,
+        "def_rate": 3.4,
+        "intelligence_rate": 3.4,
+        "command_rate": 3.4,
+        "move_rate": 3.4
+    },
+    {
+        "id": 24001082,
+        "group_id": 24001,
+        "level_id": 82,
+        "atk_rate": 3.43,
+        "def_rate": 3.43,
+        "intelligence_rate": 3.43,
+        "command_rate": 3.43,
+        "move_rate": 3.43
+    },
+    {
+        "id": 24001083,
+        "group_id": 24001,
+        "level_id": 83,
+        "atk_rate": 3.46,
+        "def_rate": 3.46,
+        "intelligence_rate": 3.46,
+        "command_rate": 3.46,
+        "move_rate": 3.46
+    },
+    {
+        "id": 24001084,
+        "group_id": 24001,
+        "level_id": 84,
+        "atk_rate": 3.49,
+        "def_rate": 3.49,
+        "intelligence_rate": 3.49,
+        "command_rate": 3.49,
+        "move_rate": 3.49
+    },
+    {
+        "id": 24001085,
+        "group_id": 24001,
+        "level_id": 85,
+        "atk_rate": 3.52,
+        "def_rate": 3.52,
+        "intelligence_rate": 3.52,
+        "command_rate": 3.52,
+        "move_rate": 3.52
+    },
+    {
+        "id": 24001086,
+        "group_id": 24001,
+        "level_id": 86,
+        "atk_rate": 3.55,
+        "def_rate": 3.55,
+        "intelligence_rate": 3.55,
+        "command_rate": 3.55,
+        "move_rate": 3.55
+    },
+    {
+        "id": 24001087,
+        "group_id": 24001,
+        "level_id": 87,
+        "atk_rate": 3.58,
+        "def_rate": 3.58,
+        "intelligence_rate": 3.58,
+        "command_rate": 3.58,
+        "move_rate": 3.58
+    },
+    {
+        "id": 24001088,
+        "group_id": 24001,
+        "level_id": 88,
+        "atk_rate": 3.61,
+        "def_rate": 3.61,
+        "intelligence_rate": 3.61,
+        "command_rate": 3.61,
+        "move_rate": 3.61
+    },
+    {
+        "id": 24001089,
+        "group_id": 24001,
+        "level_id": 89,
+        "atk_rate": 3.64,
+        "def_rate": 3.64,
+        "intelligence_rate": 3.64,
+        "command_rate": 3.64,
+        "move_rate": 3.64
+    },
+    {
+        "id": 24001090,
+        "group_id": 24001,
+        "level_id": 90,
+        "atk_rate": 3.67,
+        "def_rate": 3.67,
+        "intelligence_rate": 3.67,
+        "command_rate": 3.67,
+        "move_rate": 3.67
+    },
+    {
+        "id": 24001091,
+        "group_id": 24001,
+        "level_id": 91,
+        "atk_rate": 3.7,
+        "def_rate": 3.7,
+        "intelligence_rate": 3.7,
+        "command_rate": 3.7,
+        "move_rate": 3.7
+    },
+    {
+        "id": 24001092,
+        "group_id": 24001,
+        "level_id": 92,
+        "atk_rate": 3.73,
+        "def_rate": 3.73,
+        "intelligence_rate": 3.73,
+        "command_rate": 3.73,
+        "move_rate": 3.73
+    },
+    {
+        "id": 24001093,
+        "group_id": 24001,
+        "level_id": 93,
+        "atk_rate": 3.76,
+        "def_rate": 3.76,
+        "intelligence_rate": 3.76,
+        "command_rate": 3.76,
+        "move_rate": 3.76
+    },
+    {
+        "id": 24001094,
+        "group_id": 24001,
+        "level_id": 94,
+        "atk_rate": 3.79,
+        "def_rate": 3.79,
+        "intelligence_rate": 3.79,
+        "command_rate": 3.79,
+        "move_rate": 3.79
+    },
+    {
+        "id": 24001095,
+        "group_id": 24001,
+        "level_id": 95,
+        "atk_rate": 3.82,
+        "def_rate": 3.82,
+        "intelligence_rate": 3.82,
+        "command_rate": 3.82,
+        "move_rate": 3.82
+    },
+    {
+        "id": 24001096,
+        "group_id": 24001,
+        "level_id": 96,
+        "atk_rate": 3.85,
+        "def_rate": 3.85,
+        "intelligence_rate": 3.85,
+        "command_rate": 3.85,
+        "move_rate": 3.85
+    },
+    {
+        "id": 24001097,
+        "group_id": 24001,
+        "level_id": 97,
+        "atk_rate": 3.88,
+        "def_rate": 3.88,
+        "intelligence_rate": 3.88,
+        "command_rate": 3.88,
+        "move_rate": 3.88
+    },
+    {
+        "id": 24001098,
+        "group_id": 24001,
+        "level_id": 98,
+        "atk_rate": 3.91,
+        "def_rate": 3.91,
+        "intelligence_rate": 3.91,
+        "command_rate": 3.91,
+        "move_rate": 3.91
+    },
+    {
+        "id": 24001099,
+        "group_id": 24001,
+        "level_id": 99,
+        "atk_rate": 3.94,
+        "def_rate": 3.94,
+        "intelligence_rate": 3.94,
+        "command_rate": 3.94,
+        "move_rate": 3.94
+    },
+    {
+        "id": 24001100,
+        "group_id": 24001,
+        "level_id": 100,
+        "atk_rate": 3.97,
+        "def_rate": 3.97,
+        "intelligence_rate": 3.97,
+        "command_rate": 3.97,
+        "move_rate": 3.97
+    }
+]

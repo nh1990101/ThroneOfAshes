@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.message;
+
+option java_package = "com.message";
+option java_outer_classname = "userProto";
+option java_multiple_files = true;
+
+message User{
+  int64 id = 1;
+  string name = 2;
+}

@@ -1,0 +1,301 @@
+[
+    {
+        "id": 1,
+        "show_next_stage": 2,
+        "level_lim": 10,
+        "star_count": 1,
+        "star_icon": 42,
+        "revive_cost": [
+            1002,
+            100
+        ],
+        "base_type_star": [
+            4
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 2,
+        "show_next_stage": 3,
+        "level_lim": 20,
+        "star_count": 2,
+        "star_icon": 42,
+        "revive_cost": [
+            1002,
+            200
+        ],
+        "base_type_star": [
+            4
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 3,
+        "show_next_stage": 4,
+        "level_lim": 30,
+        "star_count": 3,
+        "star_icon": 42,
+        "revive_cost": [
+            1002,
+            300
+        ],
+        "base_type_star": [
+            4
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 4,
+        "show_next_stage": 5,
+        "level_lim": 40,
+        "star_count": 4,
+        "star_icon": 42,
+        "revive_cost": [
+            1002,
+            400
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 5,
+        "show_next_stage": 6,
+        "level_lim": 50,
+        "star_count": 5,
+        "star_icon": 42,
+        "revive_cost": [
+            1002,
+            500
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 6,
+        "show_next_stage": 7,
+        "level_lim": 55,
+        "star_count": 1,
+        "star_icon": 43,
+        "revive_cost": [
+            1002,
+            600
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 7,
+        "show_next_stage": 8,
+        "level_lim": 60,
+        "star_count": 2,
+        "star_icon": 43,
+        "revive_cost": [
+            1002,
+            700
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 8,
+        "show_next_stage": 9,
+        "level_lim": 65,
+        "star_count": 3,
+        "star_icon": 43,
+        "revive_cost": [
+            1002,
+            800
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 9,
+        "show_next_stage": 10,
+        "level_lim": 70,
+        "star_count": 4,
+        "star_icon": 43,
+        "revive_cost": [
+            1002,
+            900
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 10,
+        "show_next_stage": 11,
+        "level_lim": 75,
+        "star_count": 5,
+        "star_icon": 43,
+        "revive_cost": [
+            1002,
+            1000
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 11,
+        "show_next_stage": 12,
+        "level_lim": 80,
+        "star_count": 1,
+        "star_icon": 44,
+        "revive_cost": [
+            1002,
+            1100
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 12,
+        "show_next_stage": 13,
+        "level_lim": 85,
+        "star_count": 2,
+        "star_icon": 44,
+        "revive_cost": [
+            1002,
+            1200
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 13,
+        "show_next_stage": 14,
+        "level_lim": 90,
+        "star_count": 3,
+        "star_icon": 44,
+        "revive_cost": [
+            1002,
+            1300
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 14,
+        "show_next_stage": 15,
+        "level_lim": 95,
+        "star_count": 4,
+        "star_icon": 44,
+        "revive_cost": [
+            1002,
+            1400
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    },
+    {
+        "id": 15,
+        "level_lim": 100,
+        "star_count": 5,
+        "star_icon": 44,
+        "revive_cost": [
+            1002,
+            1500
+        ],
+        "base_self_star": [
+            5
+        ],
+        "base_type_star": [
+            3
+        ],
+        "base_all_star": [
+            4,
+            4
+        ]
+    }
+]

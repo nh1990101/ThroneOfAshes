@@ -1,0 +1,13 @@
+{
+  "package": "TortoiseSVN-1.14.9.29743-x64-svn-1.14.5.msi",
+  "bytes": 31268864,
+  "sha256": "244F3D754212FF65D057A1A02F99DD59F8B4C7EA4E4DD33EAE8FB9B52895EEC2",
+  "status": "Valid",
+  "status_message": "Signature verified.",
+  "signer_subject": "CN=\"Open Source Developer, Stefan Kueng\", O=Open Source Developer, L=Altstätten, S=St. Gallen, C=CH",
+  "signer_thumbprint": "9EFD5F918572035DEC0FF1D1730898D4CCC3B439",
+  "issuer": "CN=Certum Code Signing 2021 CA, O=Asseco Data Systems S.A., C=PL",
+  "timestamp_signer_subject": "CN=Certum Timestamp 2023, O=Asseco Data Systems S.A., C=PL",
+  "upstream_download_page": "https://sourceforge.net/projects/tortoisesvn/files/1.14.9/Application/TortoiseSVN-1.14.9.29743-x64-svn-1.14.5.msi/download",
+  "extraction_method": "Read-only MsiOpenDatabaseW, cabinet extraction with expand.exe. No msiexec installation, registry changes, PATH changes, or repository commands."
+}

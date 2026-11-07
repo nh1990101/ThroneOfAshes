@@ -1,0 +1,24 @@
+[
+    {
+        "id": 1,
+        "suit_id": 1,
+        "suit_nums": 2,
+        "suit_attribute_name": [
+            2
+        ],
+        "suit_attribute_value": [
+            0.05
+        ]
+    },
+    {
+        "id": 2,
+        "suit_id": 1,
+        "suit_nums": 4,
+        "suit_attribute_name": [
+            4
+        ],
+        "suit_attribute_value": [
+            0.05
+        ]
+    }
+]

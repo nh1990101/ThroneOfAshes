@@ -1,0 +1,30 @@
+[
+    {
+        "id": "临时栏位_1001",
+        "market_type_id": "1",
+        "goods_group": 1001,
+        "sort": 1,
+        "is_close": false
+    },
+    {
+        "id": "临时栏位_1002",
+        "market_type_id": "1",
+        "goods_group": 1002,
+        "sort": 2,
+        "is_close": false
+    },
+    {
+        "id": "临时栏位_2001",
+        "market_type_id": "2",
+        "goods_group": 2001,
+        "sort": 1,
+        "is_close": false
+    },
+    {
+        "id": "临时栏位_2002",
+        "market_type_id": "2",
+        "goods_group": 2002,
+        "sort": 2,
+        "is_close": false
+    }
+]

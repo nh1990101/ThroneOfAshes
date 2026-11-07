@@ -12,7 +12,7 @@ const SIMPLE_RULE_ALIASES: Readonly<Record<string, FieldRuleName>> = Object.free
     required: 'required',
     ignore: 'ignore',
 });
-const PARAMETER_RULE_PATTERN: RegExp = /^(ref|ref_group|ref_count|ref_args|ref_args_str|size)\(([^()]*)\)$/;
+const PARAMETER_RULE_PATTERN: RegExp = /^(ref|ref_group|ref_count|ref_args|ref_args_str|size|index_dict|index_array)\(([^()]*)\)$/;
 
 export function ParseTableName(_value: unknown, _location: SourceLocation): string {
     const tableName = ToTrimmedText(_value);
@@ -86,9 +86,21 @@ export function ParseFieldRules(_value: unknown, _location: SourceLocation): Rea
         if (parameterRule === null || parameterRule[2].trim().length <= 0) {
             throw new ConfigExportError(`不支持的校验规则：$${rule}`, _location);
         }
+        if (parameterRule[1] === 'index_dict' || parameterRule[1] === 'index_array') {
+            rules.add(NormalizeIndexRule(parameterRule[1], parameterRule[2], rule, _location));
+            continue;
+        }
         rules.add(`${parameterRule[1]}(${parameterRule[2].trim()})`);
     }
     return rules;
+}
+
+function NormalizeIndexRule(_name: string, _argsText: string, _rawRule: string, _location: SourceLocation): string {
+    const args = _argsText.split(',').map((_part) => _part.trim());
+    if (args.some((_part) => _part.length <= 0)) {
+        throw new ConfigExportError(`索引规则参数不能为空：$${_rawRule}`, _location);
+    }
+    return `${_name}(${args.join(',')})`;
 }
 
 function ToTrimmedText(_value: unknown): string {

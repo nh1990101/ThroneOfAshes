@@ -7,6 +7,13 @@
 const ResourceLoader = {
     resources: [],
 
+    // 统一为相对 remote 的路径，兼容旧表中少了分隔符的动画目录。
+    normalizePath(path) {
+        return String(path || '').trim().replace(/\\/g, '/')
+            .replace(/^assets\/remote\//, '')
+            .replace(/^Res\/Map\/MapObjectAnimation\//, 'Res/Map/MapObject/Animation/');
+    },
+
     /**
      * 扫描MapObject目录
      */

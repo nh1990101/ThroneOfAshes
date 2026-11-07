@@ -130,7 +130,7 @@ class MapEditor {
     async tryLoadDefaultExcel() {
         // 根据授权目录类型选择路径
         const defaultExcelPath = ResFS.isProjectRoot
-            ? 'sharedata/excel/D-地图表(MapData).xlsx'  // 项目根目录
+            ? 'sharedata/excel/F-副本资源表(MapResourcesData).xlsx'  // 项目根目录
             : null;  // 其他情况暂不支持自动加载
 
         console.log('tryLoadDefaultExcel: ResFS.ready =', ResFS.ready);
@@ -161,6 +161,8 @@ class MapEditor {
                 console.log('✅ Excel加载成功！数据预览:', this.excelData.slice(0, 3));
                 // 更新资源ID下拉菜单
                 this.updateResourceIdSelect();
+                // 重新加载左侧资源列表
+                await this.loadMapObjects();
             } else {
                 console.warn('⚠️ Excel解析返回空数据');
                 this.updateInfo('Excel解析返回空数据');
@@ -497,7 +499,7 @@ class MapEditor {
         });
 
         // 物体属性修改
-        ['prop-type', 'prop-grid-x', 'prop-grid-y', 'prop-offset-x', 'prop-offset-y', 'prop-params', 'prop-walkable'].forEach(id => {
+        ['prop-type', 'prop-grid-x', 'prop-grid-y', 'prop-offset-x', 'prop-offset-y', 'prop-walkable', 'prop-flipx'].forEach(id => {
             document.getElementById(id).addEventListener('change', () => this.updateSelectedObjectProps());
         });
 
@@ -508,7 +510,7 @@ class MapEditor {
         document.getElementById('btn-load-excel').addEventListener('click', async () => {
             // 尝试自动加载默认Excel文件
             const possiblePaths = [
-                'sharedata/excel/D-地图表(MapData).xlsx',
+                'sharedata/excel/F-副本资源表(MapResourcesData).xlsx',
             ];
 
             if (ResFS.ready) {
@@ -522,6 +524,10 @@ class MapEditor {
                         this.excelData = await ExcelParser.parseMapData(file);
                         this.updateInfo(`Excel数据加载成功: ${this.excelData.length} 条记录`);
                         alert(`Excel数据加载成功: ${this.excelData.length} 条记录`);
+                        // 更新资源ID下拉菜单
+                        this.updateResourceIdSelect();
+                        // 重新加载左侧资源列表
+                        await this.loadMapObjects();
                         document.getElementById('loading').classList.remove('active');
                         loaded = true;
                         return;
@@ -644,7 +650,7 @@ class MapEditor {
             mapPixelWidth: mapWidth,
             mapPixelHeight: mapHeight,
             tileSize: 512,
-            tilesPath: `Res/Map/MapGrid/${mapId}`
+            tilesPath: `Res/Map/MapGrid/${mapName}`
         };
 
         document.getElementById('modal-new-map').classList.remove('active');
@@ -658,7 +664,7 @@ class MapEditor {
                     document.getElementById('loading').classList.remove('active');
                     return;
                 }
-                await this.cutMapImage(fileInput.files[0], mapId);
+                await this.cutMapImage(fileInput.files[0], mapName);
             } else {
                 const tilesPath = document.getElementById('input-tiles-path').value.trim();
                 if (!tilesPath) {
@@ -721,8 +727,8 @@ class MapEditor {
 
                         // 目标目录
                         const targetDir = ResFS.isProjectRoot
-                            ? `assets/remote/Res/Map/MapGrid/${mapId}`
-                            : `Res/Map/MapGrid/${mapId}`;
+                            ? `assets/remote/Res/Map/MapGrid/${this.config.mapName}`
+                            : `Res/Map/MapGrid/${this.config.mapName}`;
 
                         console.log('保存地图块到目录:', targetDir);
 
@@ -1014,18 +1020,107 @@ class MapEditor {
             return;
         }
 
+        // 如果Excel数据未加载，则使用旧的方式加载资源
+        if (!this.excelData || this.excelData.length === 0) {
+            document.getElementById('loading').classList.add('active');
+            try {
+                const resources = await ResourceLoader.scanMapObjects();
+                for (const res of resources) {
+                    res.preview = await ResourceLoader.loadPreview(res);
+                }
+                this.updateResourceList(resources);
+                this.updateInfo(`加载了 ${resources.length} 个地图物体资源`);
+            } catch (error) {
+                alert('加载资源失败: ' + error.message);
+                console.error(error);
+            } finally {
+                document.getElementById('loading').classList.remove('active');
+            }
+            return;
+        }
+
+        // 使用Excel数据加载资源
         document.getElementById('loading').classList.add('active');
 
         try {
-            const resources = await ResourceLoader.scanMapObjects();
+            // 扫描所有MapObject资源用于匹配
+            const allResources = await ResourceLoader.scanMapObjects();
 
-            // 加载预览图
-            for (const res of resources) {
+            // 为每个资源加载预览图
+            for (const res of allResources) {
                 res.preview = await ResourceLoader.loadPreview(res);
             }
 
-            this.updateResourceList(resources);
-            this.updateInfo(`加载了 ${resources.length} 个地图物体资源`);
+            // 创建资源路径映射表
+            const resourceMap = new Map();
+            allResources.forEach(res => {
+                resourceMap.set(res.displayPath, res);
+            });
+
+            // 根据Excel数据构建资源列表
+            const excelBasedResources = [];
+            for (const config of this.excelData) {
+                // 从Excel数据中获取show_url
+                let showUrl = ResourceLoader.normalizePath(config.show_url);
+                if (!showUrl) continue;
+
+                // 图集路径不带扩展名，普通图片兼容不带 .png 的配置。
+                let matchedResource = resourceMap.get(showUrl) || resourceMap.get(showUrl + '.png');
+
+                // 如果精确匹配失败，尝试其他可能的路径格式
+                if (!matchedResource) {
+                    // 尝试添加不同的路径前缀
+                    const possiblePaths = [
+                        showUrl,
+                        `Res/Map/MapObject/Image/${showUrl.split('/').pop()}`,
+                        `Res/Map/MapObject/Animation/${showUrl.split('/').pop()}`,
+                    ];
+
+                    for (const path of possiblePaths) {
+                        matchedResource = resourceMap.get(path);
+                        if (matchedResource) {
+                            showUrl = path; // 更新为匹配成功的路径
+                            break;
+                        }
+                    }
+                }
+
+                // 如果还是没找到，尝试通过文件名模糊匹配
+                if (!matchedResource) {
+                    const fileName = showUrl.split('/').pop().replace(/\.(png|jpg|jpeg|plist)$/i, '');
+                    for (const [path, res] of resourceMap.entries()) {
+                        if (res.name === fileName) {
+                            matchedResource = res;
+                            showUrl = path;
+                            break;
+                        }
+                    }
+                }
+
+                if (matchedResource) showUrl = matchedResource.displayPath;
+
+                // 构建资源对象
+                const resource = {
+                    id: config.id,
+                    name: config.name,
+                    displayName: `${config.id}: ${config.name}`, // ID+名字格式
+                    displayPath: showUrl,
+                    interaction_type: config.interaction_type,
+                    areaX: config.areaX,
+                    areaY: config.areaY,
+                    offsetX: config.offsetX,
+                    offsetY: config.offsetY,
+                    isCanWalk: config.isCanWalk,
+                    isFlipX: config.isFlipX,
+                    preview: matchedResource ? matchedResource.preview : null,
+                    path: matchedResource ? matchedResource.path : null
+                };
+
+                excelBasedResources.push(resource);
+            }
+
+            this.updateResourceList(excelBasedResources);
+            this.updateInfo(`加载了 ${excelBasedResources.length} 个Excel配置的地图物体资源`);
         } catch (error) {
             alert('加载资源失败: ' + error.message);
             console.error(error);
@@ -1045,14 +1140,15 @@ class MapEditor {
             item.draggable = true;
             item.dataset.index = index;
             item.dataset.path = res.displayPath || res.path;
-            item.dataset.type = res.type;
+            item.dataset.type = res.interaction_type;
+            item.dataset.id = res.id; // 添加资源ID
 
             const img = document.createElement('img');
             img.src = res.preview || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="%23444"/><text x="32" y="32" text-anchor="middle" dominant-baseline="middle" fill="%23fff" font-size="12">加载中</text></svg>';
-            img.alt = res.name;
+            img.alt = res.displayName || res.name;
 
             const span = document.createElement('span');
-            span.textContent = res.name;
+            span.textContent = res.displayName || res.name; // 使用displayName显示"ID: 名字"格式
 
             item.appendChild(img);
             item.appendChild(span);
@@ -1061,8 +1157,9 @@ class MapEditor {
             // 拖拽事件
             item.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('resourcePath', res.displayPath || res.path);
-                e.dataTransfer.setData('resourceType', res.type);
+                e.dataTransfer.setData('interactionType', res.interaction_type);
                 e.dataTransfer.setData('resourceImage', res.preview || '');
+                e.dataTransfer.setData('resourceId', res.id || ''); // 传递资源ID
             });
         });
     }
@@ -1238,6 +1335,23 @@ class MapEditor {
 
     // 绘制标记
     paintMark(gridX, gridY) {
+        // 检查是否在地图范围内
+        if (!this.config || !this.config.mapPixelWidth || !this.config.mapPixelHeight) {
+            this.updateInfo('地图信息未加载');
+            return;
+        }
+
+        // 计算地图的格子数（而不是切片数）
+        const maxGridX = Math.floor(this.config.mapPixelWidth / this.config.gridWidth);
+        const maxGridY = Math.floor(this.config.mapPixelHeight / this.config.gridHeight);
+
+        console.log(`边界检查: gridX=${gridX}, gridY=${gridY}, 地图格子范围: 0-${maxGridX-1}, 0-${maxGridY-1}`);
+
+        if (gridX < 0 || gridX >= maxGridX || gridY < 0 || gridY >= maxGridY) {
+            this.updateInfo(`格子 (${gridX}, ${gridY}) 超出地图范围，地图格子数: ${maxGridX}x${maxGridY}`);
+            return;
+        }
+
         const key = `${gridX},${gridY}`;
         const markMode = document.getElementById('mark-mode').value;
         console.log('paintMark 被调用:', gridX, gridY, 'markMode:', markMode);
@@ -1299,20 +1413,30 @@ class MapEditor {
     async onDrop(e) {
         e.preventDefault();
 
-        const resourcePath = e.dataTransfer.getData('resourcePath');
-        const resourceType = e.dataTransfer.getData('resourceType');
+        const resourcePath = ResourceLoader.normalizePath(e.dataTransfer.getData('resourcePath'));
+        const interactionType = e.dataTransfer.getData('interactionType');
         const resourceImage = e.dataTransfer.getData('resourceImage');
+        const resourceId = e.dataTransfer.getData('resourceId'); // 获取拖拽传递的资源ID
 
         if (!resourcePath) return;
 
         const grid = this.screenToGrid(e.clientX, e.clientY);
         if (!grid) return;
 
+        // 根据资源路径判断 resourceType
+        let resourceType = 'image';  // 默认为image
+        if (resourcePath.includes('Res/Map/MapObject/Animation')) {
+            resourceType = 'animation';
+        } else if (resourcePath.includes('Res/Map/MapObject/Image')) {
+            resourceType = 'image';
+        }
+
         // 创建新物体
         const obj = {
             id: Date.now() + Math.random(),
             resourcePath,
-            resourceType,
+            resourceType: resourceType,  // 根据路径自动判断
+            interaction_type: interactionType,  // 从拖拽数据读取交互类型
             gridX: grid.x,
             gridY: grid.y,
             type: '',
@@ -1322,42 +1446,38 @@ class MapEditor {
             offsetY: 0,
             params: '',
             walkable: false, // 默认不可行走
+            flipX: false, // 默认不翻转，手动拖拽时不读取Excel配置
             imageSrc: resourceImage
         };
 
-        // 尝试从Excel表中读取占格信息和偏移（show_url字段没有扩展名）
+        // 尝试从Excel表中读取占格信息和偏移
         let foundInExcel = false;
         if (this.excelData && this.excelData.length > 0) {
-            // 去掉resourcePath的扩展名进行匹配
-            const pathWithoutExt = resourcePath.replace(/\.(png|jpg|jpeg)$/i, '');
-            console.log(`尝试匹配Excel: resourcePath="${resourcePath}", pathWithoutExt="${pathWithoutExt}"`);
+            let config = null;
 
-            // 尝试多种匹配方式
-            let config = this.excelData.find(d => d.show_url === pathWithoutExt);
-
-            // 如果直接匹配失败，尝试添加 assets/remote/ 前缀
-            if (!config) {
-                const pathWithPrefix = `assets/remote/${pathWithoutExt}`;
-                config = this.excelData.find(d => d.show_url === pathWithPrefix);
-                console.log(`尝试带前缀匹配: ${pathWithPrefix}`);
+            // 优先使用resourceId来匹配Excel配置（如果有的话）
+            if (resourceId) {
+                config = this.excelData.find(d => d.id == resourceId);
+                console.log(`使用resourceId匹配Excel: resourceId="${resourceId}", 找到=${!!config}`);
             }
 
-            // 如果还是失败，尝试去掉Excel中路径的 assets/remote/ 前缀
+            // 如果resourceId匹配失败，再尝试用路径匹配
             if (!config) {
-                config = this.excelData.find(d => {
-                    const excelPath = (d.show_url || '').replace('assets/remote/', '');
-                    return excelPath === pathWithoutExt;
-                });
-                console.log(`尝试去掉Excel前缀匹配`);
+                // 去掉resourcePath的扩展名进行匹配
+                const pathWithoutExt = resourcePath.replace(/\.(png|jpg|jpeg|plist)$/i, '');
+                console.log(`使用路径匹配Excel: resourcePath="${resourcePath}", pathWithoutExt="${pathWithoutExt}"`);
+
+                config = this.excelData.find(d => d.show_url &&
+                    ResourceLoader.normalizePath(d.show_url).replace(/\.(png|jpg|jpeg|plist)$/i, '') === pathWithoutExt);
             }
 
             if (config) {
                 console.log('✅ 找到配置:', config);
                 foundInExcel = true;
 
-                // 解析area字段（格式：x_y）
+                // 解析area字段（格式：x//y）
                 if (config.area && typeof config.area === 'string') {
-                    const parts = config.area.split('_');
+                    const parts = config.area.split('//');
                     if (parts.length === 2) {
                         obj.occupyX = parseInt(parts[0]) || 1;
                         obj.occupyY = parseInt(parts[1]) || 1;
@@ -1367,9 +1487,9 @@ class MapEditor {
                     obj.occupyY = config.areaY || 1;
                 }
 
-                // 解析offsetPos字段（格式：x_y）
+                // 解析offsetPos字段（格式：x//y）
                 if (config.offsetPos && typeof config.offsetPos === 'string') {
-                    const parts = config.offsetPos.split('_');
+                    const parts = config.offsetPos.split('//');
                     if (parts.length === 2) {
                         obj.offsetX = parseInt(parts[0]) || 0;
                         obj.offsetY = parseInt(parts[1]) || 0;
@@ -1379,11 +1499,13 @@ class MapEditor {
                     obj.offsetY = config.offsetY || 0;
                 }
 
-                obj.type = config.type || '';
-                obj.params = config.params || '';
-                console.log(`从Excel读取信息: area=${config.area}, offsetPos=${config.offsetPos}, occupyX=${obj.occupyX}, occupyY=${obj.occupyY}, offsetX=${obj.offsetX}, offsetY=${obj.offsetY}`);
+                obj.interaction_type = config.interaction_type || '';
+                obj.configId = config.id || ''; // 设置Excel表的ID
+                obj.walkable = config.isCanWalk || false;  // 从Excel读取是否可行走
+                obj.flipX = config.isFlipX || false;  // 从Excel读取是否翻转（手动拖拽时不随机，直接使用配置值）
+                console.log(`从Excel读取信息: id=${config.id}, area=${config.area}, offsetPos=${config.offsetPos}, occupyX=${obj.occupyX}, occupyY=${obj.occupyY}, offsetX=${obj.offsetX}, offsetY=${obj.offsetY}, interaction_type=${obj.interaction_type}, configId=${obj.configId}, walkable=${obj.walkable}, flipX=${obj.flipX}`);
             } else {
-                console.warn(`❌ Excel中未找到匹配: ${pathWithoutExt}`);
+                console.warn(`❌ Excel中未找到匹配: ${resourcePath}`);
             }
         } else {
             console.warn('Excel数据未加载');
@@ -1421,11 +1543,27 @@ class MapEditor {
         for (let i = this.objects.length - 1; i >= 0; i--) {
             const obj = this.objects[i];
 
-            const halfX = Math.floor(obj.occupyX / 2);
-            const halfY = Math.floor(obj.occupyY / 2);
+            // 计算占格区域的左下角
+            let occupyLeft, occupyBottom;
+            if (obj.occupyX % 2 === 0) {
+                // 偶数格：左下角 = gridX - occupyX/2 + 1
+                occupyLeft = obj.gridX - Math.floor(obj.occupyX / 2) + 1;
+            } else {
+                // 奇数格：左下角 = gridX - floor(occupyX/2)
+                occupyLeft = obj.gridX - Math.floor(obj.occupyX / 2);
+            }
 
-            if (gridX >= obj.gridX - halfX && gridX < obj.gridX + obj.occupyX - halfX &&
-                gridY >= obj.gridY - halfY && gridY < obj.gridY + obj.occupyY - halfY) {
+            if (obj.occupyY % 2 === 0) {
+                // 偶数格：左下角 = gridY - occupyY/2 + 1
+                occupyBottom = obj.gridY - Math.floor(obj.occupyY / 2) + 1;
+            } else {
+                // 奇数格：左下角 = gridY - floor(occupyY/2)
+                occupyBottom = obj.gridY - Math.floor(obj.occupyY / 2);
+            }
+
+            // 检查点击的格子是否在占格区域内
+            if (gridX >= occupyLeft && gridX < occupyLeft + obj.occupyX &&
+                gridY >= occupyBottom && gridY < occupyBottom + obj.occupyY) {
                 return obj;
             }
         }
@@ -1436,7 +1574,7 @@ class MapEditor {
     selectObject(obj) {
         this.selectedObject = obj;
         document.getElementById('property-panel').classList.add('active');
-        document.getElementById('prop-type').value = obj.type || '';
+        document.getElementById('prop-type').value = obj.configId || obj.interaction_type || '';
         // 显示物体实际位置（只读）
         document.getElementById('prop-pos-x').value = obj.gridX;
         document.getElementById('prop-pos-y').value = obj.gridY;
@@ -1445,8 +1583,8 @@ class MapEditor {
         document.getElementById('prop-grid-y').value = obj.occupyY;
         document.getElementById('prop-offset-x').value = obj.offsetX || 0;
         document.getElementById('prop-offset-y').value = obj.offsetY || 0;
-        document.getElementById('prop-params').value = obj.params || '';
         document.getElementById('prop-walkable').checked = obj.walkable || false;
+        document.getElementById('prop-flipx').checked = obj.flipX || false;
         this.render();
     }
 
@@ -1454,13 +1592,15 @@ class MapEditor {
     updateSelectedObjectProps() {
         if (!this.selectedObject) return;
 
-        this.selectedObject.type = document.getElementById('prop-type').value;
+        const idValue = document.getElementById('prop-type').value;
+        this.selectedObject.configId = idValue;
+        this.selectedObject.interaction_type = idValue; // 保持兼容性
         this.selectedObject.occupyX = parseInt(document.getElementById('prop-grid-x').value) || 1;
         this.selectedObject.occupyY = parseInt(document.getElementById('prop-grid-y').value) || 1;
         this.selectedObject.offsetX = parseInt(document.getElementById('prop-offset-x').value) || 0;
         this.selectedObject.offsetY = parseInt(document.getElementById('prop-offset-y').value) || 0;
-        this.selectedObject.params = document.getElementById('prop-params').value;
         this.selectedObject.walkable = document.getElementById('prop-walkable').checked;
+        this.selectedObject.flipX = document.getElementById('prop-flipx').checked;
 
         this.render();
     }
@@ -1722,35 +1862,44 @@ class MapEditor {
         const sortedObjects = [...this.objects].sort((a, b) => a.gridY - b.gridY);
 
         sortedObjects.forEach(obj => {
-            // 基础格子位置
-            const baseWorld = this.gridToWorld(obj.gridX, obj.gridY);
+            // 计算占格区域的左下角
+            let occupyLeft, occupyBottom;
+            if (obj.occupyX % 2 === 0) {
+                // 偶数格：左下角 = gridX - occupyX/2 + 1
+                occupyLeft = obj.gridX - Math.floor(obj.occupyX / 2) + 1;
+            } else {
+                // 奇数格：左下角 = gridX - floor(occupyX/2)
+                occupyLeft = obj.gridX - Math.floor(obj.occupyX / 2);
+            }
 
-            // 应用像素偏移（不再乘以格子大小）
-            // 注意：offsetY正值表示"往上偏移"，但Canvas的Y轴向下
-            // 所以需要用减法
+            if (obj.occupyY % 2 === 0) {
+                // 偶数格：左下角 = gridY - occupyY/2 + 1
+                occupyBottom = obj.gridY - Math.floor(obj.occupyY / 2) + 1;
+            } else {
+                // 奇数格：左下角 = gridY - floor(occupyY/2)
+                occupyBottom = obj.gridY - Math.floor(obj.occupyY / 2);
+            }
+
+            // 计算占格区域的像素中心点（世界坐标）
+            const occupyLeftWorld = this.gridToWorld(occupyLeft, occupyBottom);
+            const occupyCenterWorldX = occupyLeftWorld.x + (obj.occupyX * this.config.gridWidth) / 2;
+            const occupyCenterWorldY = occupyLeftWorld.y + (obj.occupyY * this.config.gridHeight) / 2;
+
+            // 应用像素偏移
             const offsetX = (obj.offsetX || 0);
             const offsetY = (obj.offsetY || 0);
 
-            const world = {
-                x: baseWorld.x + offsetX,
-                y: baseWorld.y - offsetY  // Canvas坐标系：Y向下，所以用减法
-            };
-            const screen = this.worldToScreen(world.x, world.y);
+            // 最终图片中心点（世界坐标）
+            const finalCenterWorldX = occupyCenterWorldX + offsetX;
+            const finalCenterWorldY = occupyCenterWorldY - offsetY; // Canvas Y向下，所以用减法
 
-            // 绘制占据范围（不受偏移影响，始终基于gridX/gridY）
-            const halfX = Math.floor(obj.occupyX / 2);
-            const halfY = Math.floor(obj.occupyY / 2);
+            // 转换为屏幕坐标
+            const finalCenterScreen = this.worldToScreen(finalCenterWorldX, finalCenterWorldY);
 
-            // 计算占格框的中心点（与图片中心对齐）
-            const gridCenterWorld = this.gridToWorld(obj.gridX, obj.gridY);
+            // 绘制占据范围框
             const occupyW = obj.occupyX * this.config.gridWidth * this.scale;
             const occupyH = obj.occupyY * this.config.gridHeight * this.scale;
-
-            // 从中心点往左上角偏移半个占格框大小
-            const occupyScreen = this.worldToScreen(
-                gridCenterWorld.x + this.config.gridWidth / 2 - (obj.occupyX * this.config.gridWidth) / 2,
-                gridCenterWorld.y + this.config.gridHeight / 2 - (obj.occupyY * this.config.gridHeight) / 2
-            );
+            const occupyScreen = this.worldToScreen(occupyLeftWorld.x, occupyLeftWorld.y);
 
             if (obj === this.selectedObject) {
                 this.objectCtx.strokeStyle = 'yellow';
@@ -1762,28 +1911,39 @@ class MapEditor {
                 this.objectCtx.strokeRect(occupyScreen.x, occupyScreen.y, occupyW, occupyH);
             }
 
-            // 绘制图片 - 居中显示在格子中心
+            // 绘制图片 - 居中显示在占格区域中心
             if (obj.image) {
-                // 计算格子中心点的屏幕坐标
-                const gridCenterWorld = this.gridToWorld(obj.gridX, obj.gridY);
-                const gridCenterScreen = this.worldToScreen(
-                    gridCenterWorld.x + this.config.gridWidth / 2,
-                    gridCenterWorld.y + this.config.gridHeight / 2
-                );
+                // 保存上下文状态
+                this.objectCtx.save();
 
-                // 应用像素偏移后的中心点
-                // 注意：offsetY正值表示"往上"，Canvas Y向下，所以用减法
-                const finalCenterX = gridCenterScreen.x + offsetX * this.scale;
-                const finalCenterY = gridCenterScreen.y - offsetY * this.scale;
+                // 如果需要水平翻转
+                if (obj.flipX) {
+                    console.log(`绘制翻转物体: id=${obj.id}, flipX=${obj.flipX}, configId=${obj.configId}`);
+                    // 平移到图片中心
+                    this.objectCtx.translate(finalCenterScreen.x, finalCenterScreen.y);
+                    // 水平翻转
+                    this.objectCtx.scale(-1, 1);
+                    // 图片居中绘制（相对于原点）
+                    this.objectCtx.drawImage(
+                        obj.image,
+                        -(obj.image.width * this.scale) / 2,
+                        -(obj.image.height * this.scale) / 2,
+                        obj.image.width * this.scale,
+                        obj.image.height * this.scale
+                    );
+                } else {
+                    // 图片居中绘制
+                    this.objectCtx.drawImage(
+                        obj.image,
+                        finalCenterScreen.x - (obj.image.width * this.scale) / 2,
+                        finalCenterScreen.y - (obj.image.height * this.scale) / 2,
+                        obj.image.width * this.scale,
+                        obj.image.height * this.scale
+                    );
+                }
 
-                // 图片居中绘制
-                this.objectCtx.drawImage(
-                    obj.image,
-                    finalCenterX - (obj.image.width * this.scale) / 2,
-                    finalCenterY - (obj.image.height * this.scale) / 2,
-                    obj.image.width * this.scale,
-                    obj.image.height * this.scale
-                );
+                // 恢复上下文状态
+                this.objectCtx.restore();
             } else {
                 // 没有图片时显示占位符
                 this.objectCtx.fillStyle = 'rgba(100, 100, 255, 0.5)';
@@ -1815,6 +1975,10 @@ class MapEditor {
 
             this.config = config.mapInfo;
 
+            // 恢复资源点动态随机复选框的状态
+            const resourceDynamicRandom = this.config.resourceDynamicRandom || false;
+            document.getElementById('resource-dynamic-random').checked = resourceDynamicRandom;
+
             // 兼容新旧两种blocks格式
             if (Array.isArray(config.blocks)) {
                 if (config.blocks.length > 0) {
@@ -1841,6 +2005,30 @@ class MapEditor {
             this.markers.resources = new Map(config.resources || []);
             this.markers.spawnPoints = config.spawnPoints || [];
             this.objects = config.objects || [];
+
+            // 兼容性处理：确保 resourceType 有默认值
+            for (const obj of this.objects) {
+                obj.resourcePath = ResourceLoader.normalizePath(obj.resourcePath);
+                if (obj.resourcePath.startsWith('Res/Map/MapObject/Animation/')) {
+                    obj.resourceType = 'animation';
+                }
+                // resourceType 如果不存在或不是有效值，默认为 'image'
+                if (!obj.resourceType || (obj.resourceType !== 'image' && obj.resourceType !== 'animation')) {
+                    obj.resourceType = 'image';
+                }
+                // 兼容旧配置：将interaction_type或id统一存储为configId
+                if (obj.id) {
+                    obj.configId = obj.id;
+                } else if (obj.interaction_type) {
+                    obj.configId = obj.interaction_type;
+                }
+                // 保留interaction_type用于内部兼容
+                if (!obj.interaction_type && obj.id) {
+                    obj.interaction_type = obj.id;
+                } else if (!obj.interaction_type) {
+                    obj.interaction_type = '';
+                }
+            }
 
             // 加载地图分块
             await this.loadMapTiles();
@@ -2003,28 +2191,36 @@ class MapEditor {
             return;
         }
 
+        // 获取资源点动态随机复选框的值
+        const resourceDynamicRandom = document.getElementById('resource-dynamic-random').checked;
+
         // 优化blocks数据：只保存坐标key的数组，不保存value（因为都是true）
         const blocksArray = Array.from(this.markers.blocks.keys());
 
+        // 将资源点动态随机字段添加到mapInfo中
+        const mapInfoWithRandom = {
+            ...this.config,
+            resourceDynamicRandom: resourceDynamicRandom
+        };
+
         const config = {
-            mapInfo: this.config,
+            mapInfo: mapInfoWithRandom,
             blocks: blocksArray,  // 简化为字符串数组：["x,y", "x,y", ...]
             resources: Array.from(this.markers.resources.entries()),
             spawnPoints: this.markers.spawnPoints,
             objects: this.objects.map(obj => ({
                 resourcePath: obj.resourcePath,
                 resourceType: obj.resourceType,
+                isAutoGenerated: obj.isAutoGenerated || false, // 保存是否为自动生成
                 gridX: obj.gridX,
                 gridY: obj.gridY,
-                type: obj.type,
+                id: obj.configId || obj.interaction_type, // 使用configId作为id字段，如果没有则使用interaction_type兼容旧数据
                 occupyX: obj.occupyX,
                 occupyY: obj.occupyY,
                 offsetX: obj.offsetX || 0,
                 offsetY: obj.offsetY || 0,
-                params: obj.params,
                 walkable: obj.walkable || false,
-                imageSrc: obj.imageSrc,
-                configId: obj.configId // 保存资源ID
+                flipX: obj.flipX || false // 保存水平翻转状态
             }))
         };
 
@@ -2074,6 +2270,8 @@ class MapEditor {
             alert(`Excel数据加载成功: ${this.excelData.length} 条记录`);
             // 更新资源ID下拉菜单
             this.updateResourceIdSelect();
+            // 重新加载左侧资源列表
+            await this.loadMapObjects();
         } catch (error) {
             alert('加载Excel失败: ' + error.message);
             console.error(error);
@@ -2158,7 +2356,7 @@ class MapEditor {
             // 只删除该资源ID的随机生成物件
             const oldCount = this.objects.length;
             this.objects = this.objects.filter(obj =>
-                obj.resourceType !== 'auto-generated' || obj.configId !== selectedResourceId
+                !obj.isAutoGenerated || obj.configId !== selectedResourceId
             );
             deletedCount = oldCount - this.objects.length;
             if (deletedCount > 0) {
@@ -2169,7 +2367,7 @@ class MapEditor {
 
             // 删除所有随机生成的物件
             const oldCount = this.objects.length;
-            this.objects = this.objects.filter(obj => obj.resourceType !== 'auto-generated');
+            this.objects = this.objects.filter(obj => !obj.isAutoGenerated);
             deletedCount = oldCount - this.objects.length;
             if (deletedCount > 0) {
                 console.log(`删除了 ${deletedCount} 个旧的随机生成物件`);
@@ -2253,25 +2451,31 @@ class MapEditor {
                 while (generated < totalCount && attempts < maxAttempts) {
                     attempts++;
 
-                    // 从有效位置中随机选择一个（这些都是可以作为左上角的位置）
+                    // 从有效位置中随机选择一个（这些都是可以作为左下角的位置）
                     const randomPosition = validPositions[Math.floor(Math.random() * validPositions.length)];
                     const markerX = randomPosition.x;
                     const markerY = randomPosition.y;
 
-                    // 计算中心点偏移，确保占位区域从左上角开始
-                    const halfX = Math.floor(occupyX / 2);
-                    const halfY = Math.floor(occupyY / 2);
+                    // 根据奇偶数计算物体的坐标点
+                    let targetX, targetY;
+                    if (occupyX % 2 === 0) {
+                        // 偶数：坐标点 = 左下角 + occupyX/2 - 1
+                        targetX = markerX + Math.floor(occupyX / 2) - 1;
+                    } else {
+                        // 奇数：坐标点 = 左下角 + floor(occupyX/2)
+                        targetX = markerX + Math.floor(occupyX / 2);
+                    }
 
-                    // 中心点 = 左上角 + half，使占位区域的左上角对齐
-                    const targetX = markerX + halfX;
-                    const targetY = markerY + halfY;
+                    if (occupyY % 2 === 0) {
+                        // 偶数：坐标点 = 左下角 + occupyY/2 - 1
+                        targetY = markerY + Math.floor(occupyY / 2) - 1;
+                    } else {
+                        // 奇数：坐标点 = 左下角 + floor(occupyY/2)
+                        targetY = markerY + Math.floor(occupyY / 2);
+                    }
 
                     // 调试：打印占位区域
-                    const occupyLeft = targetX - halfX;
-                    const occupyRight = targetX + occupyX - halfX - 1;
-                    const occupyTop = targetY - halfY;
-                    const occupyBottom = targetY + occupyY - halfY - 1;
-                    console.log(`生成位置: 左上角(${markerX},${markerY}), 中心(${targetX},${targetY}), 占位区域: (${occupyLeft},${occupyTop})-(${occupyRight},${occupyBottom})`);
+                    console.log(`生成位置: 左下角(${markerX},${markerY}), 物体坐标(${targetX},${targetY}), 占格:${occupyX}x${occupyY}`);
 
                     // 检查是否可以放置（占据格子内没有不可移动点）
                     if (!this.canPlaceObject(targetX, targetY, occupyX, occupyY)) {
@@ -2279,7 +2483,7 @@ class MapEditor {
                     }
 
                     // 检查是否与已有的所有物体重叠
-                    const existingObjects = this.objects.filter(o => o.resourceType !== 'auto-generated');
+                    const existingObjects = this.objects.filter(o => !o.isAutoGenerated);
                     if (this.checkObjectOverlap(targetX, targetY, occupyX, occupyY, existingObjects)) {
                         continue;
                     }
@@ -2290,10 +2494,23 @@ class MapEditor {
                     }
 
                     // 创建物体
+                    const randomValue = Math.random();
+                    const shouldFlip = config.isFlipX && randomValue < 0.5;
+
+                    // 根据资源路径判断 resourceType
+                    const resourcePath = ResourceLoader.normalizePath(config.show_url);
+                    let resourceType = 'image';  // 默认为image
+                    if (resourcePath.includes('Res/Map/MapObject/Animation')) {
+                        resourceType = 'animation';
+                    } else if (resourcePath.includes('Res/Map/MapObject/Image')) {
+                        resourceType = 'image';
+                    }
+
                     const obj = {
                         id: Date.now() + Math.random(),
-                        resourcePath: config.show_url,
-                        resourceType: 'auto-generated',
+                        resourcePath,
+                        resourceType: resourceType, // 根据路径自动判断
+                        isAutoGenerated: true, // 标记为自动生成，用于删除旧物体
                         gridX: targetX,
                         gridY: targetY,
                         type: config.type || '',
@@ -2302,13 +2519,16 @@ class MapEditor {
                         offsetX: config.offsetX || 0,
                         offsetY: config.offsetY || 0,
                         params: config.params || '',
-                        walkable: false,
+                        walkable: config.isCanWalk || false, // 从Excel配置读取是否可行走
+                        flipX: shouldFlip, // 如果配置了isFlipX，有50%概率翻转
                         configId: config.id
                     };
 
+                    console.log(`[资源ID ${config.id}] 创建物体: walkable=${obj.walkable}, config.isCanWalk=${config.isCanWalk}, flipX=${obj.flipX}, config.isFlipX=${config.isFlipX}, randomValue=${randomValue.toFixed(3)}`);
+
                     // 尝试加载图片
                     try {
-                        if (ResFS.ready && config.show_url) {
+                        if (ResFS.ready && resourcePath) {
                             let loaded = false;
                             let isPlist = false;
                             let frameRect = null;
@@ -2316,9 +2536,9 @@ class MapEditor {
                             // 适配项目根目录
                             let basePath;
                             if (ResFS.isProjectRoot) {
-                                basePath = `assets/remote/${config.show_url}`;
+                                basePath = `assets/remote/${resourcePath}`;
                             } else {
-                                basePath = config.show_url;
+                                basePath = resourcePath;
                             }
 
                             // 先尝试加载plist文件（图集）
@@ -2326,25 +2546,35 @@ class MapEditor {
                                 ? [basePath]
                                 : [
                                     basePath,
-                                    `assets/remote/${config.show_url}`,
-                                    config.show_url.replace(/^Res\//, '')
+                                    `assets/remote/${resourcePath}`,
+                                    resourcePath.replace(/^Res\//, '')
                                 ];
+
+                            console.log(`[资源ID ${config.id}] 尝试加载序列帧，路径: ${resourcePath}`);
+                            console.log(`[资源ID ${config.id}] ResFS.isProjectRoot = ${ResFS.isProjectRoot}`);
+                            console.log(`[资源ID ${config.id}] 尝试的plist路径:`, plistPathsToTry);
 
                             for (const tryPath of plistPathsToTry) {
                                 if (loaded) break;
 
                                 try {
                                     const plistPath = tryPath + '.plist';
+                                    console.log(`[资源ID ${config.id}] 尝试读取: ${plistPath}`);
                                     const plistFile = await ResFS.read(plistPath);
                                     const plistText = await plistFile.text();
+                                    console.log(`[资源ID ${config.id}] ✅ plist文件读取成功: ${plistPath}`);
 
                                     // 解析plist获取图集信息
                                     const plistData = await this.parsePlistForAtlas(plistText, tryPath);
+                                    console.log(`[资源ID ${config.id}] plist解析结果:`, plistData);
+
                                     if (plistData && plistData.atlasPath) {
+                                        console.log(`[资源ID ${config.id}] 尝试加载图集图片: ${plistData.atlasPath}`);
                                         // 加载图集图片
                                         const atlasFile = await ResFS.read(plistData.atlasPath);
                                         const atlasUrl = URL.createObjectURL(atlasFile);
                                         const atlasImg = await this.loadImage(atlasUrl);
+                                        console.log(`[资源ID ${config.id}] ✅ 图集加载成功`);
 
                                         // 如果有第一帧信息，裁剪出第一帧
                                         if (plistData.firstFrameRect) {
@@ -2364,24 +2594,27 @@ class MapEditor {
                                             const frameUrl = URL.createObjectURL(frameBlob);
                                             obj.imageSrc = frameUrl;
                                             obj.image = await this.loadImage(frameUrl);
+                                            obj.resourceType = 'animation'; // 标记为序列帧动画
                                             loaded = true;
                                             isPlist = true;
-                                            console.log(`加载图集第一帧: ${plistPath}`);
+                                            console.log(`[资源ID ${config.id}] ✅ 成功加载图集第一帧: ${plistPath}, 尺寸: ${rect.width}x${rect.height}`);
                                         } else {
                                             // 没有帧信息，使用整个图集
                                             obj.imageSrc = atlasUrl;
                                             obj.image = atlasImg;
+                                            obj.resourceType = 'animation'; // 标记为序列帧动画
                                             loaded = true;
-                                            console.log(`加载图集: ${plistPath}`);
+                                            console.log(`[资源ID ${config.id}] ✅ 加载整个图集（无帧信息）: ${plistPath}`);
                                         }
                                     }
                                 } catch (plistError) {
                                     // plist不存在或解析失败，继续尝试下一个路径
+                                    console.log(`[资源ID ${config.id}] ❌ 失败:`, plistError.message);
                                 }
                             }
 
                             if (!loaded) {
-                                console.log(`未找到plist或解析失败: ${config.show_url}.plist`);
+                                console.log(`未找到plist或解析失败: ${resourcePath}.plist`);
                             }
 
                             // 如果plist加载失败，尝试普通图片
@@ -2390,8 +2623,8 @@ class MapEditor {
                                     ? [basePath]
                                     : [
                                         basePath,
-                                        `assets/remote/${config.show_url}`,
-                                        config.show_url.replace(/^Res\//, '')
+                                        `assets/remote/${resourcePath}`,
+                                        resourcePath.replace(/^Res\//, '')
                                     ];
 
                                 for (const tryPath of pathsToTry) {
@@ -2419,11 +2652,11 @@ class MapEditor {
                             }
 
                             if (!loaded) {
-                                console.warn('加载物体图片失败:', config.show_url);
+                                console.warn('加载物体图片失败:', resourcePath);
                             }
                         }
                     } catch (error) {
-                        console.warn('加载物体图片失败:', config.show_url, error);
+                        console.warn('加载物体图片失败:', resourcePath, error);
                     }
 
                     newObjects.push(obj);
@@ -2435,6 +2668,10 @@ class MapEditor {
                 } else {
                     console.log(`资源ID ${resourceId}: 成功生成 ${generated} 个物体`);
                 }
+
+                // 统计翻转数量
+                const flippedCount = newObjects.filter(obj => obj.configId === resourceId && obj.flipX).length;
+                console.log(`资源ID ${resourceId}: 翻转物体数=${flippedCount}/${generated}, 翻转率=${(flippedCount/generated*100).toFixed(1)}%`);
             }
 
             this.objects.push(...newObjects);
@@ -2455,25 +2692,44 @@ class MapEditor {
 
     // 检查物体是否与其他物体重叠
     checkObjectOverlap(gridX, gridY, occupyX, occupyY, objectList) {
-        const halfX = Math.floor(occupyX / 2);
-        const halfY = Math.floor(occupyY / 2);
+        // 计算当前物体的占格区域左下角
+        let currentLeft, currentBottom;
+        if (occupyX % 2 === 0) {
+            currentLeft = gridX - Math.floor(occupyX / 2) + 1;
+        } else {
+            currentLeft = gridX - Math.floor(occupyX / 2);
+        }
+
+        if (occupyY % 2 === 0) {
+            currentBottom = gridY - Math.floor(occupyY / 2) + 1;
+        } else {
+            currentBottom = gridY - Math.floor(occupyY / 2);
+        }
+
+        const currentRight = currentLeft + occupyX - 1;
+        const currentTop = currentBottom + occupyY - 1;
 
         for (const obj of objectList) {
-            const objHalfX = Math.floor(obj.occupyX / 2);
-            const objHalfY = Math.floor(obj.occupyY / 2);
+            // 计算已有物体的占格区域左下角
+            let objLeft, objBottom;
+            if (obj.occupyX % 2 === 0) {
+                objLeft = obj.gridX - Math.floor(obj.occupyX / 2) + 1;
+            } else {
+                objLeft = obj.gridX - Math.floor(obj.occupyX / 2);
+            }
+
+            if (obj.occupyY % 2 === 0) {
+                objBottom = obj.gridY - Math.floor(obj.occupyY / 2) + 1;
+            } else {
+                objBottom = obj.gridY - Math.floor(obj.occupyY / 2);
+            }
+
+            const objRight = objLeft + obj.occupyX - 1;
+            const objTop = objBottom + obj.occupyY - 1;
 
             // 检查两个矩形是否重叠
-            const x1 = gridX - halfX;
-            const x2 = gridX + occupyX - halfX - 1;
-            const y1 = gridY - halfY;
-            const y2 = gridY + occupyY - halfY - 1;
-
-            const ox1 = obj.gridX - objHalfX;
-            const ox2 = obj.gridX + obj.occupyX - objHalfX - 1;
-            const oy1 = obj.gridY - objHalfY;
-            const oy2 = obj.gridY + obj.occupyY - objHalfY - 1;
-
-            if (!(x2 < ox1 || x1 > ox2 || y2 < oy1 || y1 > oy2)) {
+            if (!(currentRight < objLeft || currentLeft > objRight ||
+                  currentTop < objBottom || currentBottom > objTop)) {
                 return true; // 重叠
             }
         }
@@ -2487,18 +2743,29 @@ class MapEditor {
             return true; // 可穿透
         }
 
-        // 以放置点为中心
-        const halfX = Math.floor(occupyX / 2);
-        const halfY = Math.floor(occupyY / 2);
+        // 计算占格区域的左下角
+        let occupyLeft, occupyBottom;
+        if (occupyX % 2 === 0) {
+            occupyLeft = centerX - Math.floor(occupyX / 2) + 1;
+        } else {
+            occupyLeft = centerX - Math.floor(occupyX / 2);
+        }
 
+        if (occupyY % 2 === 0) {
+            occupyBottom = centerY - Math.floor(occupyY / 2) + 1;
+        } else {
+            occupyBottom = centerY - Math.floor(occupyY / 2);
+        }
+
+        // 检查占格区域内的每个格子
         for (let dy = 0; dy < occupyY; dy++) {
             for (let dx = 0; dx < occupyX; dx++) {
-                const checkX = centerX - halfX + dx;
-                const checkY = centerY - halfY + dy;
+                const checkX = occupyLeft + dx;
+                const checkY = occupyBottom + dy;
                 const key = `${checkX},${checkY}`;
 
                 // 检查是否有不可移动标记
-                if (this.markers.blocks.has(key) && this.markers.blocks.get(key).movable === 0) {
+                if (this.markers.blocks.has(key)) {
                     return false;
                 }
             }

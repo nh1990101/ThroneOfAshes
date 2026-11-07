@@ -1,0 +1,178 @@
+[
+    {
+        "name": "die",
+        "no_move": true,
+        "no_attack": true,
+        "no_cast": true,
+        "no_control": true,
+        "no_hit": true,
+        "no_damage": true,
+        "no_heal": true,
+        "no_anim": false
+    },
+    {
+        "name": "casting",
+        "no_move": true,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "stun",
+        "no_move": true,
+        "no_attack": true,
+        "no_cast": true,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "frozen",
+        "no_move": true,
+        "no_attack": true,
+        "no_cast": true,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": true
+    },
+    {
+        "name": "bati",
+        "no_move": false,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": false,
+        "no_hit": true,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "ign_control",
+        "no_move": false,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": true,
+        "no_hit": true,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "invincible",
+        "no_move": false,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": true,
+        "no_hit": true,
+        "no_damage": true,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "silence",
+        "no_move": false,
+        "no_attack": false,
+        "no_cast": true,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "wait_death",
+        "no_move": false,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "invisible",
+        "no_move": false,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "bind",
+        "no_move": true,
+        "no_attack": true,
+        "no_cast": true,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": true
+    },
+    {
+        "name": "charm",
+        "no_move": false,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "Petrify",
+        "no_move": true,
+        "no_attack": true,
+        "no_cast": true,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": true
+    },
+    {
+        "name": "no_damage",
+        "no_move": false,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": true,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "disarm",
+        "no_move": false,
+        "no_attack": true,
+        "no_cast": true,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    },
+    {
+        "name": "imprison",
+        "no_move": true,
+        "no_attack": false,
+        "no_cast": false,
+        "no_control": false,
+        "no_hit": false,
+        "no_damage": false,
+        "no_heal": false,
+        "no_anim": false
+    }
+]

@@ -1,0 +1,48 @@
+[
+    {
+        "id": 1,
+        "bgm": "背景音乐_战斗_森林",
+        "bgm_prepare": "背景音乐_部署_森林",
+        "env_sound": "环境音_通用_森林"
+    },
+    {
+        "id": 2001,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2002,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2003,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2004,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2005,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2006,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2007,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2008,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2009,
+        "res_path": "Res/Config/WildMap/map1"
+    },
+    {
+        "id": 2010,
+        "res_path": "Res/Config/WildMap/map1"
+    }
+]

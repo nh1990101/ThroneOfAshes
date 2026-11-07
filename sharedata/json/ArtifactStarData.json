@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "quality": 4,
+        "star": 1,
+        "cost_nums": 1,
+        "str_lv_max": 3
+    },
+    {
+        "id": 2,
+        "quality": 4,
+        "star": 2,
+        "cost_nums": 5,
+        "str_lv_max": 6
+    }
+]

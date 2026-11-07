@@ -1,0 +1,178 @@
+[
+    {
+        "id": 20010101,
+        "group_id": 200101,
+        "group_key": "临时英雄_1_技能1",
+        "name": 100032,
+        "desc": 100027,
+        "card_icon": 300001,
+        "level": 1,
+        "unlock_lv": 1,
+        "effect": "heroSkill1",
+        "attack_area": 2
+    },
+    {
+        "id": 20010102,
+        "group_id": 200101,
+        "name": 100032,
+        "desc": 100028,
+        "card_icon": 300001,
+        "level": 2,
+        "unlock_lv": 20,
+        "effect": "heroSkill1",
+        "attack_area": 2
+    },
+    {
+        "id": 20010103,
+        "group_id": 200101,
+        "name": 100032,
+        "desc": 100029,
+        "card_icon": 300001,
+        "level": 3,
+        "unlock_lv": 50,
+        "effect": "heroSkill1",
+        "attack_area": 2
+    },
+    {
+        "id": 20010104,
+        "group_id": 200101,
+        "name": 100032,
+        "desc": 100030,
+        "card_icon": 300001,
+        "level": 4,
+        "unlock_lv": 70,
+        "effect": "heroSkill1",
+        "attack_area": 2
+    },
+    {
+        "id": 20010105,
+        "group_id": 200101,
+        "name": 100032,
+        "desc": 100031,
+        "card_icon": 300001,
+        "level": 5,
+        "unlock_lv": 100,
+        "effect": "heroSkill1",
+        "attack_area": 2
+    },
+    {
+        "id": 20010201,
+        "group_id": 200102,
+        "group_key": "临时英雄_1_技能2",
+        "name": 100038,
+        "desc": 100033,
+        "card_icon": 300002,
+        "level": 1,
+        "unlock_lv": 1,
+        "effect": "heroSkill2",
+        "attack_area": 3
+    },
+    {
+        "id": 20010202,
+        "group_id": 200102,
+        "name": 100038,
+        "desc": 100034,
+        "card_icon": 300002,
+        "level": 2,
+        "unlock_lv": 20,
+        "effect": "heroSkill2",
+        "attack_area": 3
+    },
+    {
+        "id": 20010203,
+        "group_id": 200102,
+        "name": 100038,
+        "desc": 100035,
+        "card_icon": 300002,
+        "level": 3,
+        "unlock_lv": 50,
+        "effect": "heroSkill2",
+        "attack_area": 3
+    },
+    {
+        "id": 20010204,
+        "group_id": 200102,
+        "name": 100038,
+        "desc": 100036,
+        "card_icon": 300002,
+        "level": 4,
+        "unlock_lv": 70,
+        "effect": "heroSkill2",
+        "attack_area": 3
+    },
+    {
+        "id": 20010205,
+        "group_id": 200102,
+        "name": 100038,
+        "desc": 100037,
+        "card_icon": 300002,
+        "level": 5,
+        "unlock_lv": 100,
+        "effect": "heroSkill2",
+        "attack_area": 3
+    },
+    {
+        "id": 20010301,
+        "group_id": 200103,
+        "group_key": "临时专属技能",
+        "name": 100119,
+        "desc": 100059,
+        "card_icon": 300002,
+        "level": 1,
+        "effect": "heroSkill1",
+        "attack_area": 1
+    },
+    {
+        "id": 20010401,
+        "group_id": 200104,
+        "group_key": "临时神器技能",
+        "name": 100083,
+        "desc": 100084,
+        "card_icon": 300002,
+        "level": 1,
+        "effect": "heroSkill1",
+        "attack_area": 1
+    },
+    {
+        "id": 20010402,
+        "group_id": 200104,
+        "name": 100083,
+        "desc": 100085,
+        "card_icon": 300002,
+        "level": 2,
+        "effect": "heroSkill1",
+        "attack_area": 2
+    },
+    {
+        "id": 10010101,
+        "group_id": 100101,
+        "group_key": "临时小兵近战普攻",
+        "name": 100102,
+        "desc": 100082,
+        "level": 1,
+        "unlock_lv": 1,
+        "effect": "combat1",
+        "attack_area": 1
+    },
+    {
+        "id": 10010201,
+        "group_id": 100102,
+        "group_key": "临时小兵远程普攻",
+        "name": 100103,
+        "desc": 100082,
+        "level": 1,
+        "unlock_lv": 1,
+        "effect": "remote1",
+        "attack_area": 1
+    },
+    {
+        "id": 20010501,
+        "group_id": 200105,
+        "group_key": "临时英雄普攻",
+        "name": 100116,
+        "desc": 100082,
+        "level": 1,
+        "unlock_lv": 1,
+        "attack_area": 1
+    }
+]

@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "name": 100040,
+        "effect_code": "gold_output"
+    },
+    {
+        "id": 2,
+        "name": 100183,
+        "effect_code": "research_speed"
+    },
+    {
+        "id": 3,
+        "name": 100202,
+        "effect_code": "recruit_cost"
+    }
+]

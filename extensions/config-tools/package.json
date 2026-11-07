@@ -1,0 +1,31 @@
+{
+  "package_version": 2,
+  "name": "config-tools",
+  "version": "1.0.0",
+  "description": "在编辑器里导出配置表、收集多语言",
+  "author": "RPGCore",
+  "editor": ">=3.8.8",
+  "main": "./main.js",
+  "contributions": {
+    "menu": [
+      {
+        "path": "配置表",
+        "label": "导出配置表",
+        "message": "export-config"
+      },
+      {
+        "path": "配置表",
+        "label": "收集多语言",
+        "message": "collect-lang"
+      }
+    ],
+    "messages": {
+      "export-config": {
+        "methods": ["exportConfig"]
+      },
+      "collect-lang": {
+        "methods": ["collectLang"]
+      }
+    }
+  }
+}

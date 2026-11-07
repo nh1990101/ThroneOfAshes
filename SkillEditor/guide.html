@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>SkillEditor 使用手册 · 从第一帧到技能完成</title>
+<link rel="icon" href="data:,">
+<style>
+:root{--bg:#f4f5ef;--paper:#fffef9;--text:#243c36;--muted:#60756c;--line:#d8e0d7;--accent:#27624a;--soft:#e6eddf;--warm:#f6e9c7;--blue:#80b8f5;--purple:#bd9cf5;--green:#6fddba;--orange:#f3c17b;--red:#f592a0;--cyan:#80d8e3;--shadow:0 12px 36px #233f3010}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:30px}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.8 "Segoe UI","Microsoft YaHei",sans-serif}button,input,select{font:inherit}a{color:var(--accent);text-underline-offset:4px}button,a,input,select,summary{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #bd8d2e;outline-offset:4px}button{color:inherit}p{margin:10px 0}h1,h2,h3,h4{line-height:1.3}h1{font-size:clamp(32px,4.2vw,58px);letter-spacing:-2px;margin:20px 0}h2{font-size:28px;margin:0 0 12px}h3{font-size:18px;margin:24px 0 8px}h4{font-size:16px;margin:0 0 6px}small,.muted{color:var(--muted)}code,kbd,.mono{font-family:Consolas,"Cascadia Code",monospace;font-variant-numeric:tabular-nums}code{font-size:.91em;overflow-wrap:anywhere;background:var(--soft);padding:2px 5px;border-radius:4px}kbd{display:inline-block;line-height:1.55;border:1px solid var(--line);border-bottom-width:3px;border-radius:4px;padding:1px 6px;font-size:12px;background:var(--paper);white-space:nowrap}pre{margin:12px 0;padding:16px 18px;background:#203a32;color:#e4efdc;border-radius:8px;overflow:auto;line-height:1.65}pre code{background:none;color:inherit;padding:0;font-size:13px}ul,ol{padding-left:23px}li{margin:7px 0}hr{border:0;border-top:1px solid var(--line);margin:24px 0}.shell{display:grid;grid-template-columns:224px minmax(0,1fr);max-width:1500px;margin:auto}.rail{position:sticky;top:0;height:100vh;padding:36px 24px 24px;border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto}.logo{font-size:19px;letter-spacing:-.5px;font-weight:750;text-decoration:none}.logo span{display:inline-grid;place-items:center;background:var(--accent);color:var(--paper);width:30px;height:30px;border-radius:8px;margin-right:8px}.eyebrow{font:11px/1.6 Consolas,monospace;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}.rail .eyebrow{margin:8px 0 38px}.rail nav{display:flex;flex-direction:column;gap:4px}.rail nav a{display:flex;gap:12px;padding:8px 10px;text-decoration:none;border-radius:6px;color:var(--muted);font-size:13px}.rail nav a b{font-weight:400;opacity:.7;font-family:Consolas,monospace}.rail nav a:hover,.rail nav a.active{background:var(--soft);color:var(--accent)}.rail-bottom{margin-top:auto;padding-top:30px;font-size:11px;line-height:1.8}.rail-bottom .theme{border:1px solid var(--line);border-radius:6px;background:var(--paper);padding:5px 10px;margin-bottom:14px}.content{padding:42px clamp(22px,4.5vw,72px) 50px;min-width:0}.topline{display:flex;justify-content:space-between;align-items:center;gap:20px;border-bottom:1px solid var(--line);padding-bottom:18px;font-size:12px}.topline a{text-decoration:none}.hero{padding:55px 0 36px}.tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:1px;border:1px solid var(--line);border-radius:30px;padding:4px 10px;background:var(--paper)}.tag:before{content:"";width:6px;height:6px;background:var(--accent);border-radius:100%}.hero p{max-width:640px;font-size:16px;color:var(--muted)}.hero h1 em{font-style:normal;color:var(--accent)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 16px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:6px;text-decoration:none;background:var(--paper);font-size:13px;font-weight:600;color:var(--text);line-height:1.7}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn:hover{filter:brightness(.96)}.hero-meta{display:flex;gap:25px;font-size:11px;color:var(--muted);flex-wrap:wrap}.section{padding:42px 0;border-top:1px solid var(--line);scroll-margin-top:24px}.section-head{display:flex;gap:14px;align-items:baseline}.number{font:12px Consolas,monospace;color:var(--accent)}.lead{color:var(--muted);margin-bottom:24px}.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}.paper{border:1px solid var(--line);padding:22px;border-radius:9px;background:var(--paper);box-shadow:var(--shadow)}.paper h3{margin-top:0}.note{border-left:3px solid var(--accent);background:var(--soft);padding:12px 16px;font-size:13px;margin:18px 0}.note.warm{background:var(--warm);border-color:#b68b31}.path{font-size:12px;overflow-wrap:anywhere}.steps{counter-reset:step}.step{position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px;margin:24px 0}.step:before{counter-increment:step;content:counter(step,decimal-leading-zero);font:13px/32px Consolas,monospace;text-align:center;background:var(--soft);color:var(--accent);height:32px;border-radius:50%}.step h3{margin:2px 0 6px}.step p{margin:5px 0}.check{font-size:12px;color:var(--accent)}.map-ui{display:grid;grid-template-columns:1fr 2.3fr 1.2fr;grid-template-rows:44px 160px 90px 28px;gap:6px;background:#20332f;padding:10px;border-radius:10px;color:#dbe7dc}.map-ui button{background:#2a423a;color:#dbe7dc;border:1px solid #486257;border-radius:5px;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px}.map-ui button.selected{border:2px solid #cfe2a1;background:#365444}.map-ui button small{font-size:10px;color:#b8c9bd}.map-ui .top{grid-column:1/4;flex-direction:row;justify-content:space-between;padding:0 16px}.map-ui .assets{grid-row:2/4}.map-ui .props{grid-column:3;grid-row:2/4}.map-ui .bottom{grid-column:1/4;font-size:10px}.map-ui .stage{background:radial-gradient(ellipse at center,#466147,#2b4035)}.mini-hex{letter-spacing:8px;color:#bacaa3;font-size:25px;line-height:1.2;opacity:.6}.ui-description{min-height:58px;margin:14px 0 0;font-size:13px}.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:var(--type)}.ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.ref{padding:20px;background:var(--paper);border:1px solid var(--line);border-radius:8px}.ref h3{margin:0 0 8px;font-size:17px}.ref code{font-size:11px}.ref p,.ref li{font-size:13px}.ref ul{margin-bottom:0}.ref .ref-kind{font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:10px}.formula{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;margin:20px 0;font-size:15px;font-family:Consolas,"Microsoft YaHei",monospace}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11px;color:var(--muted);font-weight:600}td:first-child{font-weight:600}details{border-bottom:1px solid var(--line);padding:16px 0}summary{cursor:pointer;font-weight:600;font-size:14px}details p{font-size:13px;padding-left:17px}footer{border-top:1px solid var(--line);padding-top:20px;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.toast{min-height:24px;font-size:12px;color:var(--accent)}
+/* 教学演示使用独立深色画布，避免与文档正文混淆。 */
+.demo{background:#172c27;color:#e4ede6;border:1px solid #3c5248;border-radius:12px;overflow:hidden;box-shadow:0 20px 50px #102c3020}.demo-head{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px 22px;border-bottom:1px solid #3b5045;flex-wrap:wrap}.demo-head h3{margin:0;font-size:14px}.demo-head span{font:10px Consolas,monospace;letter-spacing:1px;color:#a8bdb0}.demo-controls{padding:16px 22px;display:grid;grid-template-columns:1fr 1fr auto;gap:18px;border-bottom:1px solid #3b5045;align-items:end}.demo-controls label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#b6c9bc}.demo-controls select{background:#253f34;border:1px solid #5d7465;border-radius:5px;color:#edf3ee;padding:5px 9px;font-size:13px;min-height:36px;width:100%}.demo button{background:#2d483c;color:#e4ede6;border:1px solid #5a7262;border-radius:5px;min-height:35px;padding:5px 12px;font-size:12px}.demo button:hover{background:#3a5847}.demo .play{background:#d2e6a8;color:#213e2a;border-color:#d2e6a8;font-weight:700;min-width:70px}.demo-scene{display:block;width:100%;height:auto;background:radial-gradient(ellipse at 50% 50%,#2c4738,#192f28)}.demo-scene text{font-family:"Microsoft YaHei","Segoe UI",sans-serif}.demo-stats{padding:12px 22px;display:flex;gap:14px 26px;flex-wrap:wrap;border-top:1px solid #3b5045;border-bottom:1px solid #3b5045;font-size:11px;color:#b6c9bc}.demo-stats strong{color:#deedb2;margin-left:6px;font:14px Consolas,monospace}.timeline{padding:16px 22px 8px;position:relative}.tl-ruler,.tl-row{display:grid;grid-template-columns:110px minmax(0,1fr);align-items:center;gap:8px}.tl-ruler{height:20px;font-size:9px;color:#a9beb0}.tl-ticks{display:flex;justify-content:space-between;font-family:Consolas,monospace}.tl-row{height:37px;font-size:11px}.tl-label{white-space:nowrap}.tl-lane{position:relative;height:26px;background:repeating-linear-gradient(90deg,#78927b19 0,#78927b19 1px,transparent 1px,transparent 25%);border-bottom:1px solid #365042}.tl-bar{position:absolute;top:3px;height:20px;min-width:4px;background:var(--type);border-radius:3px;opacity:.78}.tl-bar span{font-size:9px;color:#142b23;line-height:20px;padding:0 5px;white-space:nowrap}.tl-event{position:absolute;top:2px;width:2px;height:24px;background:#ecf4d9}.tl-event:before{content:"";position:absolute;left:-3px;top:-2px;width:8px;height:8px;transform:rotate(45deg);background:#ecf4d9}.tl-cursor{position:absolute;top:0;height:26px;width:2px;background:#f6f0cf;z-index:3;pointer-events:none}.demo-transport{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 22px}.demo-transport input{flex:1;min-width:100px;accent-color:#d2e6a8;height:20px}.demo-transport output{font:12px Consolas,monospace;min-width:103px;color:#d7e8b3}.seek-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:0 22px 16px}.seek-steps button{text-align:left;padding:9px 10px;line-height:1.6}.seek-steps button.active{border-color:#d2e6a8;background:#3a543f}.seek-steps button small{display:block;font-size:9px;color:#b6c9bc}.demo-caption{background:#20392e;border-top:1px solid #3b5045;padding:14px 22px;display:flex;gap:12px;font-size:12px;min-height:76px;align-items:center}.demo-caption b{color:#dceab8;white-space:nowrap}.demo-caption p{margin:0;color:#c6d6c9}.demo-outside{margin-top:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:12px}.timeline-note{color:#b6c9bc;font-size:10px;padding:0 22px 12px}.coords{display:flex;align-items:center;gap:20px;padding:18px;background:var(--soft);border-radius:8px;font-size:13px}.coords svg{flex:0 0 100px}.json-hint{font-size:12px;color:var(--muted)}.finish{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px;background:var(--soft);border-radius:9px;margin-top:24px}.finish h3{margin:0 0 8px}.finish p{font-size:13px;margin:0}.print-only{display:none}
+body.dark{--bg:#182b26;--paper:#20362f;--text:#dfe9dd;--muted:#a8beaf;--line:#3c5448;--accent:#b6db9c;--soft:#2b4234;--warm:#493f28;--shadow:none}body.dark .btn.primary{background:#b6db9c;color:#20362f}body.dark .logo span{color:#20362f}body.dark .check{color:#b6db9c}
+@media(min-width:1500px){.content{padding-right:90px;padding-left:80px}}@media(max-width:1050px){.shell{grid-template-columns:190px minmax(0,1fr)}.rail{padding:28px 16px}.content{padding:30px 28px}.demo-controls{gap:12px}.seek-steps{grid-template-columns:1fr 1fr}.two{gap:16px}}@media(max-width:760px){.shell{display:block}.rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:17px 20px;display:block}.rail .eyebrow,.rail-bottom{display:none}.rail nav{display:flex;flex-direction:row;flex-wrap:wrap;gap:3px;margin-top:12px}.rail nav a{font-size:11px;padding:4px 8px}.rail nav a b{display:none}.content{padding:22px 20px 35px}.hero{padding:32px 0}.hero h1{letter-spacing:-1px}.two,.ref-grid{grid-template-columns:1fr}.section{padding:30px 0}.topline{font-size:10px}.section h2{font-size:25px}.demo-controls{grid-template-columns:1fr 1fr;padding:14px}.demo-controls button{grid-column:1/3}.demo-head,.demo-stats,.demo-transport,.demo-caption{padding-left:14px;padding-right:14px}.timeline{padding-left:14px;padding-right:14px}.tl-row,.tl-ruler{grid-template-columns:85px minmax(0,1fr);gap:5px}.tl-label{font-size:10px}.tl-bar span{display:none}.seek-steps{padding-left:14px;padding-right:14px}.map-ui{grid-template-columns:1fr 1.6fr 1fr;grid-template-rows:40px 125px 72px 28px}.map-ui button{font-size:11px;padding:5px}.map-ui button small{font-size:9px}.mini-hex{font-size:19px;letter-spacing:3px}.map-ui .top{padding:0 8px}.finish{display:block}.finish .btn{margin-top:18px}.demo-caption{display:block;min-height:95px}.demo-caption p{margin-top:5px}.coords{gap:10px;padding:12px}.hero-meta{gap:12px}.paper{padding:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}@media print{body{background:white;color:#172d22;font-size:10pt}.rail,.topline,.actions,.demo-controls,.demo-transport,.seek-steps,.demo-outside,.theme,.toast,.no-print{display:none!important}.shell{display:block}.content{padding:0}.hero{padding:0 0 20px}.hero h1{font-size:30pt}.section{padding:20px 0;break-inside:auto}.ref,.paper,.step,details{break-inside:avoid;box-shadow:none}details>*{display:block}details summary{list-style:none}.demo{print-color-adjust:exact;-webkit-print-color-adjust:exact;break-inside:avoid}.demo-scene{max-height:210px}.two,.ref-grid{grid-template-columns:1fr 1fr}.print-only{display:block}.tl-bar{print-color-adjust:exact;-webkit-print-color-adjust:exact}h2,h3{break-after:avoid}a{color:inherit}footer{margin-top:20px}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}.scene-mobile-caption{display:none}
+@media(max-width:760px){.demo-scene text{display:none}.scene-mobile-caption{display:block;padding:10px 14px;font-size:12px;color:#d4e3d8;border-bottom:1px solid #3b5045}.scene-mobile-caption span{display:block;font-size:11px;color:#b6c9bc}.demo-head span{letter-spacing:0}.demo-stats{gap:10px 18px}.demo-stats strong{font-size:13px}}
+@media(pointer:coarse){button,.btn,summary{min-height:44px}.rail nav a{padding:10px}}
+@media print{:root,body.dark{--bg:#fff;--paper:#fff;--text:#172d22;--muted:#53695b;--line:#cbd6cc;--accent:#27624a;--soft:#edf2e9;--warm:#f6e9c7;--shadow:none}.scene-mobile-caption{display:none}.demo-scene text{display:initial}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="rail" aria-label="使用手册导航">
+  <a class="logo" href="#intro"><span aria-hidden="true">ϟ</span>SkillEditor</a><div class="eyebrow">FIELD GUIDE / 使用手册</div>
+  <nav aria-label="章节目录">
+    <a href="#start"><b>01</b>启动与准备</a><a href="#workspace"><b>02</b>认识工作区</a><a href="#quickstart"><b>03</b>做出第一个技能</a><a href="#demo"><b>04</b>交互演示</a><a href="#tracks"><b>05</b>六类轨道详解</a><a href="#timing"><b>06</b>时间、坐标与图层</a><a href="#save"><b>07</b>保存与恢复</a><a href="#keys"><b>08</b>快捷键速查</a><a href="#faq"><b>09</b>常见问题</a>
+  </nav>
+  <div class="rail-bottom"><button class="theme" id="theme-toggle" aria-pressed="false">切换深色阅读</button><br>依据本项目当前实现编写<br>2026.11.05 · 中文使用手册<br>离线阅读 · 无需网络</div>
+</aside>
+<main class="content" id="intro">
+  <div class="topline"><span>RPGCORE / TOOLS / DOCUMENTATION</span><button class="btn" id="print-button">打印 / 存为 PDF</button></div>
+  <header class="hero">
+    <span class="tag">技能表现编辑器 · 操作指南</span>
+    <h1>从第一帧，<br>到一个<em>完整技能。</em></h1>
+    <p>放置角色、安排动作、发射特效，再把伤害与位移接到准确的时刻。这份手册带你走完 SkillEditor 的一次完整编排。</p>
+    <div class="actions"><a class="btn primary" href="#quickstart">开始制作第一个技能 <span aria-hidden="true">↗</span></a><a class="btn" href="#demo">先看交互演示 <span aria-hidden="true">▶</span></a></div>
+    <div class="hero-meta"><span>六类行为节点</span><span>动作帧 / 飞行结束关联</span><span>附可导入的示例 JSON</span></div>
+  </header>
+
+  <section class="section" id="start">
+    <div class="section-head"><span class="number">01 /</span><h2>启动与准备</h2></div>
+    <p class="lead">说明页可以直接双击打开；真正的编辑器需要通过本地服务运行。</p>
+    <div class="two"><div class="paper"><h3>推荐：双击启动</h3><p>打开项目里的 <code>SkillEditor</code> 文件夹，双击 <code>start.bat</code>，保持服务窗口开启。</p><p>用 Chrome 或 Edge 打开：</p><p><a href="http://127.0.0.1:8766/" target="_blank" rel="noopener">http://127.0.0.1:8766/ ↗</a></p><p class="check">✓ 底部显示“本地已连接”，资源库出现资源。</p></div>
+    <div class="paper"><h3>命令行启动</h3><p>在项目根目录打开 PowerShell：</p><pre><code>node SkillEditor/server.cjs</code></pre><button class="btn" id="copy-command">复制启动命令</button><p class="muted" style="font-size:12px">需要 Node.js 18+，以及项目已有依赖 <code>node_modules/jszip</code>。</p></div></div>
+    <div class="note">不要双击编辑器的 <code>index.html</code> 启动：<code>file://</code> 无法读取单位 Excel 和项目资源。此限制不影响当前这份离线说明页。</div>
+    <details><summary>端口 8766 被占用怎么办？</summary><p>若已有服务正在运行，先用浏览器打开默认地址。需要另开端口时，在项目根目录执行下方命令，然后打开 <code>http://127.0.0.1:8767/</code>。</p><pre><code>$env:SKILL_EDITOR_PORT = '8767'
+node SkillEditor/server.cjs</code></pre><p>浏览器草稿按地址与端口分别保存，更换端口后可通过导入 JSON 恢复配置。更新 <code>server.cjs</code> 后，关闭旧服务并重新启动。</p></details>
+  </section>
+
+  <section class="section" id="workspace">
+    <div class="section-head"><span class="number">02 /</span><h2>认识工作区</h2></div><p class="lead">点击下面的区域，查看它负责什么。此图是界面结构示意。</p>
+    <div class="map-ui" aria-label="编辑器工作区结构示意">
+      <button class="top" data-area="file"><span>① 顶部 · 文件与技能名称</span><small>新建 / 导入 JSON / 保存 JSON</small></button>
+      <button class="assets" data-area="asset"><strong>② 资源库</strong><small>搜索 / 预览</small><small>加入特效轨道</small></button>
+      <button class="stage selected" data-area="scene" aria-pressed="true"><strong>③ 战斗预览</strong><span class="mini-hex" aria-hidden="true">⬡ ⬡ ⬡<br>⬡ ⬡ ⬡</span><small>点击格子放置单位</small></button>
+      <button class="props" data-area="property"><strong>⑤ 右侧属性</strong><small>选中对象参数</small><small>技能设置</small></button>
+      <button data-area="timeline"><strong>④ 行为时间轴</strong><small>轨道 / 播放 / 关联 / 吸附</small></button>
+      <button class="bottom" data-area="status">⑥ 底部 · 资源状态 / 提示 / 使用说明</button>
+    </div>
+    <p class="ui-description" id="area-description" aria-live="polite"><strong>③ 战斗预览：</strong>7×7 六边形地图。点击空格放置单位，点击角色选择它；滚轮缩放、中键拖动平移。“适配”恢复合适视图。</p>
+  </section>
+
+  <section class="section" id="quickstart">
+    <div class="section-head"><span class="number">03 /</span><h2>做出第一个技能</h2></div><p class="lead">练习目标：施法者攻击 → 发射特效 → 命中后受击、伤害与击退。</p>
+    <div class="steps">
+      <article class="step"><div><h3>新建，并填写技能 ID</h3><p>点击顶部 <strong>“＋ 新建”</strong>，输入 ID，例如 <code>guide-demo-1001</code>，点击“创建技能”。顶部可修改技能名称；ID 可在右侧“技能设置”调整。</p><p class="check">检查：地图和轨道为空，技能 ID 已填写。新建可撤销，取消弹窗保留原技能。</p></div></article>
+      <article class="step"><div><h3>放置攻击者和受击者</h3><p>点击空格子，搜索单位名称、ID 或检索名，选择“攻击者 / 施法者”和图集，再点“放置单位”。重复一次，放置“受击者”。</p><p>本例使用步兵 <code>110010</code> 放在 <code>(1,3)</code>、铁甲卫 <code>110030</code> 放在 <code>(4,3)</code>。图集由单位表 <code>animation_name</code> 自动映射；缺失时在右侧手动选择。</p><p class="check">检查：场景中有两个角色，角色类型分别正确。坐标按钮可显示格子 q,r。</p></div></article>
+      <article class="step"><div><h3>添加施法者攻击动作</h3><p>先回到 <strong>0 ms</strong>，点击攻击者，使用右侧“＋ 施法者行为”，或点击时间轴“＋ 新建轨道 → 施法者行为”。右侧选择场景单位，动作为“攻击”，设置 <strong>10 FPS</strong>，开始时间 <strong>0 ms</strong>。</p><p class="check">检查：时间轴出现动作帧缩略图。本例攻击动作有 5 帧，第 4 帧在 300 ms。</p></div></article>
+      <article class="step"><div><h3>添加特效，再为该实例添加飞行</h3><p>在资源库选中特效 <code>1004</code>，点击“＋ 加入特效轨道”或双击资源。在右侧把“特效位置”设为施法者；“关联时间节点”选择攻击轨道，<strong>动作第几帧 = 4</strong>、额外偏移 <strong>0 ms</strong>。持续时间留空，关闭特效循环。</p><p>保持选中这条特效，点击右侧 <strong>“为选中特效添加飞行”</strong>。飞行也关联攻击第 4 帧，起点选施法者、终点选被攻击者，速度 <strong>400 px/s</strong>，两端偏移均为 0；勾选“到达终点后隐藏特效”。</p><p class="check">检查：飞行引用的是刚创建的“特效实例”，时间轴末尾显示“飞行结束”菱形。</p></div></article>
+      <article class="step"><div><h3>在飞行结束时接上三个行为</h3><p>分别新建“受击者行为”“伤害节点”“强制移动”。每条右侧的“关联时间节点”都选择刚才的<strong>飞行轨道</strong>，额外偏移 0 ms。受击动作为“受击”，伤害保留“自动分摊剩余伤害”。</p><p>强制移动明确选择受击者实例，类型设为 <strong>3 · 固定移动方向</strong>，方向“右 / 东”，移动 1 格、耗时 200 ms。本例最终移动至 <code>(5,3)</code>。</p><p class="check">检查：三条行为开始于同一命中时刻；调整飞行速度后一起前移或后移。</p></div></article>
+      <article class="step"><div><h3>预览、检查，再保存</h3><p>按 <kbd>Space</kbd> 播放；拖动标尺检查发射和命中时刻。查看右侧配置提示，确认图集、特效、伤害占比与关联均正确，再按 <kbd>Ctrl</kbd> + <kbd>S</kbd> 保存。</p><p class="check">检查：底部提示“已保存 assets/remote/Res/Config/Skill/guide-demo-1001.json”。</p></div></article>
+    </div>
+    <div class="note warm">新轨道默认从<strong>当前时间游标</strong>开始。不要依赖添加时的先后顺序决定触发时间；以右侧“开始时间”和关联设置为准。需要快速体验，可在下方下载本例并用编辑器“导入 JSON”打开。</div>
+  </section>
+
+  <section class="section" id="demo">
+    <div class="section-head"><span class="number">04 /</span><h2>动手看看，时间怎样关联</h2></div><p class="lead">调节攻击帧率或飞行速度，再播放或拖动游标。图形为教学示意；时序沿用编辑器规则。</p>
+    <div class="demo">
+      <div class="demo-head"><h3>发射 → 飞行 → 命中 → 击退</h3><span>INTERACTIVE / 教学示意</span></div>
+      <div class="demo-controls">
+        <label for="demo-fps">攻击帧率 / FPS<select id="demo-fps"><option value="5">5 FPS · 慢动作</option><option value="10" selected>10 FPS · 默认</option><option value="20">20 FPS · 快动作</option><option value="30">30 FPS</option></select></label>
+        <label for="demo-speed">飞行速度 / px·s⁻¹<select id="demo-speed"><option value="200">200 · 慢速</option><option value="400" selected>400 · 默认</option><option value="600">600 · 快速</option><option value="800">800</option></select></label>
+        <button id="demo-reset">恢复默认</button>
+      </div>
+      <div class="scene-mobile-caption"><b>施法者 (1,3) → 受击者 (4,3)</b><span>飞行 294 px；命中后向右一格至 (5,3)。图形为教学示意。</span></div>
+      <svg class="demo-scene" viewBox="0 0 800 270" role="img" aria-labelledby="scene-title scene-description">
+        <title id="scene-title">技能时序示意</title><desc id="scene-description">施法者从攻击第4帧发射特效；飞行294像素后，目标受击、显示伤害并向右移动一格。</desc>
+        <defs><pattern id="hex-pattern" width="98" height="86" patternUnits="userSpaceOnUse"><path d="M24.5 0H73.5L98 43 73.5 86H24.5L0 43Z" fill="none" stroke="#668165" stroke-width="1" opacity=".19"/></pattern><radialGradient id="orb-light"><stop stop-color="#fff7d2"/><stop offset=".4" stop-color="#edc474"/><stop offset="1" stop-color="#cda861" stop-opacity="0"/></radialGradient></defs>
+        <rect x="30" y="70" width="740" height="163" fill="url(#hex-pattern)"/>
+        <text x="28" y="31" fill="#c8d8ca" font-size="12" id="scene-phase">准备：等待攻击第 4 帧</text><text x="772" y="31" text-anchor="end" fill="#adc4b2" font-size="11">7×7 地图中的同一行</text>
+        <path d="M200 145H526" stroke="#9cb596" stroke-width="1.3" stroke-dasharray="5 6"/>
+        <path d="m518 140 8 5-8 5" fill="none" stroke="#9cb596"/>
+        <text x="363" y="126" text-anchor="middle" fill="#adc4b2" font-size="11">294 px · 触发时记录终点</text>
+        <g id="demo-caster" transform="translate(200 170)"><ellipse cy="22" rx="39" ry="12" fill="#0d241d" opacity=".6"/><path d="M-20 12V-20L0-35 20-20V12Z" fill="#8db9df" stroke="#d4e6ec" stroke-width="2"/><path d="M0-26V7M-12-15H12" stroke="#305876" stroke-width="3"/><path id="caster-sword" d="M28 0V-46M21-7H35" stroke="#e7edc9" stroke-width="4"/><circle cx="0" cy="-44" r="12" fill="#bfd0ba"/></g>
+        <g id="demo-target" transform="translate(526 170)"><ellipse cy="22" rx="39" ry="12" fill="#0d241d" opacity=".6"/><path id="target-shield" d="M-20 12V-20L0-35 20-20V12Z" fill="#b898d6" stroke="#e5d6ec" stroke-width="2"/><path d="M0-26V7M-12-15H12" stroke="#5d4675" stroke-width="3"/><circle cy="-44" r="12" fill="#bfd0ba"/></g>
+        <g id="demo-orb" visibility="hidden"><circle r="29" fill="url(#orb-light)"/><circle r="6" fill="#f7e9ac"/></g>
+        <g id="demo-hit" visibility="hidden" stroke="#f2d091" stroke-width="3"><path d="M-17-17L-28-28M17-17L28-28M0-23V-37M-23 0H-36M23 0H36"/></g>
+        <text id="demo-damage" x="526" y="80" fill="#ffcd9a" text-anchor="middle" font-size="25" font-weight="700" visibility="hidden">−1000</text>
+        <text x="200" y="227" fill="#d4e3d8" text-anchor="middle" font-size="12">施法者 · (1,3)</text><text id="target-label" x="526" y="227" fill="#d4e3d8" text-anchor="middle" font-size="12">受击者 · (4,3)</text>
+        <text x="28" y="255" fill="#a9beb0" font-size="10">角色与特效为示意图形，下载示例使用项目实际图集。</text>
+      </svg>
+      <div class="demo-stats"><span>第4帧发射<strong id="launch-value">300 ms</strong></span><span>飞行耗时<strong id="flight-value">735 ms</strong></span><span>命中时刻<strong id="hit-value">1035 ms</strong></span><span>流程结束<strong id="end-value">1735 ms</strong></span></div>
+      <div class="timeline" aria-label="演示的六条行为轨道">
+        <div class="tl-ruler"><span>轨道 / 毫秒</span><div class="tl-ticks" id="demo-ticks"></div></div>
+        <div id="demo-tracks"></div>
+      </div><div class="timeline-note">菱形 = 关联触发点；浅色竖线 = 当前时间。特效帧播完后，在飞行途中保持末帧。</div>
+      <div class="demo-transport"><button class="play" id="demo-play" aria-pressed="false">▶ 播放</button><button id="demo-stop">停止</button><label for="demo-scrub" class="print-only">演示时间</label><input type="range" id="demo-scrub" min="0" max="1735" step="1" value="0" aria-label="演示时间游标（毫秒）"><output id="demo-time" for="demo-scrub">0 / 1735 ms</output></div>
+      <div class="seek-steps" aria-label="跳到关键步骤"><button data-seek="cast" class="active">① 施法<small>攻击从 0 ms 开始</small></button><button data-seek="launch">② 发射<small>绑定攻击第 4 帧</small></button><button data-seek="hit">③ 命中<small>绑定飞行结束</small></button><button data-seek="finish">④ 收尾<small>完整显示伤害数字</small></button></div>
+      <div class="demo-caption"><b id="demo-caption-title">① 施法</b><p id="demo-caption-text">先播放攻击动作。第 4 帧触发特效和飞行；改变 FPS，会改变发射时刻。</p></div>
+    </div>
+    <p class="sr-only" id="demo-update-status" role="status" aria-live="polite"></p>
+    <div class="demo-outside"><button class="btn primary" id="download-demo">↓ 下载默认示例 JSON</button><span>固定为 10 FPS、400 px/s；技能 ID：<code>guide-demo-1001</code></span></div>
+    <p class="json-hint">在编辑器点击“导入 JSON”选择下载的文件。示例包含 2 个角色、6 条轨道，采用步兵 / 铁甲卫与特效 1004。上方参数只影响本页教学演示。保存示例前可修改技能 ID。</p>
+    <div class="formula" id="demo-formula">发射 = (4 − 1) × 1000 ÷ 10 = 300 ms<br>命中 = 300 + 294 ÷ 400 × 1000 = 1035 ms</div>
+    <p class="muted" style="font-size:13px">试一试：只把攻击改成 20 FPS，发射提前到 150 ms，命中提前到 885 ms。再把飞行速度改成 800，命中会提前到 517.5 ms。三个命中行为始终跟随飞行结束。</p>
+  </section>
+
+  <section class="section" id="tracks">
+    <div class="section-head"><span class="number">05 /</span><h2>六类轨道详解</h2></div><p class="lead">每条轨道只有一个行为节点和一个触发关键帧。多次伤害、多次特效请添加多条轨道。选中轨道后，可在右侧改名、启用 / 禁用、复制或删除。</p>
+    <div class="ref-grid">
+      <article class="ref" style="--type:var(--blue)"><div class="ref-kind">01 / CASTER</div><h3><span class="legend-dot"></span>施法者行为</h3><p>控制攻击者的站立、攻击、移动、受击或死亡动画。</p><ul><li>明确选择“场景单位”，默认动作是攻击。</li><li>每条动作独立设置 FPS；“技能设置”的默认 FPS 只影响新轨道。</li><li>支持循环。非循环动作结束后回站立，死亡动作保持末帧。</li></ul><p><code>params.action</code> 保存为枚举数值：站立0、移动1、受击2、死亡3、攻击4。</p></article>
+      <article class="ref" style="--type:var(--purple)"><div class="ref-kind">02 / TARGET</div><h3><span class="legend-dot"></span>受击者行为</h3><p>控制被攻击者的动作，默认播放受击动画。</p><ul><li>建议与伤害节点关联到相同的命中时刻。</li><li>动画本身不创建伤害，仍需添加伤害轨道。</li><li>多个目标场景中，显式指定单位实例，避免自动选到第一个受击者。</li></ul><p>同一单位同时开始多个角色动作时，轨道列表中后面的动作优先。</p></article>
+      <article class="ref" style="--type:var(--green)"><div class="ref-kind">03 / EFFECT</div><h3><span class="legend-dot"></span>播放技能特效</h3><p>设置资源 ID、源 FPS、速度倍率、位置、偏移、缩放和层级。</p><ul><li>默认 24 FPS、1× 速度。非循环“持续时间”留空时按一轮动画。</li><li>填写 1–120000 ms 后，到时隐藏；动画先结束则保持末帧。该时长不随 FPS 或倍率变化。</li><li>开启循环时忽略已填的持续时间，关闭循环后恢复原值。</li><li>“是否多目标”供游戏运行时决定是否每个敌人创建一个特效；编辑器预览不会因此批量生成目标。</li></ul></article>
+      <article class="ref" style="--type:var(--orange)"><div class="ref-kind">04 / FLIGHT</div><h3><span class="legend-dot"></span>技能移动飞行</h3><p>让已存在的特效实例，从起点直线匀速飞到终点。</p><ul><li>必须先选择特效实例，再添加飞行；相同特效资源的不同实例互不干扰。</li><li>设置速度、起终点，以及各自独立的 X/Y 偏移；距离改变会重算耗时。</li><li>起终点在触发时记录，后续目标移动不会改变已发出的轨迹。</li><li>“是否与目标点朝向一致”让特效朝终点旋转，素材朝右为 0°；起终点重合时保持 0°。</li><li>勾选“到达终点后隐藏特效”，在飞行结束时收起特效。</li></ul></article>
+      <article class="ref" style="--type:var(--red)"><div class="ref-kind">05 / DAMAGE</div><h3><span class="legend-dot"></span>伤害节点</h3><p>在触发时刻结算一段占比；编辑器以“预览总伤害”显示数字。</p><ul><li>全部自动：2 段各 50%，3 段各约 33.33%。</li><li>手动第一段 40% + 2 个自动节点：自动段各 30%。禁用轨道不计入分摊。</li><li>最终占比合计应为 100%；过多或不足会出现配置提示。</li><li>数字表现持续 700 ms，并计入总时长。游戏实际伤害由战斗系统结算。</li></ul></article>
+      <article class="ref" style="--type:var(--cyan)"><div class="ref-kind">06 / MOVE</div><h3><span class="legend-dot"></span>强制移动</h3><p>选定移动单位与类型，设置格数或目标格，以及位移耗时。</p><ul><li><strong>1：</strong>按移动单位水平朝向的反方向移动。</li><li><strong>2：</strong>按施法者指向移动单位的向量，取最近六边形方向；缺少施法者或重合时不移动。</li><li><strong>3：</strong>固定六方向，搭配移动格数。</li><li><strong>4：</strong>全局移动到指定 <code>q,r</code>，不使用格数和固定方向，不绕障碍。</li><li>0 ms 为瞬移，大于 0 为滑动；“选中格子”只用来找移动单位，与“目标格子”不同。</li></ul></article>
+    </div>
+    <div class="note">位移预览默认忽略占用，始终受 7×7 地图边界限制；可在“技能设置”改为遇到占用停步。游戏运行时会检查路径并使用“受阻回弹”参数，编辑器预览使用全局碰撞规则。回弹距离或耗时设为 0 可关闭游戏中的回弹动画。</div>
+  </section>
+
+  <section class="section" id="timing">
+    <div class="section-head"><span class="number">06 /</span><h2>时间、坐标与图层</h2></div>
+    <h3>用关联表达“什么时候”，减少反复对时间</h3>
+    <div class="table-wrap"><table><thead><tr><th>触发方式</th><th>如何设置</th><th>改变参数之后</th></tr></thead><tbody><tr><td>绝对时间</td><td>关联选择“绝对毫秒时间”，填写开始时间，或水平拖动节点。</td><td>不跟随其他节点。</td></tr><tr><td>动作帧关联</td><td>拖到角色动作帧吸附，或选择源动作并填写相对帧号与偏移。</td><td>随源动作开始时间和 FPS 重算。</td></tr><tr><td>飞行结束关联</td><td>拖到“飞行结束”菱形，或选择飞行作为关联源，并填写偏移。</td><td>随飞行开始时间、速度和起终点重算。</td></tr></tbody></table></div>
+    <div class="formula">触发时间 = 源动作开始时间 + (相对帧号 − 1) × 1000 / FPS + 额外偏移</div>
+    <p>帧号从 <strong>1</strong> 开始，指当前动作的相对帧。动作在 200 ms 开始，10 FPS 的第 4 帧在 <strong>500 ms</strong>。这与图集的绝对帧编号不同：站立 0–5、移动 6–8、受击 9–10、死亡 11–13、攻击从 14 到末帧。</p>
+    <p>拖动时开启“吸附”；按住 <kbd>Alt</kbd> 可临时跳过。需要解除关联时，在右侧选“绝对毫秒时间”，当前计算时刻会保留。删除关联来源时，后续行为保留最后计算出的绝对时间；删除特效实例也会删除引用它的飞行轨道。不要互相引用形成循环。</p>
+    <h3>流程时长：按行为播放完成来结束</h3>
+    <p>点击播放工具栏的<strong>总时长</strong>，打开“技能设置 → 流程时长”。</p>
+    <ul><li><strong>自动：</strong>取所有启用节点“实际开始时间 + 播放时长”的最大值；空技能或全部禁用时为 0。</li><li><strong>手动：</strong>填写最小时长；节点结束得更晚时，仍会延长到完整播完。手动时长不会截断节点。</li><li>循环动画按一轮参与时长计算；工具栏“循环播放”控制整个技能重复预览，两者独立。</li><li>时间尺保留空白编辑区域，不代表流程至少 3 秒。最后一个伤害在 1000 ms 触发，流程至少到 1700 ms。</li></ul>
+    <h3>格子位置与像素偏移</h3>
+    <div class="coords"><svg viewBox="0 0 100 90" role="img" aria-label="格子坐标q向右，r向上，左下角为原点"><path d="M18 65H85M18 65V12" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m80 60 5 5-5 5M13 17l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="4" y="82" font-size="10" fill="currentColor">(0,0)</text><text x="83" y="85" font-size="12" fill="currentColor">q</text><text x="3" y="14" font-size="12" fill="currentColor">r</text></svg><div>左下角为 <code>(0,0)</code>，q 向右、r 向上，范围均为 0–6，奇数行右移半格。<br>自定义像素坐标可相对施法者、受击者或地图中心；X 向右、Y 向上。飞行两端偏移按世界方向叠加，不随角色朝向翻转。</div></div>
+    <p>单位按素材原始中心锚点对齐格子，受击者默认左右镜像并保持正立。场景中的特效实例可直接拖动调整偏移。</p>
+    <h3>自动图层</h3><p>选择“合适图层（按 Y 排序）”时，屏幕更下方的对象显示在前；同 Y 时攻击方在受击方前。必要时使用“最上层 / 最下层”覆盖排序。</p>
+  </section>
+
+  <section class="section" id="save">
+    <div class="section-head"><span class="number">07 /</span><h2>保存、导入与草稿恢复</h2></div>
+    <div class="two"><div class="paper"><h3>保存 JSON = 写入项目</h3><p>点击顶部“保存 JSON”或按 <kbd>Ctrl</kbd> + <kbd>S</kbd>，文件由本地服务保存到：</p><p class="path"><code>assets/remote/Res/Config/Skill/技能ID.json</code></p><p>ID 为 <code>1001</code> 时，文件为 <code>1001.json</code>。<strong>同 ID 再次保存会更新同一文件。</strong>需要副本时先改技能 ID。名称不决定文件名。</p><p>技能 ID 必填，最长 100 字符，不含文件名禁用字符、首尾空白、末尾点或系统保留名称。</p></div><div class="paper"><h3>导入 JSON = 还原完整编排</h3><p>点击“导入 JSON”，选择本编辑器格式的文件（最多 5 MB）。场景单位、图集映射、节点参数和时间关联一起还原。</p><p>导入会替换当前编辑内容，可在当前会话中撤销。重要修改先保存。</p><p>格式标识为 <code>RPGCore.SkillPresentation</code>，<code>schemaVersion: 1</code>；其他配置格式不能直接导入。</p></div></div>
+    <h3>自动草稿与撤销</h3><p>编辑自动保存到当前浏览器、当前站点和端口的 <code>localStorage</code>，刷新后恢复。它与项目中的 JSON 文件相互独立；更换浏览器或端口、清除站点数据后，不会自动带走原草稿。</p><p>新建、导入、删除和参数修改支持撤销 / 重做，历史最多 <strong>80 步</strong>，只保留在当前页面会话。正式保留配置请使用“保存 JSON”。</p>
+    <h3>资源从哪里来？</h3><div class="table-wrap"><table><thead><tr><th>资源</th><th>读取位置与规则</th></tr></thead><tbody><tr><td>单位表</td><td><code>sharedata/excel/D-单位表(UnitData).xlsx</code> 中的 <code>UnitData</code> 工作表；图集使用 <code>animation_name</code>。</td></tr><tr><td>角色图集</td><td><code>assets/remote/Res/Battle/UnitResAtlas</code></td></tr><tr><td>技能特效</td><td><code>assets/remote/Res/Battle/Skill</code>；支持 plist + png 图集，或按序命名的独立 PNG 帧子目录。</td></tr><tr><td>新增 / 修改资源</td><td>点击资源库右上角 <strong>↻</strong>，重新扫描目录和 Excel。资源数量以实际扫描结果为准。</td></tr></tbody></table></div>
+    <details><summary>给开发者：导出的数据如何理解？</summary><p>原始编辑数据包括 <code>settings</code>、<code>scene</code>、<code>resourceMappings</code>、<code>tracks</code>。每条轨道保存 <code>type</code>、<code>enabled</code>、<code>startMs</code>、<code>binding</code> 与 <code>params</code>。</p><pre><code>// 动作第4帧触发
+"binding": { "trackId": "攻击轨道ID", "frame": 4, "offsetMs": 0 }
+
+// 飞行结束触发
+"binding": { "trackId": "飞行轨道ID", "anchor": "end", "offsetMs": 0 }</code></pre><p><code>resolved</code> 记录最终时长、计算后的各节点时间 / 时长及伤害占比。导入时以原始参数为准并重新计算，不把过期的 <code>resolved</code> 当作编辑数据。<code>scene.coordinateOrigin</code> 为 <code>bottom-left</code>。旧动作字符串和旧坐标配置在导入时兼容转换。运行时接入细节见同目录 <code>README.md</code>。</p></details>
+  </section>
+
+  <section class="section" id="keys">
+    <div class="section-head"><span class="number">08 /</span><h2>快捷键速查</h2></div>
+    <div class="table-wrap"><table><thead><tr><th>操作</th><th>按键 / 鼠标</th><th>说明</th></tr></thead><tbody>
+      <tr><td>播放 / 暂停</td><td><kbd>Space</kbd></td><td>暂停保留当前时间。</td></tr><tr><td>细微步进</td><td><kbd>←</kbd> / <kbd>→</kbd></td><td>每次 10 ms。</td></tr><tr><td>按默认角色帧步进</td><td><kbd>Shift</kbd> + <kbd>←</kbd> / <kbd>→</kbd></td><td>按技能设置的默认 FPS；默认 10 FPS，即 100 ms。</td></tr><tr><td>回到开始</td><td><kbd>Home</kbd></td><td>回到 0 ms；停止按钮也会回到开始。</td></tr><tr><td>删除选择</td><td><kbd>Delete</kbd></td><td>删除当前单位或轨道，可撤销。</td></tr><tr><td>保存到项目</td><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>写入技能 ID 对应的 JSON。</td></tr><tr><td>撤销 / 重做</td><td><kbd>Ctrl</kbd> + <kbd>Z</kbd><br><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> 或 <kbd>Ctrl</kbd> + <kbd>Y</kbd></td><td>最多 80 步，刷新后历史不保留。</td></tr><tr><td>暂时跳过吸附</td><td><kbd>Alt</kbd> + 拖动节点</td><td>精确填写关联可用右侧属性。</td></tr><tr><td>画面缩放 / 平移</td><td>滚轮 / 中键拖动</td><td>“适配”恢复视图。</td></tr><tr><td>时间轴缩放 / 高度</td><td>工具栏滑块 / 上下拖动分隔线</td><td>分隔线在地图与时间轴之间。</td></tr>
+    </tbody></table></div><p class="muted" style="font-size:12px">这些快捷键用于真实编辑器。输入框中编辑文字时，保留输入操作；不要把本说明页的播放按钮当作编辑器全局快捷键。</p>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="section-head"><span class="number">09 /</span><h2>常见问题</h2></div>
+    <details><summary>资源连接失败、角色不显示，怎么排查？</summary><p>先确认使用 <code>http://127.0.0.1:8766/</code> 且本地服务仍在运行。点击资源库 ↻，再打开底部“本地项目资源 → 详情”。检查 Excel 路径、<code>animation_name</code> 与实际图集；映射缺失可在单位属性中手动指定。独立 PNG 序列需按原始画布对齐，编辑器无法推断已丢失的裁边偏移。</p></details>
+    <details><summary>为什么不能添加飞行轨道？</summary><p>先添加“播放技能特效”，再在场景或时间轴中选中它。飞行引用特效轨道实例 ID，选中左侧资源并不等于选中了场景特效实例。</p></details>
+    <details><summary>为什么改了 FPS，伤害仍然在原来的时刻？</summary><p>检查伤害轨道是否使用了动作帧关联。绝对毫秒时间不会跟随 FPS 改变。另请检查改的是源动作自身的 FPS，还是只改了“技能设置”的默认值；默认值只影响之后新建的动作。</p></details>
+    <details><summary>为什么选了第 6 帧，预览却在最后一帧触发？</summary><p>帧号指动作相对帧，不能超过实际动作帧数。超过时预览会钳制到末帧，并给出配置提示。请核对动作帧缩略图，设置一个存在的帧号；本例步兵攻击只有 5 帧。</p></details>
+    <details><summary>为什么特效没飞完就消失，或者动画播完后静止？</summary><p>填写非循环“持续时间”后，到时立即隐藏，即使还在飞行中。希望自然播放到到达时，可留空持续时间；非循环动画先播完时，在飞行途中保持最后一帧。需要一直播放动画则开启特效循环，结合“到达终点后隐藏特效”。</p></details>
+    <details><summary>多目标打开后，为什么预览里仍只有一个特效？</summary><p>“是否多目标”保存为 <code>params.multiTarget</code>，供战斗运行时创建特效实例时读取。当前编辑器逐条预览特效轨道，不会自动为所有受击者复制实例。</p></details>
+    <details><summary>为什么强制移动没有移动到想要的格子？</summary><p>确认“移动单位”选择的是正确场景实例，或“选中格子”里确实有单位。固定方向使用方向和格数；全局移动使用目标格子。检查地图边界和技能设置中的占用规则。向量模式缺少施法者或位置重合时不移动；耗时 0 为瞬移，需拖到触发前后比较。</p></details>
+    <details><summary>保存显示成功，但配置仍有提示，要处理吗？</summary><p>要。保存成功表示文件已写入，不代表所有资源和逻辑都满足预期。打开右侧“配置提示 → 查看全部”，逐项检查丢失资源、无效帧、伤害合计或依赖问题，再播放确认。</p></details>
+    <details><summary>保存提示旧服务，或者 moveType / targetCell 丢失？</summary><p>关闭旧的技能编辑器服务窗口，重新运行 <code>SkillEditor/start.bat</code>，再保存。当前编辑器会回读保存结果核对强制移动字段，发现丢失时显示错误并保留草稿。不要清除浏览器站点数据；先保留草稿并重启服务。</p></details>
+    <details><summary>如何打开编辑器自带的“载入操作示例”？</summary><p>它位于空地图中央的引导区域。若场景已有内容，可先保存当前技能，再点击“新建”创建空白技能。内置示例展示近战多段伤害、帧关联与击退，和本手册的飞行示例不同；载入会替换当前内容，支持撤销。</p></details>
+    <div class="finish"><div><h3>完成一次编排，保留一份 JSON。</h3><p>检查资源 → 检查关联 → 播放命中与收尾 → 保存到技能 ID 对应文件。</p></div><a class="btn primary" href="#demo">再试一次演示 ↑</a></div>
+  </section>
+  <p class="toast" id="guide-message" role="status" aria-live="polite"></p>
+  <footer><span>SkillEditor · RPGCore 技能表现编辑器</span><span>依据本项目 app.mjs / core.mjs / server.cjs / README.md 编写 · 2026.11.05</span><a href="#intro">回到顶部 ↑</a></footer>
+</main>
+</div>
+<script type="application/json" id="sample-document">{"format":"RPGCore.SkillPresentation","schemaVersion":1,"skillId":"guide-demo-1001","name":"教学示例 · 飞行命中与击退","durationMs":3000,"settings":{"defaultFps":10,"effectFps":24,"previewDamage":1000,"targetFlip":"x","collision":"ignore","durationMode":"auto"},"scene":{"cols":7,"rows":7,"hexWidth":98,"hexHeight":86,"coordinateOrigin":"bottom-left","units":[{"id":"guide-caster","unitId":110010,"q":1,"r":3,"role":"caster","scale":1},{"id":"guide-target","unitId":110030,"q":4,"r":3,"role":"target","scale":1}]},"resourceMappings":{"110010":"1001","110030":"1003"},"tracks":[{"id":"guide-attack","type":"caster","name":"施法者 · 攻击","enabled":true,"startMs":0,"binding":null,"params":{"unitInstanceId":"guide-caster","unitId":null,"action":4,"fps":10,"loop":false}},{"id":"guide-effect","type":"effect","name":"特效 · 第4帧发射","enabled":true,"startMs":0,"binding":{"trackId":"guide-attack","frame":4,"offsetMs":0},"params":{"effectId":"1004","fps":24,"speed":1,"position":{"mode":"caster","relativeTo":"caster","x":0,"y":0},"layer":"auto","offset":{"x":0,"y":0},"scale":1,"loop":false,"durationMs":null,"multiTarget":false}},{"id":"guide-flight","type":"flight","name":"飞行 · 施法者到受击者","enabled":true,"startMs":0,"binding":{"trackId":"guide-attack","frame":4,"offsetMs":0},"params":{"effectTrackId":"guide-effect","speed":400,"start":{"mode":"caster","relativeTo":"caster","x":0,"y":0},"end":{"mode":"target","relativeTo":"caster","x":0,"y":0},"startOffset":{"x":0,"y":0},"endOffset":{"x":0,"y":0},"hideOnArrival":true,"alignToTarget":false}},{"id":"guide-hit","type":"target","name":"受击 · 飞行结束","enabled":true,"startMs":0,"binding":{"trackId":"guide-flight","anchor":"end","offsetMs":0},"params":{"unitInstanceId":"guide-target","unitId":null,"action":2,"fps":10,"loop":false}},{"id":"guide-damage","type":"damage","name":"伤害 · 100%","enabled":true,"startMs":0,"binding":{"trackId":"guide-flight","anchor":"end","offsetMs":0},"params":{"share":null,"unitInstanceId":"guide-target"}},{"id":"guide-move","type":"move","name":"击退 · 向右1格","enabled":true,"startMs":0,"binding":{"trackId":"guide-flight","anchor":"end","offsetMs":0},"params":{"unitInstanceId":"guide-target","cell":{"q":4,"r":3},"moveType":3,"targetCell":{"q":0,"r":0},"direction":0,"steps":1,"durationMs":200,"bounceDistance":20,"bounceDurationMs":200}}],"resolved":{"durationMs":1735,"damagePercentTotal":100,"nodes":[{"trackId":"guide-attack","startMs":0,"durationMs":500},{"trackId":"guide-effect","startMs":300,"durationMs":250},{"trackId":"guide-flight","startMs":300,"durationMs":735},{"trackId":"guide-hit","startMs":1035,"durationMs":200},{"trackId":"guide-damage","startMs":1035,"durationMs":700,"damagePercent":100},{"trackId":"guide-move","startMs":1035,"durationMs":200}]}}</script>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const fmt = value => (Math.round(value * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2, useGrouping: false });
+  const message = text => { $('guide-message').textContent = text; };
+  $('theme-toggle').addEventListener('click', () => { const dark = document.body.classList.toggle('dark'); $('theme-toggle').setAttribute('aria-pressed', String(dark)); $('theme-toggle').textContent = dark ? '切换浅色阅读' : '切换深色阅读'; });
+  let printDetails = [];
+  window.addEventListener('beforeprint', () => { printDetails = [...document.querySelectorAll('details')].map(element => [element, element.open]); printDetails.forEach(([element]) => { element.open = true; }); });
+  window.addEventListener('afterprint', () => { printDetails.forEach(([element, open]) => { element.open = open; }); });
+  $('print-button').addEventListener('click', () => window.print());
+  $('copy-command').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText('node SkillEditor/server.cjs'); $('copy-command').textContent = '✓ 已复制'; message('启动命令已复制，请在项目根目录执行。'); }
+    catch { $('copy-command').textContent = '请选中上方命令复制'; message('浏览器未允许复制，请选中启动命令后按 Ctrl+C。'); }
+  });
+  const areaText = {
+    file: ['① 顶部文件区', '填写技能名称，新建、导入或保存 JSON。技能 ID 在新建弹窗或“技能设置”中填写，保存文件名由 ID 决定。'],
+    asset: ['② 资源库', '切换技能特效 / 角色图集，按 ID 搜索。单击预览，双击特效或“加入特效轨道”添加实例；↻ 重新扫描资源与单位表。'],
+    scene: ['③ 战斗预览', '7×7 六边形地图。点击空格放置单位，点击角色选择它；滚轮缩放、中键拖动平移。“适配”恢复合适视图。'],
+    property: ['⑤ 属性与技能设置', '“属性”编辑所选单位或轨道；“技能设置”修改 ID、流程时长、默认 FPS、预览总伤害、翻转与碰撞规则。'],
+    timeline: ['④ 行为时间轴', '新建与选择轨道，拖动行为节点，建立动作帧或飞行结束关联。播放、暂停、停止、循环和倍率在工具栏；拖动标尺定位任意时刻。'],
+    status: ['⑥ 底部状态栏', '查看本地连接、资源扫描和操作提示；右下角打开“快捷键 / 使用说明”。右侧配置提示可展开查看全部问题。']
+  };
+  document.querySelectorAll('[data-area]').forEach(button => {
+    if (!button.hasAttribute('aria-pressed')) button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', () => { document.querySelectorAll('[data-area]').forEach(other => { other.classList.toggle('selected', other === button); other.setAttribute('aria-pressed', String(other === button)); }); const [title, text] = areaText[button.dataset.area]; $('area-description').replaceChildren(); const strong = document.createElement('strong'); strong.textContent = title + '：'; $('area-description').append(strong, document.createTextNode(text)); });
+  });
+  if ('IntersectionObserver' in window) {
+    const sections = [...document.querySelectorAll('section.section')];
+    const observer = new IntersectionObserver(entries => { for (const entry of entries) if (entry.isIntersecting) document.querySelectorAll('.rail nav a').forEach(a => a.classList.toggle('active', a.hash === '#' + entry.target.id)); }, { rootMargin: '-10% 0px -65% 0px' });
+    sections.forEach(section => observer.observe(section));
+  }
+  let fps = 10, speed = 400, time = 0, playing = false, previousTick = 0, raf = 0;
+  const timing = () => { const launch = 3000 / fps, flight = 294000 / speed, hit = launch + flight; return { launch, flight, hit, end: Math.max(5000 / fps, hit + 700) }; };
+  const phases = [
+    ['① 施法', '先播放攻击动作。第 4 帧触发特效和飞行；改变 FPS，会改变发射时刻。'],
+    ['② 发射与飞行', '飞行和特效关联攻击第 4 帧。终点在触发时记录，飞行不会追踪随后移动的目标。'],
+    ['③ 命中与击退', '飞行结束时，受击动作、100% 伤害和向右 1 格的位移同时开始。200 ms 完成位移，伤害只结算一次。'],
+    ['④ 收尾完成', '伤害数字完整显示 700 ms 后流程结束。动画与数字的播放尾部也会影响自动总时长。']
+  ];
+  const rowData = t => [
+    ['施法者 · 攻击', '--blue', 0, 5000 / fps, '5 帧', null],
+    ['技能特效', '--green', t.launch, 250, '6 帧 / 24 FPS', t.launch],
+    ['特效飞行', '--orange', t.launch, t.flight, '294 px', t.hit],
+    ['受击者 · 受击', '--purple', t.hit, 200, '2 帧', t.hit],
+    ['伤害 · 100%', '--red', t.hit, 700, '700 ms', t.hit],
+    ['强制移动 · 1 格', '--cyan', t.hit, 200, '200 ms', t.hit]
+  ];
+  function buildTimeline(t) {
+    const ticks = $('demo-ticks'); ticks.replaceChildren();
+    for (let i = 0; i < 5; i++) { const tick = document.createElement('span'); tick.textContent = fmt(t.end * i / 4); ticks.append(tick); }
+    const rows = $('demo-tracks'); rows.replaceChildren();
+    for (const [label, color, start, duration, text, anchor] of rowData(t)) {
+      const row = document.createElement('div'); row.className = 'tl-row';
+      row.style.setProperty('--type', 'var(' + color + ')');
+      const name = document.createElement('span'); name.className = 'tl-label'; name.textContent = label;
+      const lane = document.createElement('div'); lane.className = 'tl-lane';
+      const bar = document.createElement('div'); bar.className = 'tl-bar'; bar.style.left = start / t.end * 100 + '%'; bar.style.width = duration / t.end * 100 + '%'; bar.title = label + '：' + fmt(start) + '–' + fmt(start + duration) + ' ms';
+      const inner = document.createElement('span'); inner.textContent = text; bar.append(inner); lane.append(bar);
+      if (anchor !== null) { const marker = document.createElement('span'); marker.className = 'tl-event'; marker.style.left = anchor / t.end * 100 + '%'; lane.append(marker); }
+      const cursor = document.createElement('span'); cursor.className = 'tl-cursor'; lane.append(cursor); row.append(name, lane); rows.append(row);
+    }
+  }
+  function paint() {
+    const t = timing(); time = Math.max(0, Math.min(time, t.end));
+    $('demo-scrub').value = String(time); $('demo-scrub').setAttribute('aria-valuetext', fmt(time) + ' 毫秒，共 ' + fmt(t.end) + ' 毫秒');
+    $('demo-time').value = fmt(time) + ' / ' + fmt(t.end) + ' ms';
+    document.querySelectorAll('.tl-cursor').forEach(cursor => { cursor.style.left = time / t.end * 100 + '%'; });
+    const progress = Math.max(0, Math.min(1, (time - t.hit) / 200)); const targetX = 526 + 108.67 * progress;
+    $('demo-target').setAttribute('transform', 'translate(' + targetX + ' 170)');
+    $('target-label').setAttribute('x', String(targetX)); $('target-label').textContent = progress === 1 ? '受击者 · (5,3)' : progress > 0 ? '受击者 · 击退中' : '受击者 · (4,3)';
+    const inFlight = time >= t.launch && time < t.hit;
+    $('demo-orb').setAttribute('visibility', inFlight ? 'visible' : 'hidden');
+    $('demo-orb').setAttribute('transform', 'translate(' + (200 + 326 * Math.max(0, Math.min(1, (time - t.launch) / t.flight))) + ' 145)');
+    const damageAge = time - t.hit;
+    $('demo-damage').setAttribute('visibility', damageAge >= 0 && damageAge < 700 ? 'visible' : 'hidden'); $('demo-damage').setAttribute('x', String(targetX)); $('demo-damage').setAttribute('y', String(80 - Math.max(0, damageAge) / 700 * 20));
+    $('demo-hit').setAttribute('visibility', damageAge >= 0 && damageAge < 200 ? 'visible' : 'hidden'); $('demo-hit').setAttribute('transform', 'translate(' + targetX + ' 145)');
+    $('target-shield').setAttribute('fill', damageAge >= 0 && damageAge < 200 ? '#e1b299' : '#b898d6');
+    $('caster-sword').setAttribute('transform', time >= t.launch && time < 5000 / fps ? 'rotate(35 28 -7)' : 'rotate(0 28 -7)');
+    const phase = time >= t.end - .01 ? 3 : time >= t.hit ? 2 : time >= t.launch ? 1 : 0;
+    $('scene-phase').textContent = phase === 0 ? '施法：当前攻击第 ' + Math.min(5, Math.floor(time * fps / 1000) + 1) + ' 帧' : phase === 1 ? '飞行中：目标位置已记录' : phase === 2 ? '命中：受击、伤害与位移同步触发' : '流程完成：伤害数字播放结束';
+    $('demo-caption-title').textContent = phases[phase][0]; $('demo-caption-text').textContent = phases[phase][1];
+    document.querySelectorAll('[data-seek]').forEach((button, i) => { button.classList.toggle('active', i === phase); button.setAttribute('aria-pressed', String(i === phase)); });
+  }
+  function pause() { playing = false; cancelAnimationFrame(raf); $('demo-play').textContent = '▶ 播放'; $('demo-play').setAttribute('aria-pressed', 'false'); }
+  function updateSettings() {
+    pause(); fps = Number($('demo-fps').value); speed = Number($('demo-speed').value); time = 0; const t = timing();
+    $('launch-value').textContent = fmt(t.launch) + ' ms'; $('flight-value').textContent = fmt(t.flight) + ' ms'; $('hit-value').textContent = fmt(t.hit) + ' ms'; $('end-value').textContent = fmt(t.end) + ' ms';
+    $('demo-scrub').max = String(t.end); $('demo-scrub').step = 'any';
+    $('demo-formula').textContent = '发射 = (4 − 1) × 1000 ÷ ' + fps + ' = ' + fmt(t.launch) + ' ms；命中 = ' + fmt(t.launch) + ' + 294 ÷ ' + speed + ' × 1000 = ' + fmt(t.hit) + ' ms';
+    buildTimeline(t); paint();
+    $('demo-update-status').textContent = '已重算：发射 ' + fmt(t.launch) + ' 毫秒，飞行 ' + fmt(t.flight) + ' 毫秒，命中 ' + fmt(t.hit) + ' 毫秒，流程结束 ' + fmt(t.end) + ' 毫秒。';
+  }
+  function tick(now) { if (!playing) return; time += now - previousTick; previousTick = now; if (time >= timing().end) { time = timing().end; pause(); } paint(); if (playing) raf = requestAnimationFrame(tick); }
+  $('demo-play').addEventListener('click', () => {
+    if (playing) return pause(); if (time >= timing().end) time = 0;
+    playing = true; previousTick = performance.now(); $('demo-play').textContent = 'Ⅱ 暂停'; $('demo-play').setAttribute('aria-pressed', 'true'); raf = requestAnimationFrame(tick);
+  });
+  $('demo-stop').addEventListener('click', () => { pause(); time = 0; paint(); });
+  $('demo-scrub').addEventListener('input', event => { pause(); time = Number(event.target.value); paint(); });
+  $('demo-fps').addEventListener('change', updateSettings); $('demo-speed').addEventListener('change', updateSettings);
+  $('demo-reset').addEventListener('click', () => { $('demo-fps').value = '10'; $('demo-speed').value = '400'; updateSettings(); });
+  document.querySelectorAll('[data-seek]').forEach(button => button.addEventListener('click', () => { pause(); const t = timing(); time = {cast:0,launch:t.launch,hit:t.hit,finish:t.end}[button.dataset.seek]; paint(); }));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+  $('download-demo').addEventListener('click', () => {
+    try { const sample = JSON.parse($('sample-document').textContent); const blob = new Blob([JSON.stringify(sample, null, 2) + '\n'], {type:'application/json;charset=utf-8'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'guide-demo-1001.json'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000); message('已生成默认示例 JSON。请在 SkillEditor 中使用“导入 JSON”打开，保存前确认技能 ID。'); }
+    catch { message('示例读取失败，请检查说明页是否完整。'); }
+  });
+  updateSettings();
+})();
+</script>
+</body>
+</html>

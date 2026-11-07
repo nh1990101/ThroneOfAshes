@@ -1,0 +1,782 @@
+[
+    {
+        "id": 100101,
+        "resources": 1001,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 100102,
+        "resources": 1001,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 100103,
+        "resources": 1001,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 100104,
+        "resources": 1001,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 100105,
+        "resources": 1001,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 100106,
+        "resources": 1001,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 100107,
+        "resources": 1001,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 100108,
+        "resources": 1001,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 100109,
+        "resources": 1001,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 100110,
+        "resources": 1001,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 100201,
+        "resources": 1002,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 100202,
+        "resources": 1002,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 100203,
+        "resources": 1002,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 100204,
+        "resources": 1002,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 100205,
+        "resources": 1002,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 100206,
+        "resources": 1002,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 100207,
+        "resources": 1002,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 100208,
+        "resources": 1002,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 100209,
+        "resources": 1002,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 100210,
+        "resources": 1002,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 100301,
+        "resources": 1003,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 100302,
+        "resources": 1003,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 100303,
+        "resources": 1003,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 100304,
+        "resources": 1003,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 100305,
+        "resources": 1003,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 100306,
+        "resources": 1003,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 100307,
+        "resources": 1003,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 100308,
+        "resources": 1003,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 100309,
+        "resources": 1003,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 100310,
+        "resources": 1003,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 100401,
+        "resources": 1004,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 100402,
+        "resources": 1004,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 100403,
+        "resources": 1004,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 100404,
+        "resources": 1004,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 100405,
+        "resources": 1004,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 100406,
+        "resources": 1004,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 100407,
+        "resources": 1004,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 100408,
+        "resources": 1004,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 100409,
+        "resources": 1004,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 100410,
+        "resources": 1004,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 100501,
+        "resources": 1005,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 100502,
+        "resources": 1005,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 100503,
+        "resources": 1005,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 100504,
+        "resources": 1005,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 100505,
+        "resources": 1005,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 100506,
+        "resources": 1005,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 100507,
+        "resources": 1005,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 100508,
+        "resources": 1005,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 100509,
+        "resources": 1005,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 100510,
+        "resources": 1005,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 100601,
+        "resources": 1006,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 100602,
+        "resources": 1006,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 100603,
+        "resources": 1006,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 100604,
+        "resources": 1006,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 100605,
+        "resources": 1006,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 100606,
+        "resources": 1006,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 100607,
+        "resources": 1006,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 100608,
+        "resources": 1006,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 100609,
+        "resources": 1006,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 100610,
+        "resources": 1006,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 100701,
+        "resources": 1007,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 100702,
+        "resources": 1007,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 100703,
+        "resources": 1007,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 100704,
+        "resources": 1007,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 100705,
+        "resources": 1007,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 100706,
+        "resources": 1007,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 100707,
+        "resources": 1007,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 100708,
+        "resources": 1007,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 100709,
+        "resources": 1007,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 100710,
+        "resources": 1007,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 300101,
+        "resources": 3001,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 300102,
+        "resources": 3001,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 300103,
+        "resources": 3001,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 300104,
+        "resources": 3001,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 300105,
+        "resources": 3001,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 300106,
+        "resources": 3001,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 300107,
+        "resources": 3001,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 300108,
+        "resources": 3001,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 300109,
+        "resources": 3001,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 300110,
+        "resources": 3001,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 300201,
+        "resources": 1009,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 300202,
+        "resources": 1009,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 300203,
+        "resources": 1009,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 300204,
+        "resources": 1009,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 300205,
+        "resources": 1009,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 300206,
+        "resources": 1009,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 300207,
+        "resources": 1009,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 300208,
+        "resources": 1009,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 300209,
+        "resources": 1009,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 300210,
+        "resources": 1009,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 300601,
+        "resources": 3006,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 300602,
+        "resources": 3006,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 300603,
+        "resources": 3006,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 300604,
+        "resources": 3006,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 300605,
+        "resources": 3006,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 300606,
+        "resources": 3006,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 300607,
+        "resources": 3006,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 300608,
+        "resources": 3006,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 300609,
+        "resources": 3006,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 300610,
+        "resources": 3006,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 300701,
+        "resources": 3007,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 300702,
+        "resources": 3007,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 300703,
+        "resources": 3007,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 300704,
+        "resources": 3007,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 300705,
+        "resources": 3007,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 300706,
+        "resources": 3007,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 300707,
+        "resources": 3007,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 300708,
+        "resources": 3007,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 300709,
+        "resources": 3007,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 300710,
+        "resources": 3007,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 300801,
+        "resources": 3008,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 300802,
+        "resources": 3008,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 300803,
+        "resources": 3008,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 300804,
+        "resources": 3008,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 300805,
+        "resources": 3008,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 300806,
+        "resources": 3008,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 300807,
+        "resources": 3008,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 300808,
+        "resources": 3008,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 300809,
+        "resources": 3008,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 300810,
+        "resources": 3008,
+        "drop": 6105,
+        "chapter_limit": 10
+    },
+    {
+        "id": 300901,
+        "resources": 3009,
+        "drop": 6101,
+        "chapter_limit": 1
+    },
+    {
+        "id": 300902,
+        "resources": 3009,
+        "drop": 6101,
+        "chapter_limit": 2
+    },
+    {
+        "id": 300903,
+        "resources": 3009,
+        "drop": 6102,
+        "chapter_limit": 3
+    },
+    {
+        "id": 300904,
+        "resources": 3009,
+        "drop": 6102,
+        "chapter_limit": 4
+    },
+    {
+        "id": 300905,
+        "resources": 3009,
+        "drop": 6103,
+        "chapter_limit": 5
+    },
+    {
+        "id": 300906,
+        "resources": 3009,
+        "drop": 6103,
+        "chapter_limit": 6
+    },
+    {
+        "id": 300907,
+        "resources": 3009,
+        "drop": 6104,
+        "chapter_limit": 7
+    },
+    {
+        "id": 300908,
+        "resources": 3009,
+        "drop": 6104,
+        "chapter_limit": 8
+    },
+    {
+        "id": 300909,
+        "resources": 3009,
+        "drop": 6105,
+        "chapter_limit": 9
+    },
+    {
+        "id": 300910,
+        "resources": 3009,
+        "drop": 6105,
+        "chapter_limit": 10
+    }
+]

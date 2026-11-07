@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "level": 0,
+        "name": 100179,
+        "sub_attr_num": 0
+    },
+    {
+        "id": 2,
+        "level": 1,
+        "name": 100052,
+        "sub_attr_num": 1
+    },
+    {
+        "id": 3,
+        "level": 2,
+        "name": 100191,
+        "sub_attr_num": 2
+    },
+    {
+        "id": 4,
+        "level": 3,
+        "name": 100005,
+        "sub_attr_num": 3
+    },
+    {
+        "id": 5,
+        "level": 4,
+        "name": 100138,
+        "sub_attr_num": 4
+    }
+]

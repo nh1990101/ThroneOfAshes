@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "unit_id": 21001,
+        "pre_star": 4,
+        "unclock_star": 5,
+        "item_quality": [
+            4
+        ],
+        "unclock_skill": [
+            1
+        ],
+        "skill_id": [
+            20010301
+        ]
+    }
+]

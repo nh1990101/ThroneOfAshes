@@ -6,7 +6,7 @@ set "PROJECT_ROOT=%~dp0..\.."
 cd /d "%PROJECT_ROOT%"
 title ThroneOfAshes Config Exporter
 
-echo Exporting Excel to ConfigForClient.zip and TypeScript definitions...
+echo Exporting Excel to ConfigForClient.zip, sharedata\json, and TypeScript definitions...
 echo.
 
 set "NODE_RUNNER=%~dp0runtime\node.exe"

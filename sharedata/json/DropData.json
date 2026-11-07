@@ -1,0 +1,250 @@
+[
+    {
+        "id": 100101,
+        "group_id": 1001,
+        "group_key": "普通礼包测试",
+        "drop_type": 2,
+        "item": 1002,
+        "num": 1000,
+        "weight": 60,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 100102,
+        "group_id": 1001,
+        "drop_type": 2,
+        "item": 1003,
+        "num": 100,
+        "weight": 30,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 100103,
+        "group_id": 1001,
+        "drop_type": 2,
+        "item": 41001,
+        "num": 5,
+        "weight": 10,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 200101,
+        "group_id": 2001,
+        "group_key": "随机礼包测试",
+        "drop_type": 1,
+        "item": 1002,
+        "num": 1000,
+        "weight": 60,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 200102,
+        "group_id": 2001,
+        "drop_type": 1,
+        "item": 1003,
+        "num": 100,
+        "weight": 30,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 200103,
+        "group_id": 2001,
+        "drop_type": 1,
+        "item": 41001,
+        "num": 5,
+        "weight": 10,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 300101,
+        "group_id": 3001,
+        "group_key": "自选礼包测试",
+        "drop_type": 3,
+        "item": 1002,
+        "num": 1000,
+        "weight": 60,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 300102,
+        "group_id": 3001,
+        "drop_type": 3,
+        "item": 1003,
+        "num": 100,
+        "weight": 30,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 300103,
+        "group_id": 3001,
+        "drop_type": 3,
+        "item": 41001,
+        "num": 5,
+        "weight": 10,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 610101,
+        "group_id": 6101,
+        "group_key": "临时普通宝箱奖励",
+        "drop_type": 1,
+        "item": 1002,
+        "num": 1000,
+        "weight": 60,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 610102,
+        "group_id": 6101,
+        "drop_type": 1,
+        "item": 1003,
+        "num": 100,
+        "weight": 30,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 610103,
+        "group_id": 6101,
+        "drop_type": 1,
+        "item": 41001,
+        "num": 5,
+        "weight": 10,
+        "draws_times": 1,
+        "repeat": true
+    },
+    {
+        "id": 610201,
+        "group_id": 6102,
+        "group_key": "临时精良宝箱奖励",
+        "drop_type": 1,
+        "item": 1002,
+        "num": 2000,
+        "weight": 50,
+        "draws_times": 2,
+        "repeat": true
+    },
+    {
+        "id": 610202,
+        "group_id": 6102,
+        "drop_type": 1,
+        "item": 22001,
+        "num": 5,
+        "weight": 30,
+        "draws_times": 2,
+        "repeat": true
+    },
+    {
+        "id": 610203,
+        "group_id": 6102,
+        "drop_type": 1,
+        "item": 41001,
+        "num": 10,
+        "weight": 20,
+        "draws_times": 2,
+        "repeat": true
+    },
+    {
+        "id": 610301,
+        "group_id": 6103,
+        "group_key": "临时史诗宝箱奖励",
+        "drop_type": 1,
+        "item": 22001,
+        "num": 10,
+        "weight": 50,
+        "draws_times": 3,
+        "repeat": true
+    },
+    {
+        "id": 610302,
+        "group_id": 6103,
+        "drop_type": 1,
+        "item": 30007,
+        "num": 1,
+        "weight": 30,
+        "draws_times": 3,
+        "repeat": true
+    },
+    {
+        "id": 610303,
+        "group_id": 6103,
+        "drop_type": 1,
+        "item": 40001,
+        "num": 1,
+        "weight": 20,
+        "draws_times": 3,
+        "repeat": true
+    },
+    {
+        "id": 610401,
+        "group_id": 6104,
+        "group_key": "临时传说宝箱奖励",
+        "drop_type": 1,
+        "item": 23001,
+        "num": 10,
+        "weight": 50,
+        "draws_times": 4,
+        "repeat": true
+    },
+    {
+        "id": 610402,
+        "group_id": 6104,
+        "drop_type": 1,
+        "item": 24001,
+        "num": 1,
+        "weight": 30,
+        "draws_times": 4,
+        "repeat": true
+    },
+    {
+        "id": 610403,
+        "group_id": 6104,
+        "drop_type": 1,
+        "item": 40002,
+        "num": 1,
+        "weight": 20,
+        "draws_times": 4,
+        "repeat": true
+    },
+    {
+        "id": 610501,
+        "group_id": 6105,
+        "group_key": "临时神迹宝箱奖励",
+        "drop_type": 1,
+        "item": 1001,
+        "num": 100,
+        "weight": 50,
+        "draws_times": 5,
+        "repeat": true
+    },
+    {
+        "id": 610502,
+        "group_id": 6105,
+        "drop_type": 1,
+        "item": 24002,
+        "num": 1,
+        "weight": 30,
+        "draws_times": 5,
+        "repeat": true
+    },
+    {
+        "id": 610503,
+        "group_id": 6105,
+        "drop_type": 1,
+        "item": 40001,
+        "num": 1,
+        "weight": 20,
+        "draws_times": 5,
+        "repeat": true
+    }
+]

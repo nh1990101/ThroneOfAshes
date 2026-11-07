@@ -1,0 +1,151 @@
+{
+  "format": "RPGCore.SkillPresentation",
+  "schemaVersion": 1,
+  "skillId": "",
+  "name": "未命名技能",
+  "durationMs": 3000,
+  "settings": {
+    "defaultFps": 10,
+    "effectFps": 24,
+    "previewDamage": 1000,
+    "targetFlip": "x",
+    "collision": "ignore"
+  },
+  "scene": {
+    "cols": 7,
+    "rows": 7,
+    "hexWidth": 98,
+    "hexHeight": 86,
+    "units": [
+      {
+        "id": "unit_fb2920aa",
+        "unitId": 110030,
+        "q": 0,
+        "r": 0,
+        "role": "caster",
+        "scale": 1
+      },
+      {
+        "id": "unit_6b4c8e50",
+        "unitId": 110020,
+        "q": 1,
+        "r": 0,
+        "role": "target",
+        "scale": 1
+      }
+    ]
+  },
+  "resourceMappings": {
+    "110020": "1002",
+    "110030": "1003"
+  },
+  "tracks": [
+    {
+      "id": "track_bfe76364",
+      "name": "施法者行为",
+      "type": "caster",
+      "enabled": true,
+      "startMs": 0,
+      "binding": null,
+      "params": {
+        "unitInstanceId": "unit_fb2920aa",
+        "unitId": null,
+        "action": "attack",
+        "fps": 10,
+        "loop": false
+      }
+    },
+    {
+      "id": "track_b07239b9",
+      "name": "受击者行为",
+      "type": "target",
+      "enabled": true,
+      "startMs": 400,
+      "binding": {
+        "trackId": "track_bfe76364",
+        "frame": 5,
+        "offsetMs": 0
+      },
+      "params": {
+        "unitInstanceId": "",
+        "unitId": null,
+        "action": "hit",
+        "fps": 10,
+        "loop": false
+      }
+    },
+    {
+      "id": "track_e428a4da",
+      "name": "伤害节点",
+      "type": "damage",
+      "enabled": true,
+      "startMs": 500,
+      "binding": {
+        "trackId": "track_bfe76364",
+        "frame": 6,
+        "offsetMs": 0
+      },
+      "params": {
+        "share": null,
+        "unitInstanceId": "unit_6b4c8e50"
+      }
+    },
+    {
+      "id": "track_f139debd",
+      "name": "播放技能特效",
+      "type": "effect",
+      "enabled": true,
+      "startMs": 400,
+      "binding": {
+        "trackId": "track_bfe76364",
+        "frame": 5,
+        "offsetMs": 0
+      },
+      "params": {
+        "effectId": "1002",
+        "fps": 10,
+        "speed": 1,
+        "position": {
+          "mode": "target",
+          "relativeTo": "caster",
+          "x": 0,
+          "y": 0
+        },
+        "layer": "top",
+        "offset": {
+          "x": -2.46,
+          "y": 61.27
+        },
+        "scale": 1,
+        "loop": false
+      }
+    }
+  ],
+  "resolved": {
+    "durationMs": 3000,
+    "damagePercentTotal": 100,
+    "nodes": [
+      {
+        "trackId": "track_bfe76364",
+        "startMs": 0,
+        "durationMs": 600
+      },
+      {
+        "trackId": "track_b07239b9",
+        "startMs": 400,
+        "durationMs": 200
+      },
+      {
+        "trackId": "track_e428a4da",
+        "startMs": 500,
+        "durationMs": 0,
+        "damagePercent": 100
+      },
+      {
+        "trackId": "track_f139debd",
+        "startMs": 400,
+        "durationMs": 100
+      }
+    ]
+  }
+}

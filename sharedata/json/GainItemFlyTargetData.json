@@ -1,0 +1,8 @@
+[
+    {
+        "id": 1,
+        "ui": "MainPage",
+        "ui_path": "nd_top",
+        "hide_target": true
+    }
+]

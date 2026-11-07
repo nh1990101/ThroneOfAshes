@@ -59,9 +59,8 @@ function ParseScalarValue(
 ): unknown {
     switch (_scalarType) {
         case 'string':
-            return ParseString(_rawValue, _fieldName, _location);
         case 'lang':
-            return `lang-${ParseString(_rawValue, _fieldName, _location)}`;
+            return ParseString(_rawValue, _fieldName, _location);
         case 'int':
             return ParseInteger(_rawValue, _fieldName, _location);
         case 'float':

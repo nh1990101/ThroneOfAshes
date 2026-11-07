@@ -1,0 +1,67 @@
+[
+    {
+        "id": 1,
+        "item_id": 20001,
+        "box_explain": 100055,
+        "output": [
+            6101
+        ],
+        "extra_item": [
+            1002,
+            100
+        ],
+        "score": 1
+    },
+    {
+        "id": 2,
+        "item_id": 20002,
+        "box_explain": 100054,
+        "output": [
+            6102
+        ],
+        "extra_item": [
+            1002,
+            200
+        ],
+        "score": 5
+    },
+    {
+        "id": 3,
+        "item_id": 20003,
+        "box_explain": 100057,
+        "output": [
+            6103
+        ],
+        "extra_item": [
+            1002,
+            300
+        ],
+        "score": 10
+    },
+    {
+        "id": 4,
+        "item_id": 20004,
+        "box_explain": 100053,
+        "output": [
+            6104
+        ],
+        "extra_item": [
+            1002,
+            500
+        ],
+        "score": 20
+    },
+    {
+        "id": 5,
+        "item_id": 20005,
+        "box_explain": 100056,
+        "output": [
+            6105
+        ],
+        "extra_item": [
+            1002,
+            1000
+        ],
+        "score": 50
+    }
+]

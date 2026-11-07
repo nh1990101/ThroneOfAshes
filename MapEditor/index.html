@@ -358,6 +358,14 @@
                 </label>
             </div>
 
+            <!-- 资源点动态随机 -->
+            <div class="toolbar-group">
+                <label>
+                    <input type="checkbox" id="resource-dynamic-random" />
+                    资源点动态随机
+                </label>
+            </div>
+
             <!-- Excel和资源目录 -->
             <div class="toolbar-group">
                 <button id="btn-select-dir">选择资源目录</button>
@@ -394,7 +402,7 @@
             <div id="property-panel">
                 <h3>物体属性</h3>
                 <div class="property-field">
-                    <label>类型 (Type):</label>
+                    <label>ID:</label>
                     <input type="text" id="prop-type" />
                 </div>
                 <div class="property-field">
@@ -421,13 +429,13 @@
                     <label>偏移像素 Y:</label>
                     <input type="number" id="prop-offset-y" value="0" />
                 </div>
-                <div class="property-field">
-                    <label>类型参数:</label>
-                    <input type="text" id="prop-params" />
-                </div>
                 <div class="property-field" style="display: flex; align-items: center;">
                     <input type="checkbox" id="prop-walkable" style="width: auto; margin-right: 8px;" />
                     <label style="margin: 0; cursor: pointer;" for="prop-walkable">可行走</label>
+                </div>
+                <div class="property-field" style="display: flex; align-items: center;">
+                    <input type="checkbox" id="prop-flipx" style="width: auto; margin-right: 8px;" />
+                    <label style="margin: 0; cursor: pointer;" for="prop-flipx">水平翻转</label>
                 </div>
                 <button id="btn-delete-object" class="danger" style="width: 100%; margin-top: 10px;">删除物体</button>
             </div>

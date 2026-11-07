@@ -2,9 +2,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import ExcelJS from 'exceljs';
 import JSZip from 'jszip';
-import { ConfigExportAggregateError, ConfigExportError } from './errors.js';
+import { ConfigExportAggregateError, ConfigExportError, DescribeTableSources, FormatWorkbookLabel } from './errors.js';
 import type { ConfigField, ConfigRow, ConfigTable, ExportProgressEvent, SourceLocation } from './model.js';
 import { SHEET_LAYOUT } from './model.js';
+import { BuildTableIndexes } from './index-builder.js';
 import { ParseFieldName, ParseFieldRules, ParseFieldType, ParseTableName } from './schema-parser.js';
 import { IsBlankValue, ParseFieldValue } from './value-parser.js';
 
@@ -37,7 +38,25 @@ export async function ReadConfigWorkbooks(
     if (errors.length > 0) {
         throw new ConfigExportAggregateError(errors);
     }
+    OmitChineseIndexFields(tables);
     return { workbookFiles, tables };
+}
+
+/** ch_key 只给策划填表和 $ref 查找用，校验完成后不进入导出数据。 */
+function OmitChineseIndexFields(_tables: Map<string, ConfigTable>): void {
+    for (const table of _tables.values()) {
+        const fieldIndex = table.fields.findIndex((_field) => _field.name === 'ch_key');
+        if (fieldIndex < 0) {
+            continue;
+        }
+        if (table.fields[fieldIndex].rules.has('key')) {
+            throw new ConfigExportError(`${DescribeTableSources(table.sources)} 逻辑表 ${table.logicalPath} 不能把 ch_key 当作主键。`);
+        }
+        table.fields.splice(fieldIndex, 1);
+        for (const row of table.rows) {
+            delete row.values.ch_key;
+        }
+    }
 }
 
 async function WalkDirectory(_directory: string, _files: string[]): Promise<void> {
@@ -157,6 +176,8 @@ function ReadWorksheet(
             fields,
             rows,
             sources: [{ workbookPath: _workbookPath, sheetName: _worksheet.name }],
+            indexes: [],
+            indexData: null,
         });
         return { logicalPath, rowCount: rows.length };
     }
@@ -170,11 +191,11 @@ function ReadWorksheet(
 function ReadFields(_workbookPath: string, _worksheet: ExcelJS.Worksheet): ConfigField[] {
     const fields: ConfigField[] = [];
     const seenNames = new Set<string>();
-    for (let column = SHEET_LAYOUT.fieldStartColumn; column <= _worksheet.columnCount + 1; column += 1) {
+    for (let column = SHEET_LAYOUT.fieldStartColumn; column <= _worksheet.columnCount; column += 1) {
         const nameLocation = CreateLocation(_workbookPath, _worksheet.name, SHEET_LAYOUT.fieldNameRow, column);
         const rawName = ReadCellValue(_worksheet.getCell(nameLocation.row, nameLocation.column), nameLocation);
         if (IsBlankValue(rawName)) {
-            break;
+            continue;
         }
 
         const name = ParseFieldName(rawName, nameLocation);
@@ -187,7 +208,6 @@ function ReadFields(_workbookPath: string, _worksheet: ExcelJS.Worksheet): Confi
         const ruleLocation = CreateLocation(_workbookPath, _worksheet.name, SHEET_LAYOUT.fieldRuleRow, column);
         fields.push({
             name,
-            description: String(_worksheet.getCell(SHEET_LAYOUT.descriptionRow, column).text ?? '').trim(),
             type: ParseFieldType(ReadCellValue(_worksheet.getCell(typeLocation.row, typeLocation.column), typeLocation), typeLocation),
             rules: ParseFieldRules(ReadCellValue(_worksheet.getCell(ruleLocation.row, ruleLocation.column), ruleLocation), ruleLocation),
             column,
@@ -287,7 +307,7 @@ function ValidateTables(
     for (const table of _tables.values()) {
         const existingTable = tablesByName.get(table.tableName);
         if (existingTable !== undefined && existingTable !== table) {
-            _errors.push(new ConfigExportError(`逻辑表名重复：${table.tableName}（${existingTable.logicalPath} / ${table.logicalPath}）`));
+            _errors.push(new ConfigExportError(`${DescribeTableSources(existingTable.sources)} / ${DescribeTableSources(table.sources)} 逻辑表名重复：${table.tableName}（${existingTable.logicalPath} / ${table.logicalPath}）`));
             continue;
         }
         tablesByName.set(table.tableName, table);
@@ -299,9 +319,14 @@ function ValidateTables(
             ValidateTable(table, tablesByName);
             _onProgress?.({ stage: 'table', status: 'passed', logicalPath: table.logicalPath, rowCount: table.rows.length });
         } catch (_error: unknown) {
-            const error = NormalizeConfigError(_error);
+            const error = AttachTableSource(NormalizeConfigError(_error), table);
             _errors.push(error);
-            _onProgress?.({ stage: 'table', status: 'failed', logicalPath: table.logicalPath, message: error.message });
+            _onProgress?.({
+                stage: 'table',
+                status: 'failed',
+                logicalPath: `${DescribeTableSources(table.sources)} ${table.logicalPath}`.trim(),
+                message: error.message,
+            });
         }
     }
 }
@@ -341,6 +366,7 @@ function ValidateTable(_table: ConfigTable, _tablesByName: ReadonlyMap<string, C
             }
         }
     }
+    BuildTableIndexes(_table);
 }
 
 function ValidateUniqueField(_table: ConfigTable, _field: ConfigField): void {
@@ -354,7 +380,7 @@ function ValidateUniqueField(_table: ConfigTable, _field: ConfigField): void {
         const previousRow = seenValues.get(identity);
         if (previousRow !== undefined) {
             throw new ConfigExportError(
-                `逻辑表 ${_table.logicalPath} 的字段 ${_field.name} 出现重复值 ${JSON.stringify(value)}；首次位于 ${previousRow.location.workbookPath} [${previousRow.location.sheetName}] R${previousRow.location.row}。`,
+                `逻辑表 ${_table.logicalPath} 的字段 ${_field.name} 出现重复值 ${JSON.stringify(value)}；首次位于 ${FormatWorkbookLabel(previousRow.location.workbookPath)} [${previousRow.location.sheetName}] R${previousRow.location.row}。`,
                 { ...row.location, column: _field.column },
             );
         }
@@ -421,7 +447,7 @@ function BuildReferenceMap(_targetTable: ConfigTable, _useGroup: boolean): Map<s
     const result = new Map<string, unknown>();
     const keyField = _targetTable.fields.find((_field) => _field.rules.has('key'));
     if (keyField === undefined) {
-        throw new ConfigExportError(`被引用表 ${_targetTable.logicalPath} 没有 $key。`);
+        throw new ConfigExportError(`${DescribeTableSources(_targetTable.sources)} 被引用表 ${_targetTable.logicalPath} 没有 $key。`);
     }
     for (const row of _targetTable.rows) {
         const key = row.values[keyField.name];
@@ -471,7 +497,7 @@ function ConvertReferenceCount(
         if (!Number.isFinite(count)) {
             throw new ConfigExportError(`字段 ${_field.name} 的数量不是数字：${String(_value[index + 1])}`, _location);
         }
-        converted.push(Number.isInteger(count) ? Math.trunc(count) : count);
+        converted.push(count);
     }
     return converted;
 }
@@ -514,7 +540,7 @@ function ParseReferenceArgument(
     }
     const numericValue = Number(text);
     if (Number.isFinite(numericValue)) {
-        return Number.isInteger(numericValue) ? Math.trunc(numericValue) : numericValue;
+        return numericValue;
     }
     if (_allowStringArguments) {
         return text;
@@ -548,8 +574,19 @@ function NormalizeConfigError(_error: unknown, _workbookPath?: string, _sheetNam
     if (_error instanceof ConfigExportError) {
         return _error;
     }
-    const context = _workbookPath === undefined ? '' : `${_workbookPath}${_sheetName === undefined ? '' : ` [${_sheetName}]`} `;
+    const context = _workbookPath === undefined ? '' : `Excel：${FormatWorkbookLabel(_workbookPath)}${_sheetName === undefined ? '' : ` [${_sheetName}]`} `;
     return new ConfigExportError(`${context}未处理错误：${_error instanceof Error ? _error.message : String(_error)}`);
+}
+
+function AttachTableSource(_error: ConfigExportError, _table: ConfigTable): ConfigExportError {
+    if (_error.location !== undefined || _error.message.startsWith('Excel：')) {
+        return _error;
+    }
+    const source = DescribeTableSources(_table.sources);
+    if (source.length <= 0) {
+        return _error;
+    }
+    return new ConfigExportError(`${source} ${_error.message}`);
 }
 
 function CreateLocation(_workbookPath: string, _sheetName: string, _row: number, _column: number): SourceLocation {

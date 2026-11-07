@@ -1,0 +1,224 @@
+[
+    {
+        "id": 1,
+        "type_id": 1,
+        "name": 100243,
+        "desc": 100076,
+        "level": 1,
+        "sort": 1
+    },
+    {
+        "id": 2,
+        "type_id": 1,
+        "name": 100245,
+        "desc": 100076,
+        "level": 2,
+        "sort": 1,
+        "need_tech_id": [
+            1
+        ],
+        "need_tech_level": [
+            1
+        ]
+    },
+    {
+        "id": 3,
+        "type_id": 1,
+        "name": 100246,
+        "desc": 100076,
+        "level": 2,
+        "sort": 2,
+        "need_tech_id": [
+            1
+        ],
+        "need_tech_level": [
+            1
+        ]
+    },
+    {
+        "id": 4,
+        "type_id": 1,
+        "name": 100247,
+        "desc": 100076,
+        "level": 2,
+        "sort": 3,
+        "need_tech_id": [
+            1
+        ],
+        "need_tech_level": [
+            1
+        ]
+    },
+    {
+        "id": 5,
+        "type_id": 1,
+        "name": 100248,
+        "desc": 100076,
+        "level": 3,
+        "sort": 1,
+        "need_tech_id": [
+            2,
+            3,
+            4
+        ],
+        "need_tech_level": [
+            1,
+            1,
+            1
+        ]
+    },
+    {
+        "id": 6,
+        "type_id": 1,
+        "name": 100249,
+        "desc": 100076,
+        "level": 3,
+        "sort": 2,
+        "need_tech_id": [
+            2,
+            3,
+            4
+        ],
+        "need_tech_level": [
+            1,
+            1,
+            1
+        ]
+    },
+    {
+        "id": 7,
+        "type_id": 1,
+        "name": 100250,
+        "desc": 100076,
+        "level": 4,
+        "sort": 1,
+        "need_tech_id": [
+            5,
+            6
+        ],
+        "need_tech_level": [
+            1,
+            1
+        ]
+    },
+    {
+        "id": 8,
+        "type_id": 1,
+        "name": 100251,
+        "desc": 100076,
+        "level": 4,
+        "sort": 2,
+        "need_tech_id": [
+            5,
+            6
+        ],
+        "need_tech_level": [
+            1,
+            1
+        ]
+    },
+    {
+        "id": 9,
+        "type_id": 1,
+        "name": 100252,
+        "desc": 100076,
+        "level": 4,
+        "sort": 3,
+        "need_tech_id": [
+            5,
+            6
+        ],
+        "need_tech_level": [
+            1,
+            1
+        ]
+    },
+    {
+        "id": 10,
+        "type_id": 1,
+        "name": 100244,
+        "desc": 100076,
+        "level": 4,
+        "sort": 4,
+        "need_tech_id": [
+            5,
+            6
+        ],
+        "need_tech_level": [
+            1,
+            1
+        ]
+    },
+    {
+        "id": 11,
+        "type_id": 2,
+        "name": 100253,
+        "desc": 100101,
+        "level": 1,
+        "sort": 1,
+        "need_tech_id": [
+            11
+        ],
+        "need_tech_level": [
+            1
+        ]
+    },
+    {
+        "id": 12,
+        "type_id": 2,
+        "name": 100254,
+        "desc": 100101,
+        "level": 2,
+        "sort": 1,
+        "need_tech_id": [
+            11
+        ],
+        "need_tech_level": [
+            1
+        ]
+    },
+    {
+        "id": 13,
+        "type_id": 2,
+        "name": 100255,
+        "desc": 100101,
+        "level": 2,
+        "sort": 2,
+        "need_tech_id": [
+            11
+        ],
+        "need_tech_level": [
+            1
+        ]
+    },
+    {
+        "id": 14,
+        "type_id": 2,
+        "name": 100256,
+        "desc": 100101,
+        "level": 3,
+        "sort": 1,
+        "need_tech_id": [
+            12,
+            13
+        ],
+        "need_tech_level": [
+            1,
+            1
+        ]
+    },
+    {
+        "id": 15,
+        "type_id": 2,
+        "name": 100257,
+        "desc": 100101,
+        "level": 4,
+        "sort": 1,
+        "need_tech_id": [
+            14
+        ],
+        "need_tech_level": [
+            1
+        ]
+    }
+]

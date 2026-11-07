@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "is_hide": false,
+        "attr_name": [
+            7,
+            3
+        ],
+        "attr_value": [
+            2,
+            5
+        ],
+        "star_attr_rate": [
+            1,
+            2
+        ],
+        "skill_star": [
+            1,
+            2
+        ],
+        "skill_ids": [
+            20010401,
+            20010402
+        ]
+    },
+    {
+        "id": 2,
+        "is_hide": false,
+        "attr_name": [
+            1,
+            5
+        ],
+        "attr_value": [
+            10,
+            8
+        ],
+        "star_attr_rate": [
+            1,
+            2
+        ],
+        "skill_star": [
+            1,
+            2
+        ],
+        "skill_ids": [
+            20010401,
+            20010402
+        ]
+    }
+]

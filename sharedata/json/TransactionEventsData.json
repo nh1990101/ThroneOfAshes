@@ -1,0 +1,227 @@
+[
+    {
+        "id": 1,
+        "resources": 2,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 1
+    },
+    {
+        "id": 2,
+        "resources": 2,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 2
+    },
+    {
+        "id": 3,
+        "resources": 2,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 3
+    },
+    {
+        "id": 4,
+        "resources": 2,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 4
+    },
+    {
+        "id": 5,
+        "resources": 2,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 5
+    },
+    {
+        "id": 301001,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 1
+    },
+    {
+        "id": 301002,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 2
+    },
+    {
+        "id": 301003,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 3
+    },
+    {
+        "id": 301004,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 4
+    },
+    {
+        "id": 301005,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 5
+    },
+    {
+        "id": 301006,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 6
+    },
+    {
+        "id": 301007,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 7
+    },
+    {
+        "id": 301008,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 8
+    },
+    {
+        "id": 301009,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 9
+    },
+    {
+        "id": 301010,
+        "resources": 3010,
+        "item": 41001,
+        "cost_id": [
+            1002,
+            1003
+        ],
+        "cost_num": [
+            "500",
+            "500"
+        ],
+        "max": 20,
+        "chapter_limit": 10
+    }
+]

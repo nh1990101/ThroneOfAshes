@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "name": 100145,
+        "icon": 51,
+        "big_icon": 71,
+        "hero_detail_bg": 61,
+        "main_city_bg": 81,
+        "main_city_hero_tab_icon": 91,
+        "main_city_soldier_tab_icon": 101,
+        "main_city_city_tab_icon": 111,
+        "main_city_pve_tab_icon": 121,
+        "main_city_pvp_tab_icon": 131
+    },
+    {
+        "id": 2,
+        "name": 100124,
+        "icon": 52,
+        "big_icon": 72,
+        "hero_detail_bg": 62,
+        "main_city_bg": 82,
+        "main_city_hero_tab_icon": 92,
+        "main_city_soldier_tab_icon": 102,
+        "main_city_city_tab_icon": 112,
+        "main_city_pve_tab_icon": 122,
+        "main_city_pvp_tab_icon": 132
+    },
+    {
+        "id": 3,
+        "name": 100014,
+        "icon": 53,
+        "big_icon": 73,
+        "hero_detail_bg": 63,
+        "main_city_bg": 83,
+        "main_city_hero_tab_icon": 93,
+        "main_city_soldier_tab_icon": 103,
+        "main_city_city_tab_icon": 113,
+        "main_city_pve_tab_icon": 123,
+        "main_city_pvp_tab_icon": 133
+    },
+    {
+        "id": 4,
+        "name": 100137,
+        "icon": 54,
+        "big_icon": 74,
+        "hero_detail_bg": 64,
+        "main_city_bg": 84,
+        "main_city_hero_tab_icon": 94,
+        "main_city_soldier_tab_icon": 104,
+        "main_city_city_tab_icon": 114,
+        "main_city_pve_tab_icon": 124,
+        "main_city_pvp_tab_icon": 134
+    }
+]

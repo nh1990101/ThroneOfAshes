@@ -1,0 +1,35 @@
+{
+    "testOnly": true,
+    "defaultModuleId": 1,
+    "roles": {
+        "com.message.User": "both"
+    },
+    "routes": {
+        "HelloReq": {
+            "commandId": 1001
+        },
+        "HelloResp": {
+            "commandId": 1001
+        },
+        "UseGMCMDReq": {
+            "commandId": 1002
+        },
+        "UseGMCMDResp": {
+            "commandId": 1002
+        },
+        "NtfGMCMDInit": {
+            "commandId": 1003
+        },
+        "com.message.User": {
+            "commandId": 3
+        },
+        "com.game.hjwz.message.AccountLoginReq": {
+            "moduleId": 10,
+            "commandId": 1
+        },
+         "com.game.hjwz.message.AccountLoginResp": {
+            "moduleId": 10,
+            "commandId": 1
+        }
+    }
+}

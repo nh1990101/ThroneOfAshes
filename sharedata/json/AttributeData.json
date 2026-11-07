@@ -1,0 +1,58 @@
+[
+    {
+        "id": "base_hp",
+        "name": 100225,
+        "icon": 174
+    },
+    {
+        "id": "base_atk",
+        "name": 100224,
+        "icon": 171,
+        "icon_big": 151
+    },
+    {
+        "id": "base_def",
+        "name": 100223,
+        "icon": 172,
+        "icon_big": 152
+    },
+    {
+        "id": "base_intelligence",
+        "name": 100448,
+        "icon_big": 153
+    },
+    {
+        "id": "base_speed",
+        "name": 100447,
+        "icon": 173
+    },
+    {
+        "id": "base_command",
+        "name": 100294,
+        "icon_big": 154
+    },
+    {
+        "id": "base_hp_pct",
+        "base_attr": "base_hp"
+    },
+    {
+        "id": "base_atk_pct",
+        "base_attr": "base_atk"
+    },
+    {
+        "id": "base_def_pct",
+        "base_attr": "base_def"
+    },
+    {
+        "id": "base_intelligence_pct",
+        "base_attr": "base_intelligence"
+    },
+    {
+        "id": "base_speed_pct",
+        "base_attr": "base_speed"
+    },
+    {
+        "id": "base_command_pct",
+        "base_attr": "base_command"
+    }
+]

@@ -1,0 +1,65 @@
+[
+    {
+        "id": 1,
+        "name": 100171,
+        "default_star": 1,
+        "max_star": 5,
+        "icon": 31,
+        "rare_bg_small": 11,
+        "rare_bg_big": 21
+    },
+    {
+        "id": 2,
+        "name": 100173,
+        "default_star": 2,
+        "max_star": 5,
+        "icon": 32,
+        "rare_bg_small": 12,
+        "rare_bg_big": 22
+    },
+    {
+        "id": 3,
+        "name": 100174,
+        "default_star": 3,
+        "max_star": 10,
+        "icon": 33,
+        "rare_bg_small": 13,
+        "rare_bg_big": 23
+    },
+    {
+        "id": 4,
+        "name": 100175,
+        "default_star": 4,
+        "max_star": 10,
+        "icon": 34,
+        "rare_bg_small": 14,
+        "rare_bg_big": 24
+    },
+    {
+        "id": 5,
+        "name": 100176,
+        "default_star": 5,
+        "max_star": 15,
+        "icon": 35,
+        "rare_bg_small": 15,
+        "rare_bg_big": 25
+    },
+    {
+        "id": 6,
+        "name": 100172,
+        "default_star": 5,
+        "max_star": 15,
+        "icon": 36,
+        "rare_bg_small": 16,
+        "rare_bg_big": 26
+    },
+    {
+        "id": 7,
+        "name": 100177,
+        "default_star": 5,
+        "max_star": 15,
+        "icon": 37,
+        "rare_bg_small": 17,
+        "rare_bg_big": 27
+    }
+]

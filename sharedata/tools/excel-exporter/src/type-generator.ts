@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
-import { ConfigExportError } from './errors.js';
-import type { ConfigField, ConfigTable, ScalarFieldType } from './model.js';
+import { ConfigExportError, DescribeTableSources } from './errors.js';
+import { IsLangPackTable } from './lang-ids.js';
+import type { ConfigField, ConfigTable, ScalarFieldType, TableIndex } from './model.js';
 
 const REFERENCE_RULE = /^(ref|ref_group|ref_count|ref_args|ref_args_str)\(([^()]*)\)$/;
 
@@ -9,9 +10,12 @@ export function GenerateConfigTypes(_tables: ReadonlyMap<string, ConfigTable>): 
     const tablesByName = new Map(tables.map((_table) => [_table.tableName, _table]));
     const outputs = new Map<string, string>();
     for (const table of tables) {
-        const keyType = FieldOutputType(GetKeyField(table), tablesByName);
+        if (IsLangPackTable(table.tableName)) {
+            continue;
+        }
+        const keyType = FieldOutputType(GetKeyField(table), tablesByName, table);
         if (keyType !== 'string' && keyType !== 'number') {
-            throw new ConfigExportError('逻辑表 ' + table.tableName + ' 的主键类型必须导出为 string 或 number。');
+            throw new ConfigExportError(DescribeTableSources(table.sources) + ' 逻辑表 ' + table.tableName + ' 的主键类型必须导出为 string 或 number。');
         }
         const lines = [
             '// Auto-generated from ' + table.tableName + '.json by sharedata/tools/excel-exporter.',
@@ -22,10 +26,17 @@ export function GenerateConfigTypes(_tables: ReadonlyMap<string, ConfigTable>): 
                 continue;
             }
             const optional = !field.rules.has('key') && !field.rules.has('required');
-            const type = FieldOutputType(field, tablesByName);
+            const type = FieldOutputType(field, tablesByName, table);
             lines.push('  ' + field.name + (optional ? '?' : '') + ': ' + type + ';');
         }
         lines.push('}', '');
+        if (table.indexes.length > 0) {
+            lines.push('export interface ' + InterfaceName(table.tableName) + 'Index {');
+            for (const index of table.indexes) {
+                lines.push('  ' + index.name + ': ' + IndexType(index, table, tablesByName) + ';');
+            }
+            lines.push('}', '');
+        }
         outputs.set(table.tableName + '.ts', lines.join('\n'));
     }
     return outputs;
@@ -59,12 +70,31 @@ export function GenerateTypeMeta(_tableName: string): string {
 function GetKeyField(_table: ConfigTable): ConfigField {
     const keyField = _table.fields.find((_field) => _field.rules.has('key'));
     if (keyField === undefined || keyField.rules.has('ignore')) {
-        throw new ConfigExportError('逻辑表 ' + _table.tableName + ' 没有可导出的主键。');
+        throw new ConfigExportError(DescribeTableSources(_table.sources) + ' 逻辑表 ' + _table.tableName + ' 没有可导出的主键。');
     }
     return keyField;
 }
 
-function FieldOutputType(_field: ConfigField, _tablesByName: ReadonlyMap<string, ConfigTable>): string {
+function IndexType(_index: TableIndex, _table: ConfigTable, _tablesByName: ReadonlyMap<string, ConfigTable>): string {
+    const keyType = FieldOutputType(GetKeyField(_table), _tablesByName, _table);
+    let leaf = _index.kind === 'array' ? ArrayType(keyType) : keyType;
+    for (let index = _index.fields.length - 1; index >= 0; index -= 1) {
+        const fieldName = _index.fields[index];
+        const field = _table.fields.find((_field) => _field.name === fieldName);
+        if (field === undefined) {
+            throw new ConfigExportError(DescribeTableSources(_table.sources) + ' 索引 ' + _index.name + ' 引用了不存在的字段：' + fieldName);
+        }
+        leaf = 'Record<' + IndexKeyType(field, _tablesByName, _table) + ', ' + leaf + '>';
+    }
+    return leaf;
+}
+
+function IndexKeyType(_field: ConfigField, _tablesByName: ReadonlyMap<string, ConfigTable>, _owner: ConfigTable): string {
+    const type = FieldOutputType(_field, _tablesByName, _owner);
+    return type.endsWith(' | null') ? type.slice(0, -' | null'.length) : type;
+}
+
+function FieldOutputType(_field: ConfigField, _tablesByName: ReadonlyMap<string, ConfigTable>, _owner: ConfigTable): string {
     let type = ScalarType(_field.type.scalarType);
     let isArray = _field.type.isArray;
     for (const rule of _field.rules) {
@@ -74,7 +104,7 @@ function FieldOutputType(_field: ConfigField, _tablesByName: ReadonlyMap<string,
         }
         const target = _tablesByName.get(match[2]);
         if (target === undefined) {
-            throw new ConfigExportError('字段 ' + _field.name + ' 引用了不存在的表：' + match[2]);
+            throw new ConfigExportError(DescribeTableSources(_owner.sources) + ' 字段 ' + _field.name + ' 引用了不存在的表：' + match[2]);
         }
         const keyType = ScalarType(GetKeyField(target).type.scalarType);
         if (match[1] === 'ref_group') {
@@ -101,8 +131,9 @@ function FieldOutputType(_field: ConfigField, _tablesByName: ReadonlyMap<string,
 function ScalarType(_type: ScalarFieldType): string {
     switch (_type) {
         case 'string':
-        case 'lang':
             return 'string';
+        case 'lang':
+            return 'number';
         case 'int':
         case 'float':
             return 'number';

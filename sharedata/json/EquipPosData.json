@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "name": 100165,
+        "bottom_icon": 110102,
+        "tab_icon": 110102,
+        "ui_pos": 1
+    },
+    {
+        "id": 2,
+        "name": 100184,
+        "bottom_icon": 110103,
+        "tab_icon": 110103,
+        "ui_pos": 2
+    },
+    {
+        "id": 3,
+        "name": 100169,
+        "bottom_icon": 110104,
+        "tab_icon": 110104,
+        "ui_pos": 3
+    },
+    {
+        "id": 4,
+        "name": 100181,
+        "bottom_icon": 110105,
+        "tab_icon": 110105,
+        "ui_pos": 4
+    }
+]

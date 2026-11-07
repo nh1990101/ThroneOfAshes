@@ -20,6 +20,23 @@ export class ConfigExportAggregateError extends Error {
     }
 }
 
+/** 相对 excel 目录的文件名，例如 `Y-英雄表(HeroData).xlsx` 或 `UI/Page.xlsx`。 */
+export function FormatWorkbookLabel(_workbookPath: string): string {
+    const normalized = _workbookPath.replaceAll('\\', '/');
+    const marker = '/excel/';
+    const index = normalized.toLowerCase().lastIndexOf(marker);
+    if (index >= 0) {
+        return normalized.slice(index + marker.length);
+    }
+    const slash = normalized.lastIndexOf('/');
+    return slash < 0 ? normalized : normalized.slice(slash + 1);
+}
+
 export function FormatLocation(_location: SourceLocation): string {
-    return `${_location.workbookPath} [${_location.sheetName}] R${_location.row}C${_location.column}:`;
+    return `Excel：${FormatWorkbookLabel(_location.workbookPath)} [${_location.sheetName}] R${_location.row}C${_location.column}:`;
+}
+
+export function DescribeTableSources(_sources: ReadonlyArray<{ workbookPath: string; sheetName: string }>): string {
+    const labels = _sources.map((_source) => `${FormatWorkbookLabel(_source.workbookPath)} [${_source.sheetName}]`);
+    return labels.length <= 0 ? '' : `Excel：${labels.join('、')}`;
 }

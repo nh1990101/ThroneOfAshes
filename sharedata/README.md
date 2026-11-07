@@ -2,8 +2,10 @@
 
 `excel/` 是当前客户端配置的 Excel 来源。导表工具扫描子目录中的 `.xlsx`，
 按工作表 A4 的逻辑表名将各表放入 `assets/resources/ConfigForClient.zip`
-根目录，并在 `assets/script/Config/Typings/` 为每张表生成一个接口文件。
-例如 A4 为 `ItemData` 的工作表会成为 ZIP 内的 `ItemData.json`。
+根目录，同时把同一份 JSON 写到 `json/` 方便直接查看，并在
+`assets/script/Config/Typings/` 为每张表生成一个接口文件。
+例如 A4 为 `ItemData` 的工作表会成为 ZIP 内的 `ItemData.json`，以及 `json/ItemData.json`。
+表上若声明了 `$index_dict` 或 `$index_array`，还会生成 `表名Index.json`。
 同名工作表合并为一张表；Excel 子目录不映射到 ZIP 路径。
 
 例如 `ItemData.ts` 导出 `IItemData`，`fishing_tbl.ts` 导出 `IFishingTbl`。

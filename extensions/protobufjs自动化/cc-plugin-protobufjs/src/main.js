@@ -236,6 +236,13 @@ exports.methods = {
     _build_list(build_as_, force_b_ = false) {
         return __awaiter(this, void 0, void 0, function* () {
             log_1.default.log("开始构建");
+            // 项目托管的生成器自行扫描协议、校验路由并更新产物。
+            // 避免旧流程备份后恢复源文件，覆盖构建过程中保存的编辑。
+            if (model.config.managed_build_b) {
+                const success = yield model.config.build_f();
+                log_1.default.log(success ? "构建完成" : "构建失败，请查看 Proto 日志");
+                return;
+            }
             /** 构建成功列表 */
             const build_success_as = [];
             /** 构建失败列表 */

@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "attr_name": "base_atk",
+        "calc_type": "float"
+    },
+    {
+        "id": 2,
+        "attr_name": "base_def",
+        "calc_type": "float"
+    },
+    {
+        "id": 3,
+        "attr_name": "base_intelligence",
+        "calc_type": "float"
+    },
+    {
+        "id": 4,
+        "attr_name": "base_speed",
+        "calc_type": "float"
+    },
+    {
+        "id": 5,
+        "attr_name": "base_command",
+        "calc_type": "float"
+    }
+]

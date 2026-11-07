@@ -1,0 +1,302 @@
+[
+    {
+        "id": 1,
+        "unit_type": 2,
+        "hero_level_growth": 24001,
+        "star_growth": 4001,
+        "atk": 100,
+        "def": 50,
+        "intelligence": 80,
+        "command": 100,
+        "move": 5,
+        "speed": 10
+    },
+    {
+        "id": 2,
+        "unit_type": 2,
+        "hero_level_growth": 24001,
+        "star_growth": 4001,
+        "atk": 100,
+        "def": 50,
+        "intelligence": 80,
+        "command": 100,
+        "move": 5,
+        "speed": 10
+    },
+    {
+        "id": 3,
+        "unit_type": 2,
+        "hero_level_growth": 24001,
+        "star_growth": 4001,
+        "atk": 100,
+        "def": 50,
+        "intelligence": 80,
+        "command": 100,
+        "move": 5,
+        "speed": 10
+    },
+    {
+        "id": 4,
+        "unit_type": 2,
+        "hero_level_growth": 24001,
+        "star_growth": 4001,
+        "atk": 100,
+        "def": 50,
+        "intelligence": 80,
+        "command": 100,
+        "move": 5,
+        "speed": 10
+    },
+    {
+        "id": 110010,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 110020,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 120010,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 120020,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 130010,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 130020,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 140010,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 140020,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 110030,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 120030,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 130030,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 140030,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 110040,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 120040,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 130040,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 140040,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 110050,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 110060,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 120050,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 120060,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 130050,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 130060,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 140050,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 140060,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 110070,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 120070,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 130070,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    },
+    {
+        "id": 140070,
+        "unit_type": 1,
+        "soldier_level_growth": 11001,
+        "hp": 100,
+        "atk": 20,
+        "def": 10,
+        "speed": 5
+    }
+]

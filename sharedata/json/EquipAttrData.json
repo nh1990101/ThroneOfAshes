@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "name": 100210,
+        "attr_code": "atk",
+        "value_type": "flat"
+    },
+    {
+        "id": 2,
+        "name": 100209,
+        "attr_code": "atk",
+        "value_type": "rate"
+    },
+    {
+        "id": 3,
+        "name": 100208,
+        "attr_code": "def",
+        "value_type": "flat"
+    },
+    {
+        "id": 4,
+        "name": 100207,
+        "attr_code": "def",
+        "value_type": "rate"
+    },
+    {
+        "id": 5,
+        "name": 100216,
+        "attr_code": "intelligence",
+        "value_type": "flat"
+    },
+    {
+        "id": 6,
+        "name": 100215,
+        "attr_code": "intelligence",
+        "value_type": "rate"
+    },
+    {
+        "id": 7,
+        "name": 100212,
+        "attr_code": "command",
+        "value_type": "flat"
+    },
+    {
+        "id": 8,
+        "name": 100211,
+        "attr_code": "command",
+        "value_type": "rate"
+    },
+    {
+        "id": 9,
+        "name": 100218,
+        "attr_code": "move",
+        "value_type": "flat"
+    },
+    {
+        "id": 10,
+        "name": 100217,
+        "attr_code": "move",
+        "value_type": "rate"
+    },
+    {
+        "id": 11,
+        "name": 100214,
+        "attr_code": "speed",
+        "value_type": "flat"
+    },
+    {
+        "id": 12,
+        "name": 100213,
+        "attr_code": "speed",
+        "value_type": "rate"
+    }
+]

@@ -1,0 +1,1113 @@
+[
+    {
+        "id": 1,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            100
+        ]
+    },
+    {
+        "id": 2,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            101
+        ]
+    },
+    {
+        "id": 3,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            102
+        ]
+    },
+    {
+        "id": 4,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            103
+        ]
+    },
+    {
+        "id": 5,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 6,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            104
+        ]
+    },
+    {
+        "id": 7,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            105
+        ]
+    },
+    {
+        "id": 8,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            106
+        ]
+    },
+    {
+        "id": 9,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            107
+        ]
+    },
+    {
+        "id": 10,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 11,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            108
+        ]
+    },
+    {
+        "id": 12,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            109
+        ]
+    },
+    {
+        "id": 13,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            110
+        ]
+    },
+    {
+        "id": 14,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            111
+        ]
+    },
+    {
+        "id": 15,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 16,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            112
+        ]
+    },
+    {
+        "id": 17,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            113
+        ]
+    },
+    {
+        "id": 18,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            114
+        ]
+    },
+    {
+        "id": 19,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            115
+        ]
+    },
+    {
+        "id": 20,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 21,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            116
+        ]
+    },
+    {
+        "id": 22,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            117
+        ]
+    },
+    {
+        "id": 23,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            118
+        ]
+    },
+    {
+        "id": 24,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            119
+        ]
+    },
+    {
+        "id": 25,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 26,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            120
+        ]
+    },
+    {
+        "id": 27,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            121
+        ]
+    },
+    {
+        "id": 28,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            122
+        ]
+    },
+    {
+        "id": 29,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            123
+        ]
+    },
+    {
+        "id": 30,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 31,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            124
+        ]
+    },
+    {
+        "id": 32,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            125
+        ]
+    },
+    {
+        "id": 33,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            126
+        ]
+    },
+    {
+        "id": 34,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            127
+        ]
+    },
+    {
+        "id": 35,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 36,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            128
+        ]
+    },
+    {
+        "id": 37,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            129
+        ]
+    },
+    {
+        "id": 38,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            130
+        ]
+    },
+    {
+        "id": 39,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            131
+        ]
+    },
+    {
+        "id": 40,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 41,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            132
+        ]
+    },
+    {
+        "id": 42,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            133
+        ]
+    },
+    {
+        "id": 43,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            134
+        ]
+    },
+    {
+        "id": 44,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            135
+        ]
+    },
+    {
+        "id": 45,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 46,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            136
+        ]
+    },
+    {
+        "id": 47,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            137
+        ]
+    },
+    {
+        "id": 48,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            138
+        ]
+    },
+    {
+        "id": 49,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            139
+        ]
+    },
+    {
+        "id": 50,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 51,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            140
+        ]
+    },
+    {
+        "id": 52,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            141
+        ]
+    },
+    {
+        "id": 53,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            142
+        ]
+    },
+    {
+        "id": 54,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            143
+        ]
+    },
+    {
+        "id": 55,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 56,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            144
+        ]
+    },
+    {
+        "id": 57,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            145
+        ]
+    },
+    {
+        "id": 58,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            146
+        ]
+    },
+    {
+        "id": 59,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            147
+        ]
+    },
+    {
+        "id": 60,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 61,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            148
+        ]
+    },
+    {
+        "id": 62,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            149
+        ]
+    },
+    {
+        "id": 63,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            150
+        ]
+    },
+    {
+        "id": 64,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            151
+        ]
+    },
+    {
+        "id": 65,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 66,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            152
+        ]
+    },
+    {
+        "id": 67,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            153
+        ]
+    },
+    {
+        "id": 68,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            154
+        ]
+    },
+    {
+        "id": 69,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            155
+        ]
+    },
+    {
+        "id": 70,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 71,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            156
+        ]
+    },
+    {
+        "id": 72,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            157
+        ]
+    },
+    {
+        "id": 73,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            158
+        ]
+    },
+    {
+        "id": 74,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            159
+        ]
+    },
+    {
+        "id": 75,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 76,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            160
+        ]
+    },
+    {
+        "id": 77,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            161
+        ]
+    },
+    {
+        "id": 78,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            162
+        ]
+    },
+    {
+        "id": 79,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            163
+        ]
+    },
+    {
+        "id": 80,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 81,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            164
+        ]
+    },
+    {
+        "id": 82,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            165
+        ]
+    },
+    {
+        "id": 83,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            166
+        ]
+    },
+    {
+        "id": 84,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            167
+        ]
+    },
+    {
+        "id": 85,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 86,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            168
+        ]
+    },
+    {
+        "id": 87,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            169
+        ]
+    },
+    {
+        "id": 88,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            170
+        ]
+    },
+    {
+        "id": 89,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            171
+        ]
+    },
+    {
+        "id": 90,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 91,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            172
+        ]
+    },
+    {
+        "id": 92,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            173
+        ]
+    },
+    {
+        "id": 93,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            174
+        ]
+    },
+    {
+        "id": 94,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            175
+        ]
+    },
+    {
+        "id": 95,
+        "is_breakthrough": true,
+        "breakthrough_item": [
+            1009,
+            1011
+        ],
+        "item_count": [
+            100,
+            1000
+        ]
+    },
+    {
+        "id": 96,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            176
+        ]
+    },
+    {
+        "id": 97,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            177
+        ]
+    },
+    {
+        "id": 98,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            178
+        ]
+    },
+    {
+        "id": 99,
+        "lvup_cost_item": [
+            1009,
+            1002
+        ],
+        "lvup_cost_count": [
+            100,
+            179
+        ]
+    },
+    {
+        "id": 100
+    }
+]

@@ -1,0 +1,1954 @@
+[
+    {
+        "id": 1001,
+        "build_id": 1,
+        "level": 1,
+        "feature_id": "Council",
+        "uplv_time": 0,
+        "product_item": 1002,
+        "product_count": 1,
+        "garrison_count": 1
+    },
+    {
+        "id": 1002,
+        "build_id": 1,
+        "level": 2,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            400,
+            200
+        ],
+        "uplv_time": 60,
+        "product_item": 1002,
+        "product_count": 2,
+        "garrison_count": 1
+    },
+    {
+        "id": 1003,
+        "build_id": 1,
+        "level": 3,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            900,
+            450
+        ],
+        "uplv_time": 180,
+        "product_item": 1002,
+        "product_count": 3,
+        "garrison_count": 1
+    },
+    {
+        "id": 1004,
+        "build_id": 1,
+        "level": 4,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            1600,
+            800
+        ],
+        "uplv_time": 360,
+        "product_item": 1002,
+        "product_count": 4,
+        "garrison_count": 1
+    },
+    {
+        "id": 1005,
+        "build_id": 1,
+        "level": 5,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            2500,
+            1250
+        ],
+        "uplv_time": 600,
+        "product_item": 1002,
+        "product_count": 5,
+        "garrison_count": 1
+    },
+    {
+        "id": 1006,
+        "build_id": 1,
+        "level": 6,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            3600,
+            1800
+        ],
+        "uplv_time": 1200,
+        "product_item": 1002,
+        "product_count": 6,
+        "garrison_count": 1
+    },
+    {
+        "id": 1007,
+        "build_id": 1,
+        "level": 7,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            4900,
+            2450
+        ],
+        "uplv_time": 2400,
+        "product_item": 1002,
+        "product_count": 7,
+        "garrison_count": 1
+    },
+    {
+        "id": 1008,
+        "build_id": 1,
+        "level": 8,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            6400,
+            3200
+        ],
+        "uplv_time": 4800,
+        "product_item": 1002,
+        "product_count": 8,
+        "garrison_count": 1
+    },
+    {
+        "id": 1009,
+        "build_id": 1,
+        "level": 9,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            8100,
+            4050
+        ],
+        "uplv_time": 8400,
+        "product_item": 1002,
+        "product_count": 9,
+        "garrison_count": 1
+    },
+    {
+        "id": 1010,
+        "build_id": 1,
+        "level": 10,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            10000,
+            5000
+        ],
+        "uplv_time": 14400,
+        "product_item": 1002,
+        "product_count": 10,
+        "garrison_count": 1
+    },
+    {
+        "id": 1011,
+        "build_id": 1,
+        "level": 11,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            12100,
+            6050
+        ],
+        "uplv_time": 21600,
+        "product_item": 1002,
+        "product_count": 11,
+        "garrison_count": 2
+    },
+    {
+        "id": 1012,
+        "build_id": 1,
+        "level": 12,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            14400,
+            7200
+        ],
+        "uplv_time": 32400,
+        "product_item": 1002,
+        "product_count": 12,
+        "garrison_count": 2
+    },
+    {
+        "id": 1013,
+        "build_id": 1,
+        "level": 13,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            16900,
+            8450
+        ],
+        "uplv_time": 46800,
+        "product_item": 1002,
+        "product_count": 13,
+        "garrison_count": 2
+    },
+    {
+        "id": 1014,
+        "build_id": 1,
+        "level": 14,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            19600,
+            9800
+        ],
+        "uplv_time": 64800,
+        "product_item": 1002,
+        "product_count": 14,
+        "garrison_count": 2
+    },
+    {
+        "id": 1015,
+        "build_id": 1,
+        "level": 15,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            22500,
+            11250
+        ],
+        "uplv_time": 86400,
+        "product_item": 1002,
+        "product_count": 15,
+        "garrison_count": 2
+    },
+    {
+        "id": 1016,
+        "build_id": 1,
+        "level": 16,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            25600,
+            12800
+        ],
+        "uplv_time": 105600,
+        "product_item": 1002,
+        "product_count": 16,
+        "garrison_count": 2
+    },
+    {
+        "id": 1017,
+        "build_id": 1,
+        "level": 17,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            28900,
+            14450
+        ],
+        "uplv_time": 124800,
+        "product_item": 1002,
+        "product_count": 17,
+        "garrison_count": 2
+    },
+    {
+        "id": 1018,
+        "build_id": 1,
+        "level": 18,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            32400,
+            16200
+        ],
+        "uplv_time": 144000,
+        "product_item": 1002,
+        "product_count": 18,
+        "garrison_count": 2
+    },
+    {
+        "id": 1019,
+        "build_id": 1,
+        "level": 19,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            36100,
+            18050
+        ],
+        "uplv_time": 163200,
+        "product_item": 1002,
+        "product_count": 19,
+        "garrison_count": 2
+    },
+    {
+        "id": 1020,
+        "build_id": 1,
+        "level": 20,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            40000,
+            20000
+        ],
+        "uplv_time": 182400,
+        "product_item": 1002,
+        "product_count": 20,
+        "garrison_count": 2
+    },
+    {
+        "id": 1021,
+        "build_id": 1,
+        "level": 21,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            44100,
+            22050
+        ],
+        "uplv_time": 201600,
+        "product_item": 1002,
+        "product_count": 21,
+        "garrison_count": 3
+    },
+    {
+        "id": 1022,
+        "build_id": 1,
+        "level": 22,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            48400,
+            24200
+        ],
+        "uplv_time": 220800,
+        "product_item": 1002,
+        "product_count": 22,
+        "garrison_count": 3
+    },
+    {
+        "id": 1023,
+        "build_id": 1,
+        "level": 23,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            52900,
+            26450
+        ],
+        "uplv_time": 240000,
+        "product_item": 1002,
+        "product_count": 23,
+        "garrison_count": 3
+    },
+    {
+        "id": 1024,
+        "build_id": 1,
+        "level": 24,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            57600,
+            28800
+        ],
+        "uplv_time": 259200,
+        "product_item": 1002,
+        "product_count": 24,
+        "garrison_count": 3
+    },
+    {
+        "id": 1025,
+        "build_id": 1,
+        "level": 25,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            62500,
+            31250
+        ],
+        "uplv_time": 278400,
+        "product_item": 1002,
+        "product_count": 25,
+        "garrison_count": 3
+    },
+    {
+        "id": 1026,
+        "build_id": 1,
+        "level": 26,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            67600,
+            33800
+        ],
+        "uplv_time": 297600,
+        "product_item": 1002,
+        "product_count": 26,
+        "garrison_count": 3
+    },
+    {
+        "id": 1027,
+        "build_id": 1,
+        "level": 27,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            72900,
+            36450
+        ],
+        "uplv_time": 316800,
+        "product_item": 1002,
+        "product_count": 27,
+        "garrison_count": 3
+    },
+    {
+        "id": 1028,
+        "build_id": 1,
+        "level": 28,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            78400,
+            39200
+        ],
+        "uplv_time": 336000,
+        "product_item": 1002,
+        "product_count": 28,
+        "garrison_count": 3
+    },
+    {
+        "id": 1029,
+        "build_id": 1,
+        "level": 29,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            84100,
+            42050
+        ],
+        "uplv_time": 355200,
+        "product_item": 1002,
+        "product_count": 29,
+        "garrison_count": 3
+    },
+    {
+        "id": 1030,
+        "build_id": 1,
+        "level": 30,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            90000,
+            45000
+        ],
+        "uplv_time": 378000,
+        "product_item": 1002,
+        "product_count": 30,
+        "garrison_count": 3
+    },
+    {
+        "id": 2001,
+        "build_id": 2,
+        "level": 1,
+        "need_build_id": [
+            3
+        ],
+        "need_build_level": [
+            1
+        ],
+        "feature_id": "MagicTower",
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            100,
+            50
+        ],
+        "uplv_time": 0,
+        "product_item": 1004,
+        "product_count": 1,
+        "garrison_count": 1
+    },
+    {
+        "id": 2002,
+        "build_id": 2,
+        "level": 2,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            1
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            400,
+            200
+        ],
+        "uplv_time": 60,
+        "product_item": 1004,
+        "product_count": 2,
+        "garrison_count": 1
+    },
+    {
+        "id": 2003,
+        "build_id": 2,
+        "level": 3,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            2
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            900,
+            450
+        ],
+        "uplv_time": 180,
+        "product_item": 1004,
+        "product_count": 3,
+        "garrison_count": 1
+    },
+    {
+        "id": 2004,
+        "build_id": 2,
+        "level": 4,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            2
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            1600,
+            800
+        ],
+        "uplv_time": 360,
+        "product_item": 1004,
+        "product_count": 4,
+        "garrison_count": 1
+    },
+    {
+        "id": 2005,
+        "build_id": 2,
+        "level": 5,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            3
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            2500,
+            1250
+        ],
+        "uplv_time": 600,
+        "product_item": 1004,
+        "product_count": 5,
+        "garrison_count": 1
+    },
+    {
+        "id": 2006,
+        "build_id": 2,
+        "level": 6,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            3
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            3600,
+            1800
+        ],
+        "uplv_time": 1200,
+        "product_item": 1004,
+        "product_count": 6,
+        "garrison_count": 1
+    },
+    {
+        "id": 2007,
+        "build_id": 2,
+        "level": 7,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            4
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            4900,
+            2450
+        ],
+        "uplv_time": 2400,
+        "product_item": 1004,
+        "product_count": 7,
+        "garrison_count": 1
+    },
+    {
+        "id": 2008,
+        "build_id": 2,
+        "level": 8,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            4
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            6400,
+            3200
+        ],
+        "uplv_time": 4800,
+        "product_item": 1004,
+        "product_count": 8,
+        "garrison_count": 1
+    },
+    {
+        "id": 2009,
+        "build_id": 2,
+        "level": 9,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            5
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            8100,
+            4050
+        ],
+        "uplv_time": 8400,
+        "product_item": 1004,
+        "product_count": 9,
+        "garrison_count": 1
+    },
+    {
+        "id": 2010,
+        "build_id": 2,
+        "level": 10,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            5
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            10000,
+            5000
+        ],
+        "uplv_time": 14400,
+        "product_item": 1004,
+        "product_count": 10,
+        "garrison_count": 1
+    },
+    {
+        "id": 2011,
+        "build_id": 2,
+        "level": 11,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            6
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            12100,
+            6050
+        ],
+        "uplv_time": 21600,
+        "product_item": 1004,
+        "product_count": 11,
+        "garrison_count": 2
+    },
+    {
+        "id": 2012,
+        "build_id": 2,
+        "level": 12,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            6
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            14400,
+            7200
+        ],
+        "uplv_time": 32400,
+        "product_item": 1004,
+        "product_count": 12,
+        "garrison_count": 2
+    },
+    {
+        "id": 2013,
+        "build_id": 2,
+        "level": 13,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            7
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            16900,
+            8450
+        ],
+        "uplv_time": 46800,
+        "product_item": 1004,
+        "product_count": 13,
+        "garrison_count": 2
+    },
+    {
+        "id": 2014,
+        "build_id": 2,
+        "level": 14,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            7
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            19600,
+            9800
+        ],
+        "uplv_time": 64800,
+        "product_item": 1004,
+        "product_count": 14,
+        "garrison_count": 2
+    },
+    {
+        "id": 2015,
+        "build_id": 2,
+        "level": 15,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            8
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            22500,
+            11250
+        ],
+        "uplv_time": 86400,
+        "product_item": 1004,
+        "product_count": 15,
+        "garrison_count": 2
+    },
+    {
+        "id": 2016,
+        "build_id": 2,
+        "level": 16,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            8
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            25600,
+            12800
+        ],
+        "uplv_time": 105600,
+        "product_item": 1004,
+        "product_count": 16,
+        "garrison_count": 2
+    },
+    {
+        "id": 2017,
+        "build_id": 2,
+        "level": 17,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            9
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            28900,
+            14450
+        ],
+        "uplv_time": 124800,
+        "product_item": 1004,
+        "product_count": 17,
+        "garrison_count": 2
+    },
+    {
+        "id": 2018,
+        "build_id": 2,
+        "level": 18,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            9
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            32400,
+            16200
+        ],
+        "uplv_time": 144000,
+        "product_item": 1004,
+        "product_count": 18,
+        "garrison_count": 2
+    },
+    {
+        "id": 2019,
+        "build_id": 2,
+        "level": 19,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            10
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            36100,
+            18050
+        ],
+        "uplv_time": 163200,
+        "product_item": 1004,
+        "product_count": 19,
+        "garrison_count": 2
+    },
+    {
+        "id": 2020,
+        "build_id": 2,
+        "level": 20,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            10
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            40000,
+            20000
+        ],
+        "uplv_time": 182400,
+        "product_item": 1004,
+        "product_count": 20,
+        "garrison_count": 2
+    },
+    {
+        "id": 2021,
+        "build_id": 2,
+        "level": 21,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            11
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            44100,
+            22050
+        ],
+        "uplv_time": 201600,
+        "product_item": 1004,
+        "product_count": 21,
+        "garrison_count": 3
+    },
+    {
+        "id": 2022,
+        "build_id": 2,
+        "level": 22,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            11
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            48400,
+            24200
+        ],
+        "uplv_time": 220800,
+        "product_item": 1004,
+        "product_count": 22,
+        "garrison_count": 3
+    },
+    {
+        "id": 2023,
+        "build_id": 2,
+        "level": 23,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            12
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            52900,
+            26450
+        ],
+        "uplv_time": 240000,
+        "product_item": 1004,
+        "product_count": 23,
+        "garrison_count": 3
+    },
+    {
+        "id": 2024,
+        "build_id": 2,
+        "level": 24,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            12
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            57600,
+            28800
+        ],
+        "uplv_time": 259200,
+        "product_item": 1004,
+        "product_count": 24,
+        "garrison_count": 3
+    },
+    {
+        "id": 2025,
+        "build_id": 2,
+        "level": 25,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            13
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            62500,
+            31250
+        ],
+        "uplv_time": 278400,
+        "product_item": 1004,
+        "product_count": 25,
+        "garrison_count": 3
+    },
+    {
+        "id": 2026,
+        "build_id": 2,
+        "level": 26,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            13
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            67600,
+            33800
+        ],
+        "uplv_time": 297600,
+        "product_item": 1004,
+        "product_count": 26,
+        "garrison_count": 3
+    },
+    {
+        "id": 2027,
+        "build_id": 2,
+        "level": 27,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            14
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            72900,
+            36450
+        ],
+        "uplv_time": 316800,
+        "product_item": 1004,
+        "product_count": 27,
+        "garrison_count": 3
+    },
+    {
+        "id": 2028,
+        "build_id": 2,
+        "level": 28,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            14
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            78400,
+            39200
+        ],
+        "uplv_time": 336000,
+        "product_item": 1004,
+        "product_count": 28,
+        "garrison_count": 3
+    },
+    {
+        "id": 2029,
+        "build_id": 2,
+        "level": 29,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            15
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            84100,
+            42050
+        ],
+        "uplv_time": 355200,
+        "product_item": 1004,
+        "product_count": 29,
+        "garrison_count": 3
+    },
+    {
+        "id": 2030,
+        "build_id": 2,
+        "level": 30,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            15
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            90000,
+            45000
+        ],
+        "uplv_time": 378000,
+        "product_item": 1004,
+        "product_count": 30,
+        "garrison_count": 3
+    },
+    {
+        "id": 3001,
+        "build_id": 3,
+        "level": 1,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            1
+        ],
+        "feature_id": "Barracks",
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            100
+        ],
+        "uplv_time": 0,
+        "product_item": 1003,
+        "product_count": 1,
+        "garrison_count": 1
+    },
+    {
+        "id": 3002,
+        "build_id": 3,
+        "level": 2,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            1
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            400,
+            200
+        ],
+        "uplv_time": 60,
+        "product_item": 1003,
+        "product_count": 2,
+        "garrison_count": 1
+    },
+    {
+        "id": 3003,
+        "build_id": 3,
+        "level": 3,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            2
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            900,
+            450
+        ],
+        "uplv_time": 180,
+        "product_item": 1003,
+        "product_count": 3,
+        "garrison_count": 1
+    },
+    {
+        "id": 3004,
+        "build_id": 3,
+        "level": 4,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            2
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            1600,
+            800
+        ],
+        "uplv_time": 360,
+        "product_item": 1003,
+        "product_count": 4,
+        "garrison_count": 1
+    },
+    {
+        "id": 3005,
+        "build_id": 3,
+        "level": 5,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            3
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            2500,
+            1250
+        ],
+        "uplv_time": 600,
+        "product_item": 1003,
+        "product_count": 5,
+        "garrison_count": 1
+    },
+    {
+        "id": 3006,
+        "build_id": 3,
+        "level": 6,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            3
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            3600,
+            1800
+        ],
+        "uplv_time": 1200,
+        "product_item": 1003,
+        "product_count": 6,
+        "garrison_count": 1
+    },
+    {
+        "id": 3007,
+        "build_id": 3,
+        "level": 7,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            4
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            4900,
+            2450
+        ],
+        "uplv_time": 2400,
+        "product_item": 1003,
+        "product_count": 7,
+        "garrison_count": 1
+    },
+    {
+        "id": 3008,
+        "build_id": 3,
+        "level": 8,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            4
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            6400,
+            3200
+        ],
+        "uplv_time": 4800,
+        "product_item": 1003,
+        "product_count": 8,
+        "garrison_count": 1
+    },
+    {
+        "id": 3009,
+        "build_id": 3,
+        "level": 9,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            5
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            8100,
+            4050
+        ],
+        "uplv_time": 8400,
+        "product_item": 1003,
+        "product_count": 9,
+        "garrison_count": 1
+    },
+    {
+        "id": 3010,
+        "build_id": 3,
+        "level": 10,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            5
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            10000,
+            5000
+        ],
+        "uplv_time": 14400,
+        "product_item": 1003,
+        "product_count": 10,
+        "garrison_count": 1
+    },
+    {
+        "id": 3011,
+        "build_id": 3,
+        "level": 11,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            6
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            12100,
+            6050
+        ],
+        "uplv_time": 21600,
+        "product_item": 1003,
+        "product_count": 11,
+        "garrison_count": 2
+    },
+    {
+        "id": 3012,
+        "build_id": 3,
+        "level": 12,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            6
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            14400,
+            7200
+        ],
+        "uplv_time": 32400,
+        "product_item": 1003,
+        "product_count": 12,
+        "garrison_count": 2
+    },
+    {
+        "id": 3013,
+        "build_id": 3,
+        "level": 13,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            7
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            16900,
+            8450
+        ],
+        "uplv_time": 46800,
+        "product_item": 1003,
+        "product_count": 13,
+        "garrison_count": 2
+    },
+    {
+        "id": 3014,
+        "build_id": 3,
+        "level": 14,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            7
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            19600,
+            9800
+        ],
+        "uplv_time": 64800,
+        "product_item": 1003,
+        "product_count": 14,
+        "garrison_count": 2
+    },
+    {
+        "id": 3015,
+        "build_id": 3,
+        "level": 15,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            8
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            22500,
+            11250
+        ],
+        "uplv_time": 86400,
+        "product_item": 1003,
+        "product_count": 15,
+        "garrison_count": 2
+    },
+    {
+        "id": 3016,
+        "build_id": 3,
+        "level": 16,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            8
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            25600,
+            12800
+        ],
+        "uplv_time": 105600,
+        "product_item": 1003,
+        "product_count": 16,
+        "garrison_count": 2
+    },
+    {
+        "id": 3017,
+        "build_id": 3,
+        "level": 17,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            9
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            28900,
+            14450
+        ],
+        "uplv_time": 124800,
+        "product_item": 1003,
+        "product_count": 17,
+        "garrison_count": 2
+    },
+    {
+        "id": 3018,
+        "build_id": 3,
+        "level": 18,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            9
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            32400,
+            16200
+        ],
+        "uplv_time": 144000,
+        "product_item": 1003,
+        "product_count": 18,
+        "garrison_count": 2
+    },
+    {
+        "id": 3019,
+        "build_id": 3,
+        "level": 19,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            10
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            36100,
+            18050
+        ],
+        "uplv_time": 163200,
+        "product_item": 1003,
+        "product_count": 19,
+        "garrison_count": 2
+    },
+    {
+        "id": 3020,
+        "build_id": 3,
+        "level": 20,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            10
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            40000,
+            20000
+        ],
+        "uplv_time": 182400,
+        "product_item": 1003,
+        "product_count": 20,
+        "garrison_count": 2
+    },
+    {
+        "id": 3021,
+        "build_id": 3,
+        "level": 21,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            11
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            44100,
+            22050
+        ],
+        "uplv_time": 201600,
+        "product_item": 1003,
+        "product_count": 21,
+        "garrison_count": 3
+    },
+    {
+        "id": 3022,
+        "build_id": 3,
+        "level": 22,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            11
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            48400,
+            24200
+        ],
+        "uplv_time": 220800,
+        "product_item": 1003,
+        "product_count": 22,
+        "garrison_count": 3
+    },
+    {
+        "id": 3023,
+        "build_id": 3,
+        "level": 23,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            12
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            52900,
+            26450
+        ],
+        "uplv_time": 240000,
+        "product_item": 1003,
+        "product_count": 23,
+        "garrison_count": 3
+    },
+    {
+        "id": 3024,
+        "build_id": 3,
+        "level": 24,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            12
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            57600,
+            28800
+        ],
+        "uplv_time": 259200,
+        "product_item": 1003,
+        "product_count": 24,
+        "garrison_count": 3
+    },
+    {
+        "id": 3025,
+        "build_id": 3,
+        "level": 25,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            13
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            62500,
+            31250
+        ],
+        "uplv_time": 278400,
+        "product_item": 1003,
+        "product_count": 25,
+        "garrison_count": 3
+    },
+    {
+        "id": 3026,
+        "build_id": 3,
+        "level": 26,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            13
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            67600,
+            33800
+        ],
+        "uplv_time": 297600,
+        "product_item": 1003,
+        "product_count": 26,
+        "garrison_count": 3
+    },
+    {
+        "id": 3027,
+        "build_id": 3,
+        "level": 27,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            14
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            72900,
+            36450
+        ],
+        "uplv_time": 316800,
+        "product_item": 1003,
+        "product_count": 27,
+        "garrison_count": 3
+    },
+    {
+        "id": 3028,
+        "build_id": 3,
+        "level": 28,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            14
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            78400,
+            39200
+        ],
+        "uplv_time": 336000,
+        "product_item": 1003,
+        "product_count": 28,
+        "garrison_count": 3
+    },
+    {
+        "id": 3029,
+        "build_id": 3,
+        "level": 29,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            15
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            84100,
+            42050
+        ],
+        "uplv_time": 355200,
+        "product_item": 1003,
+        "product_count": 29,
+        "garrison_count": 3
+    },
+    {
+        "id": 3030,
+        "build_id": 3,
+        "level": 30,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            15
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            90000,
+            45000
+        ],
+        "uplv_time": 378000,
+        "product_item": 1003,
+        "product_count": 30,
+        "garrison_count": 3
+    },
+    {
+        "id": 4001,
+        "build_id": 4,
+        "level": 1,
+        "need_build_id": [
+            3
+        ],
+        "need_build_level": [
+            1
+        ],
+        "feature_id": "Tavern",
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            100,
+            50
+        ],
+        "uplv_time": 0,
+        "product_item": 1002,
+        "product_count": 1
+    },
+    {
+        "id": 5001,
+        "build_id": 5,
+        "level": 1,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            2
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            200,
+            100
+        ],
+        "uplv_time": 60,
+        "product_item": 1006,
+        "product_count": 1,
+        "day_shop_cost": 0
+    },
+    {
+        "id": 5002,
+        "build_id": 5,
+        "level": 2,
+        "need_build_id": [
+            1
+        ],
+        "need_build_level": [
+            2
+        ],
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            400,
+            200
+        ],
+        "uplv_time": 120,
+        "product_item": 1006,
+        "product_count": 2,
+        "day_shop_cost": 0.02
+    }
+]

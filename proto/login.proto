@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package com.game.hjwz.message;
+
+option java_outer_classname = "loginProto";
+option java_multiple_files = true;
+
+message AccountLoginReq{
+  /**账号名(平台传过来的用户Id)*/
+  string account_name = 1;
+  /**设备型号 */
+  string device_model = 2;
+  /**系统名称*/
+  string os_name = 3;
+  /**系统版本*/
+  string os_ver = 4;
+  /**运营渠道*/
+  string channel = 5;
+  /**客户端版本(资源版本号)*/
+  string client_ver = 6;
+  /**token标识(登录服返回的加密串)*/
+  string token = 7;
+  /**联网类型*/
+  string network = 8;
+  /**sdk版本*/
+  string sdk_ver = 9;
+  /**登录服地址*/
+  string login_addr = 10;
+  /**时间戳*/
+  int64 timestamp = 11;
+  /**ios 0/android 1*/
+  int32 os_type = 12;
+  /**注册渠道*/
+  string reg_channel = 13;
+  /**登陆渠道*/
+  string login_channel = 14;
+
+}
+
+message AccountLoginResp{
+  /** 用户的帐号信息 */
+  Account account=1;
+}
+
+message Account{
+  /** 账户编号 */
+  sint64  id = 1;
+  /** 账号 */
+  string account_name = 2;
+  /** 状态 */
+  AccountState state=3;
+  /** 创建时间 */
+  int64 created_time=4;
+}
+
+enum AccountState{
+  /** 正常 */
+  NORMAL = 0;
+  /** 锁定 */
+  BLOCK = 1;
+  /*零收益*/
+  ZERO = 2;
+  /** 清理 */
+  CLEAN = 3;
+}

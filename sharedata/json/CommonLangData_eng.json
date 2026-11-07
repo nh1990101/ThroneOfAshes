@@ -1,0 +1,602 @@
+[
+    {
+        "id": 1,
+        "text": "hero"
+    },
+    {
+        "id": 2,
+        "text": "artifact"
+    },
+    {
+        "id": 3,
+        "text": "illl"
+    },
+    {
+        "id": 4,
+        "text": "formation"
+    },
+    {
+        "id": 5,
+        "text": "hero count:{count}"
+    },
+    {
+        "id": 18,
+        "text": "All"
+    },
+    {
+        "id": 19,
+        "text": "soldier count:{count}"
+    },
+    {
+        "id": 20,
+        "text": "Lv.{level}"
+    },
+    {
+        "id": 21,
+        "text": "lv.{level}"
+    },
+    {
+        "id": 22,
+        "text": "HP"
+    },
+    {
+        "id": 23,
+        "text": "ATK"
+    },
+    {
+        "id": 24,
+        "text": "DEF"
+    },
+    {
+        "id": 25,
+        "text": "Upgrade"
+    },
+    {
+        "id": 26,
+        "text": "Max level"
+    },
+    {
+        "id": 27,
+        "text": "Not enough materials"
+    },
+    {
+        "id": 28,
+        "text": "{value} ({sign}{delta})"
+    },
+    {
+        "id": 30,
+        "text": "All score rewards claimed"
+    },
+    {
+        "id": 31,
+        "text": "Score {score}"
+    },
+    {
+        "id": 32,
+        "text": "Claimed"
+    },
+    {
+        "id": 33,
+        "text": "{score} more to claim {name}"
+    },
+    {
+        "id": 34,
+        "text": "Score {score}/{need}"
+    },
+    {
+        "id": 35,
+        "text": "{score}/{need}"
+    },
+    {
+        "id": 36,
+        "text": "Claimable"
+    },
+    {
+        "id": 37,
+        "text": "Inactive"
+    },
+    {
+        "id": 38,
+        "text": "Open {count} chests"
+    },
+    {
+        "id": 39,
+        "text": "No chests"
+    },
+    {
+        "id": 40,
+        "text": "Obtained {reward}"
+    },
+    {
+        "id": 41,
+        "text": "{name}x{count}"
+    },
+    {
+        "id": 42,
+        "text": "Score gained: {score}"
+    },
+    {
+        "id": 44,
+        "text": "Magic Tower"
+    },
+    {
+        "id": 45,
+        "text": "Arcane Library · Knowledge and Power"
+    },
+    {
+        "id": 46,
+        "text": "Swipe up to see more"
+    },
+    {
+        "id": 47,
+        "text": "Back"
+    },
+    {
+        "id": 48,
+        "text": "Tap a node to view requirements and effects.<br/>The research window opens only when a node is selected.<br/>Closing it keeps your place in the tree.<br/>Research raises the level by one."
+    },
+    {
+        "id": 49,
+        "text": "Research Effects"
+    },
+    {
+        "id": 50,
+        "text": "Current Effects"
+    },
+    {
+        "id": 51,
+        "text": "Current"
+    },
+    {
+        "id": 52,
+        "text": "Next Level"
+    },
+    {
+        "id": 53,
+        "text": "Requirements"
+    },
+    {
+        "id": 54,
+        "text": "Cost"
+    },
+    {
+        "id": 55,
+        "text": "Maximum level reached. All effects are active."
+    },
+    {
+        "id": 56,
+        "text": "Research"
+    },
+    {
+        "id": 57,
+        "text": "Locked"
+    },
+    {
+        "id": 58,
+        "text": "Not enough materials"
+    },
+    {
+        "id": 59,
+        "text": "Queue busy"
+    },
+    {
+        "id": 60,
+        "text": "Ready"
+    },
+    {
+        "id": 61,
+        "text": "Researching"
+    },
+    {
+        "id": 62,
+        "text": "Max level"
+    },
+    {
+        "id": 63,
+        "text": "Effects apply when research finishes."
+    },
+    {
+        "id": 64,
+        "text": "Research the required technologies first."
+    },
+    {
+        "id": 65,
+        "text": "Gather the resources marked in red."
+    },
+    {
+        "id": 66,
+        "text": "{name} is being researched"
+    },
+    {
+        "id": 67,
+        "text": "Time remaining"
+    },
+    {
+        "id": 68,
+        "text": "Research time"
+    },
+    {
+        "id": 69,
+        "text": "Met"
+    },
+    {
+        "id": 70,
+        "text": "Current Lv.{level}"
+    },
+    {
+        "id": 71,
+        "text": "Lv.{level}"
+    },
+    {
+        "id": 72,
+        "text": "Max"
+    },
+    {
+        "id": 73,
+        "text": "Res"
+    },
+    {
+        "id": 74,
+        "text": "Lock"
+    },
+    {
+        "id": 75,
+        "text": "View"
+    },
+    {
+        "id": 76,
+        "text": "Attack"
+    },
+    {
+        "id": 77,
+        "text": "Defense"
+    },
+    {
+        "id": 78,
+        "text": "Health"
+    },
+    {
+        "id": 79,
+        "text": "Intelligence"
+    },
+    {
+        "id": 80,
+        "text": "Command"
+    },
+    {
+        "id": 81,
+        "text": "Speed"
+    },
+    {
+        "id": 82,
+        "text": "{name} output"
+    },
+    {
+        "id": 83,
+        "text": "「{name}」 research complete · Lv.{level} is now active"
+    },
+    {
+        "id": 86,
+        "text": "Council Hall"
+    },
+    {
+        "id": 87,
+        "text": "Back"
+    },
+    {
+        "id": 88,
+        "text": "Garrison"
+    },
+    {
+        "id": 89,
+        "text": "Upgrade"
+    },
+    {
+        "id": 90,
+        "text": "Buildings"
+    },
+    {
+        "id": 91,
+        "text": "Select a building"
+    },
+    {
+        "id": 92,
+        "text": "Seat {n}"
+    },
+    {
+        "id": 93,
+        "text": "Locked"
+    },
+    {
+        "id": 94,
+        "text": "Empty"
+    },
+    {
+        "id": 95,
+        "text": "Seat {slot}: {hero} {value}%"
+    },
+    {
+        "id": 96,
+        "text": "Seat {slot}: empty"
+    },
+    {
+        "id": 97,
+        "text": "Seat {slot}: locked"
+    },
+    {
+        "id": 98,
+        "text": "Garrison effect"
+    },
+    {
+        "id": 99,
+        "text": "Base output"
+    },
+    {
+        "id": 100,
+        "text": "Remove"
+    },
+    {
+        "id": 101,
+        "text": "Assign"
+    },
+    {
+        "id": 102,
+        "text": "Change"
+    },
+    {
+        "id": 103,
+        "text": "Locked"
+    },
+    {
+        "id": 104,
+        "text": "Max level"
+    },
+    {
+        "id": 105,
+        "text": "Upgrade"
+    },
+    {
+        "id": 106,
+        "text": "No requirements"
+    },
+    {
+        "id": 107,
+        "text": "Requires: {list}"
+    },
+    {
+        "id": 108,
+        "text": "{name} Lv.{lv} (now {current})"
+    },
+    {
+        "id": 109,
+        "text": "Takes effect immediately"
+    },
+    {
+        "id": 110,
+        "text": "Takes {time}"
+    },
+    {
+        "id": 111,
+        "text": "Requires {name} Lv.{lv}"
+    },
+    {
+        "id": 112,
+        "text": "Not enough resources"
+    },
+    {
+        "id": 113,
+        "text": "Seats {n}"
+    },
+    {
+        "id": 114,
+        "text": "Seats {a} → {b}"
+    },
+    {
+        "id": 115,
+        "text": "{a} → {b}"
+    },
+    {
+        "id": 116,
+        "text": "Choose a hero"
+    },
+    {
+        "id": 117,
+        "text": "{building} Lv.{level} · Seat {slot}/{count}"
+    },
+    {
+        "id": 118,
+        "text": "Recommended"
+    },
+    {
+        "id": 119,
+        "text": "All"
+    },
+    {
+        "id": 120,
+        "text": "Idle"
+    },
+    {
+        "id": 121,
+        "text": "{value}%"
+    },
+    {
+        "id": 122,
+        "text": "Cannot garrison"
+    },
+    {
+        "id": 123,
+        "text": "Idle"
+    },
+    {
+        "id": 124,
+        "text": "Current seat"
+    },
+    {
+        "id": 125,
+        "text": "{building} seat {slot}"
+    },
+    {
+        "id": 126,
+        "text": "No heroes available"
+    },
+    {
+        "id": 127,
+        "text": "{effect} {before} → {after}"
+    },
+    {
+        "id": 128,
+        "text": "Choose a hero"
+    },
+    {
+        "id": 129,
+        "text": "Already garrisoned here"
+    },
+    {
+        "id": 130,
+        "text": "Will move from {building} seat {slot} to {building2} seat {slot2}"
+    },
+    {
+        "id": 131,
+        "text": "Will move from seat {from} to seat {to}"
+    },
+    {
+        "id": 132,
+        "text": "Will replace {hero}"
+    },
+    {
+        "id": 133,
+        "text": "Takes effect when confirmed"
+    },
+    {
+        "id": 134,
+        "text": "Confirm"
+    },
+    {
+        "id": 135,
+        "text": "Current"
+    },
+    {
+        "id": 136,
+        "text": "Choose a hero"
+    },
+    {
+        "id": 137,
+        "text": "Upgrade complete"
+    },
+    {
+        "id": 138,
+        "text": "Removed"
+    },
+    {
+        "id": 139,
+        "text": "Garrison updated"
+    },
+    {
+        "id": 140,
+        "text": "Upgrade failed"
+    },
+    {
+        "id": 141,
+        "text": "Garrison failed"
+    },
+    {
+        "id": 142,
+        "text": "Building not found"
+    },
+    {
+        "id": 143,
+        "text": "Hero not found"
+    },
+    {
+        "id": 144,
+        "text": "This hero cannot garrison"
+    },
+    {
+        "id": 145,
+        "text": "Already in this seat"
+    },
+    {
+        "id": 146,
+        "text": "Demo data. Resets when you re-enter."
+    },
+    {
+        "id": 147,
+        "text": "Lv.{lv}"
+    },
+    {
+        "id": 148,
+        "text": "Garrison {n}/{total}"
+    },
+    {
+        "id": 149,
+        "text": "Can upgrade"
+    },
+    {
+        "id": 150,
+        "text": "Stationed {n}/{total}"
+    },
+    {
+        "id": 151,
+        "text": "Lv.{from} → Lv.{to}"
+    },
+    {
+        "id": 152,
+        "text": "{n}h"
+    },
+    {
+        "id": 153,
+        "text": "{n}m"
+    },
+    {
+        "id": 154,
+        "text": "{n}s"
+    },
+    {
+        "id": 188,
+        "text": "Not enough currency"
+    },
+    {
+        "id": 189,
+        "text": "Sold out"
+    },
+    {
+        "id": 190,
+        "text": "Locked"
+    },
+    {
+        "id": 191,
+        "text": "No refreshes left"
+    },
+    {
+        "id": 192,
+        "text": "Shop refreshed"
+    },
+    {
+        "id": 193,
+        "text": "Market Lv.{level}, {percent}% off"
+    },
+    {
+        "id": 194,
+        "text": "Owned {count}"
+    },
+    {
+        "id": 195,
+        "text": "Unlocks at Lv.{level}"
+    },
+    {
+        "id": 196,
+        "text": "Limit {buy}/{limit}"
+    },
+    {
+        "id": 197,
+        "text": "Refreshes in {time}"
+    },
+    {
+        "id": 198,
+        "text": "Free"
+    },
+    {
+        "id": 199,
+        "text": "{day}d {time}"
+    }
+]

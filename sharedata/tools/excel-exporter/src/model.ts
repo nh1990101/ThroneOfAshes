@@ -1,5 +1,4 @@
 export const SHEET_LAYOUT = Object.freeze({
-    descriptionRow: 3,
     fieldNameRow: 4,
     fieldTypeRow: 5,
     fieldRuleRow: 6,
@@ -21,7 +20,6 @@ export type FieldRuleName = string;
 
 export interface ConfigField {
     name: string;
-    description: string;
     type: FieldTypeDefinition;
     rules: ReadonlySet<FieldRuleName>;
     column: number;
@@ -39,18 +37,28 @@ export interface ConfigRow {
     location: SourceLocation;
 }
 
+export interface TableIndex {
+    name: string;
+    kind: 'dict' | 'array';
+    fields: string[];
+    sortField?: string;
+}
+
 export interface ConfigTable {
     logicalPath: string;
     tableName: string;
     fields: ConfigField[];
     rows: ConfigRow[];
     sources: Array<{ workbookPath: string; sheetName: string }>;
+    indexes: TableIndex[];
+    indexData: Record<string, unknown> | null;
 }
 
 export interface ExportOptions {
     inputDirectory: string;
     outputZipPath: string;
     typesOutputDirectory: string;
+    jsonOutputDirectory: string;
     checkOnly?: boolean;
     onProgress?: (_event: ExportProgressEvent) => void;
 }

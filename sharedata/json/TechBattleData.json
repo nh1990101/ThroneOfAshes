@@ -1,0 +1,23 @@
+[
+    {
+        "id": 3001,
+        "tech_level_id": 3001,
+        "unit_scope": 1,
+        "fight_attr": 1,
+        "attr_bonus_rate": 0.01
+    },
+    {
+        "id": 3002,
+        "tech_level_id": 3002,
+        "unit_scope": 1,
+        "fight_attr": 1,
+        "attr_bonus_rate": 0.02
+    },
+    {
+        "id": 3003,
+        "tech_level_id": 3003,
+        "unit_scope": 1,
+        "fight_attr": 1,
+        "attr_bonus_rate": 0.03
+    }
+]

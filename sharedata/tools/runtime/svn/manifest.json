@@ -1,0 +1,122 @@
+{
+  "upstream_page": "https://tortoisesvn.net/downloads.html",
+  "download_page": "https://sourceforge.net/projects/tortoisesvn/files/1.14.9/Application/TortoiseSVN-1.14.9.29743-x64-svn-1.14.5.msi/download",
+  "package": "TortoiseSVN-1.14.9.29743-x64-svn-1.14.5.msi",
+  "package_sha256": "244f3d754212ff65d057a1a02f99dd59f8b4c7ea4e4dd33eae8fb9b52895eec2",
+  "extraction": "Read-only Windows Installer database APIs plus expand.exe; MSI installation not executed.",
+  "files": [
+    {
+      "file": "intl3_tsvn.dll",
+      "sha256": "891890fbe6c9ddf59cc9d1127d10c2e4db1dab08236c185fb21dd2d312b7a34f",
+      "bytes": 69808
+    },
+    {
+      "file": "libapr_tsvn.dll",
+      "sha256": "07c47939b51a7d5da11d3b8eeb14f716ecaf45f17efee89a7cb6611be956add9",
+      "bytes": 238768
+    },
+    {
+      "file": "libaprutil_tsvn.dll",
+      "sha256": "200f3f2426b17b653319d016255a1c4b57934c5e0a93ccc00a951b3c1fc2a008",
+      "bytes": 295600
+    },
+    {
+      "file": "libsasl.dll",
+      "sha256": "2ff7109f63f20a6f791a68de5356b3242334faa28fc2689a2fab201bd8e2db9f",
+      "bytes": 104624
+    },
+    {
+      "file": "libsvn_tsvn.dll",
+      "sha256": "22797d5db4cf0054bed500c73deaf2320aea5cbef7e1259ffa1548fc32a81518",
+      "bytes": 9502384
+    },
+    {
+      "file": "saslANONYMOUS.dll",
+      "sha256": "a7e25959fd4bc003bf12e9508232aebf64a766cec5915425aad74054c46750a1",
+      "bytes": 25776
+    },
+    {
+      "file": "saslCRAMMD5.dll",
+      "sha256": "37f3e764354bcf4b4de9385b0c7119dfb496d8623a75d765d865b95ad9832c05",
+      "bytes": 29872
+    },
+    {
+      "file": "saslDIGESTMD5.dll",
+      "sha256": "93ef64b44641d25f0c02927dd46bb0964cc8743d6adda158dcc2e177354bb58a",
+      "bytes": 96944
+    },
+    {
+      "file": "saslGSSAPI.dll",
+      "sha256": "f7b28abc1096f18463f7dd2e99ddaa182c78c54dddc3915e32b713f12a123eb3",
+      "bytes": 37552
+    },
+    {
+      "file": "saslLOGIN.dll",
+      "sha256": "7af3e28d9c6ce333e35f95f4bab0ccdcd010707c502d972a23f296da481b62f6",
+      "bytes": 26800
+    },
+    {
+      "file": "saslNTLM.dll",
+      "sha256": "d0eafc8e204814094dc9bf07835465b0d568fd3b71aa6aacf10ff65b8ef2b6b2",
+      "bytes": 3716272
+    },
+    {
+      "file": "saslPLAIN.dll",
+      "sha256": "b43e7861c2f965e7b2fc87f41ce08664764f4cee0e0ac7983771457502dba980",
+      "bytes": 26800
+    },
+    {
+      "file": "svn.exe",
+      "sha256": "8e728a7c2c3088565f7f807e73c143d8fc5b0e8656b31179a66dfabbb6e93e8f",
+      "bytes": 431280
+    },
+    {
+      "file": "vcruntime140.dll",
+      "sha256": "da72e6677bd1bcd01c453c1998aaa19aeaf6659f4774cf6848409da8232a95b2",
+      "bytes": 120432
+    }
+  ],
+  "system_imports": [
+    "ADVAPI32.dll",
+    "CRYPT32.dll",
+    "KERNEL32.dll",
+    "RPCRT4.dll",
+    "SHELL32.dll",
+    "SHLWAPI.dll",
+    "Secur32.dll",
+    "USER32.dll",
+    "VERSION.dll",
+    "WLDAP32.dll",
+    "WS2_32.dll",
+    "api-ms-win-crt-conio-l1-1-0.dll",
+    "api-ms-win-crt-convert-l1-1-0.dll",
+    "api-ms-win-crt-environment-l1-1-0.dll",
+    "api-ms-win-crt-filesystem-l1-1-0.dll",
+    "api-ms-win-crt-heap-l1-1-0.dll",
+    "api-ms-win-crt-locale-l1-1-0.dll",
+    "api-ms-win-crt-math-l1-1-0.dll",
+    "api-ms-win-crt-runtime-l1-1-0.dll",
+    "api-ms-win-crt-stdio-l1-1-0.dll",
+    "api-ms-win-crt-string-l1-1-0.dll",
+    "api-ms-win-crt-time-l1-1-0.dll",
+    "api-ms-win-crt-utility-l1-1-0.dll",
+    "ole32.dll"
+  ],
+  "verification": {
+    "svn.exe": {
+      "exit_code": 0,
+      "stdout": "svn, version 1.14.5 (r1922182)\n   compiled Nov 30 2024, 08:20:48 on x86-microsoft-windows\n\nCopyright (C) 2024 The Apache Software Foundation.\nThis software consists of contributions made by many people;\nsee the NOTICE file for more information.\nSubversion is open source software, see http://subversion.apache.org/\n\nThe following repository access (RA) modules are available:\n\n* ra_svn : Module for accessing a repository using the svn network protocol.\n  - with Cyrus SASL authentication\n  - handles 'svn' scheme\n* ra_local : Module for accessing a repository on local disk.\n  - handles 'file' scheme\n* ra_serf : Module for accessing a repository via WebDAV protocol using serf.\n  - using serf 1.3.10 (compiled with 1.3.10)\n  - handles 'http' scheme\n  - handles 'https' scheme\n\nThe following authentication credential caches are available:\n\n* Wincrypt cache in C:\\Users\\Administrator\\AppData\\Roaming\\Subversion\n\n",
+      "stderr": ""
+    },
+    "svnadmin.exe": {
+      "exit_code": 0,
+      "stdout": "svnadmin, version 1.14.5 (r1922182)\n   compiled Nov 30 2024, 08:20:48 on x86-microsoft-windows\n\nCopyright (C) 2024 The Apache Software Foundation.\nThis software consists of contributions made by many people;\nsee the NOTICE file for more information.\nSubversion is open source software, see http://subversion.apache.org/\n\nThe following repository back-end (FS) modules are available:\n\n* fs_fs : Module for working with a plain file (FSFS) repository.\n* fs_x : Module for working with an experimental (FSX) repository.\n\n",
+      "stderr": ""
+    },
+    "svnserve.exe": {
+      "exit_code": 0,
+      "stdout": "svnserve, version 1.14.5 (r1922182)\n   compiled Nov 30 2024, 08:20:48 on x86-microsoft-windows\n\nCopyright (C) 2024 The Apache Software Foundation.\nThis software consists of contributions made by many people;\nsee the NOTICE file for more information.\nSubversion is open source software, see http://subversion.apache.org/\n\nThe following repository back-end (FS) modules are available:\n\n* fs_fs : Module for working with a plain file (FSFS) repository.\n* fs_x : Module for working with an experimental (FSX) repository.\n\nCyrus SASL authentication is available.\n\n",
+      "stderr": ""
+    }
+  }
+}

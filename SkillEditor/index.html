@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>技能表现编辑器 · RPGCore</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%231c252a'/%3E%3Cpath d='M23 5L9 23h10l-2 12 14-19H21z' fill='%2369dfbb'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/SkillEditor/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">ϟ</span><div>技能表现编辑器<small>RPGCORE / SKILL STUDIO</small></div></div>
+    <div class="document-title"><input id="skill-name" aria-label="技能名称" value="未命名技能" maxlength="100"><span id="save-state" class="status-dot" title="本地草稿已保存"></span></div>
+    <nav aria-label="文件操作">
+      <button id="new-button" title="输入技能 ID 后新建空白技能">＋ 新建</button>
+      <button id="import-button">↥ 导入 JSON</button>
+      <button id="save-button" class="primary" title="保存到 assets/remote/Res/Config/Skill/技能ID.json">▣ 保存 JSON <kbd>Ctrl S</kbd></button>
+    </nav>
+  </header>
+  <main class="workspace">
+    <aside class="assets-panel panel">
+      <div class="panel-heading"><h2>资源库</h2><button id="refresh-button" class="icon-button" title="重新扫描本地资源和Excel单位表">↻</button></div>
+      <div class="asset-tabs"><button class="active" data-tab="skills">技能特效 <span id="skill-count">0</span></button><button data-tab="units">角色图集 <span id="atlas-count">0</span></button></div>
+      <label class="search-field"><span>⌕</span><input id="asset-search" placeholder="搜索资源 ID…" aria-label="搜索资源 ID"></label>
+      <div class="resource-path" id="resource-path" title="assets/remote/Res/Battle/Skill">Res / Battle / Skill</div>
+      <div id="asset-list" class="asset-list" aria-label="虚拟滚动资源列表"><div id="asset-spacer"></div><div id="asset-window"></div><div id="asset-empty" class="empty-state"></div></div>
+      <div class="asset-preview"><canvas id="asset-preview" width="240" height="142" aria-label="选中资源动画预览"></canvas><div><span id="preview-name">选择一个动画资源</span><span id="preview-frames" class="muted">—</span></div><button id="use-resource" class="full" disabled>＋ 加入特效轨道</button></div>
+      <div class="library-footer"><span class="live-dot"></span> 本地项目资源 <button id="resource-info" title="查看资源扫描信息">详情 ↗</button></div>
+    </aside>
+    <section class="center-panel">
+      <div class="viewport-toolbar"><div class="breadcrumb">战斗预览 <span>/</span> <span>7 × 7 六边形地图</span></div><div class="viewport-actions"><button id="grid-button" class="active" title="显示 / 隐藏地图格子">▦ 格子</button><button id="coord-button" title="显示 / 隐藏格子坐标；左下角为 (0,0)，q 向右、r 向上">q,r 坐标</button><button id="fit-button" title="恢复适合窗口大小">⊡ 适配</button><span id="zoom-label">100%</span></div></div>
+      <div id="viewport" class="viewport"><canvas id="scene" aria-label="战斗地图，点击格子放置单位" tabindex="0"></canvas><div id="scene-empty" class="scene-guide"><span class="guide-symbol">⌖</span><strong>从一名角色开始</strong><span>点击地图格子放置单位，再添加行为轨道</span><button id="demo-button">载入操作示例 ↗</button></div><div class="scene-top-label"><span class="live-dot"></span> 实时预览 <span id="scene-state">EDIT MODE</span></div><div id="scene-selection" class="scene-selection" hidden></div><div class="scene-bottom-label"><span id="hover-cell">地图坐标 · 等待选择</span><span>滚轮缩放 · 中键平移</span></div></div>
+      <div id="timeline-resize" class="resize-handle" role="separator" aria-label="调整时间轴高度"></div>
+      <section class="timeline-panel" aria-label="技能行为时间轴">
+        <div class="timeline-toolbar"><div class="transport"><button id="restart-button" class="icon-button" title="回到开始">▮◀</button><button id="play-button" class="play-button" title="播放 / 暂停（空格）">▶</button><button id="stop-button" class="icon-button" title="停止并回到开始">■</button><span id="time-label" class="time-label">0000 <small>ms</small></span><span class="time-divider">/</span><button id="duration-label" class="duration-button muted mono" title="点击修改流程时长" aria-label="修改技能流程时长">0 ms</button><button id="loop-button" class="icon-button" title="循环播放">↻</button><select id="playback-speed" aria-label="预览播放倍率"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div><div class="timeline-controls"><button id="undo-button" class="icon-button" title="撤销（Ctrl Z）">↶</button><button id="redo-button" class="icon-button" title="重做（Ctrl Shift Z）">↷</button><span class="divider"></span><button id="snap-button" class="active" title="吸附到角色动作帧，拖动时按Alt可跳过吸附">⌁ 吸附</button><input id="timeline-zoom" type="range" min="10" max="70" value="22" aria-label="时间轴缩放"><button id="add-track-button" class="primary subtle">＋ 新建轨道</button></div></div>
+        <div id="timeline-scroll" class="timeline-scroll"><div id="timeline-content" class="timeline-content"><div id="timeline-ruler" class="timeline-ruler"></div><div id="timeline-rows"></div><div id="timeline-empty" class="timeline-empty"><span>每条轨道，一种行为</span><small>添加角色动作、特效、伤害或位移节点，开始编排技能</small><button id="empty-add-button">＋ 新建轨道</button></div><div id="timeline-end" class="timeline-end" hidden><span id="timeline-end-label"></span></div><div id="playhead" class="playhead"><span></span></div></div></div>
+        <div class="timeline-footer"><span id="track-count">0 条轨道</span><span id="binding-status">拖动节点调整时间 · 拖到角色动作帧以关联</span><span class="mono">SPACE 播放　← → 步进　DEL 删除</span></div>
+      </section>
+    </section>
+    <aside class="inspector-panel panel"><div class="inspector-tabs"><button class="active" data-inspector="selection">属性</button><button data-inspector="skill">技能设置</button></div><div id="inspector" class="inspector"></div><div id="validation" class="validation"></div></aside>
+  </main>
+  <footer class="statusbar"><span><span class="live-dot"></span> <span id="connection-status">连接本地资源…</span></span><span id="status-message">准备就绪</span><button id="help-button">快捷键 / 使用说明 ?</button></footer>
+  <input id="import-file" type="file" accept="application/json,.json" hidden>
+  <dialog id="new-skill-dialog" aria-labelledby="new-skill-title"><form id="new-skill-form" method="dialog" class="dialog-form"><div class="dialog-heading"><div><small>NEW SKILL</small><h2 id="new-skill-title">新建技能</h2></div><button id="close-new-skill" class="icon-button" type="button" aria-label="关闭新建技能">×</button></div><label class="field">技能 ID<input id="new-skill-id" type="text" maxlength="100" required autofocus autocomplete="off" placeholder="请输入技能 ID，例如 1001" aria-describedby="new-skill-note"></label><p id="new-skill-note" class="field-note">保存为 assets/remote/Res/Config/Skill/技能ID.json。创建后可在技能设置中修改 ID。</p><div class="dialog-footer"><button id="cancel-new-skill" type="button">取消</button><button id="create-skill-button" class="primary" type="submit">创建技能</button></div></form></dialog>
+  <dialog id="unit-dialog"><form method="dialog" class="dialog-form"><div class="dialog-heading"><div><small>PLACE UNIT</small><h2>放置战斗单位</h2></div><button class="icon-button" type="submit" value="cancel" formnovalidate aria-label="关闭">×</button></div><p id="unit-cell-label" class="muted"></p><label class="search-field"><span>⌕</span><input id="unit-search" placeholder="搜索单位名称、ID 或检索名" autocomplete="off"></label><div id="unit-results" class="unit-results"></div><div class="placement-options"><label>角色类型<select id="placement-role"><option value="caster">攻击者 / 施法者</option><option value="target">受击者</option></select></label><label>动画图集<select id="placement-atlas" required></select></label></div><p id="mapping-note" class="field-note"></p><div class="dialog-footer"><button type="submit" value="cancel" formnovalidate>取消</button><button id="place-unit-button" class="primary" type="button" disabled>放置单位</button></div></form></dialog>
+  <dialog id="info-dialog"><div class="dialog-form"><div class="dialog-heading"><h2 id="info-title">使用说明</h2><button id="close-info" class="icon-button" aria-label="关闭">×</button></div><div id="info-body" class="info-body"></div><div class="dialog-footer"><button id="info-ok" class="primary">知道了</button></div></div></dialog>
+  <div id="track-menu" class="track-menu" hidden><div class="menu-heading">选择功能节点</div></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script type="module" src="/SkillEditor/app.mjs"></script>
+</body>
+</html>

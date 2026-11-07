@@ -1,0 +1,75 @@
+[
+    {
+        "id": 1,
+        "name": 100185,
+        "desc": 100064,
+        "init_level": 1,
+        "can_garrison": true,
+        "garrison_effect_type": 1,
+        "garrison_bonus": [
+            0.01,
+            0.02,
+            0.03,
+            0.04,
+            0.05,
+            0.07,
+            0.1
+        ]
+    },
+    {
+        "id": 2,
+        "name": 100122,
+        "desc": 100063,
+        "can_garrison": true,
+        "garrison_effect_type": 2,
+        "garrison_bonus": [
+            0.01,
+            0.02,
+            0.03,
+            0.04,
+            0.05,
+            0.07,
+            0.1
+        ]
+    },
+    {
+        "id": 3,
+        "name": 100004,
+        "desc": 100060,
+        "can_garrison": true,
+        "garrison_effect_type": 3,
+        "garrison_bonus": [
+            0.01,
+            0.02,
+            0.03,
+            0.04,
+            0.05,
+            0.07,
+            0.1
+        ]
+    },
+    {
+        "id": 4,
+        "name": 100042,
+        "desc": 100062,
+        "can_garrison": false
+    },
+    {
+        "id": 5,
+        "name": 100026,
+        "desc": 100061,
+        "can_garrison": false
+    },
+    {
+        "id": 6,
+        "name": 100050,
+        "desc": 100286,
+        "can_garrison": false
+    },
+    {
+        "id": 7,
+        "name": 100143,
+        "desc": 100287,
+        "can_garrison": false
+    }
+]

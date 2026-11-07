@@ -22,20 +22,62 @@
         }
         #canvas-container {
             flex: 1;
+            min-width: 0;
             position: relative;
-            overflow: auto;
+            overflow: hidden;
             background: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         #mapCanvas {
+            position: absolute;
+            inset: 0;
             display: block;
+            width: 100%;
+            height: 100%;
             cursor: crosshair;
-            max-width: 100%;
-            max-height: 100%;
+            touch-action: none;
+            outline: none;
+        }
+        #view-toolbar {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            pointer-events: none;
+        }
+        #view-toolbar button {
+            width: auto;
+            padding: 8px 10px;
+            margin: 0;
+            font-size: 12px;
+            pointer-events: auto;
+        }
+        #zoomLevel {
+            min-width: 58px;
+            padding: 8px;
+            text-align: center;
+            background: #2c3e50;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        #canvasHint {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            width: fit-content;
+            padding: 8px 12px;
+            background: rgba(26, 26, 26, 0.85);
+            border-radius: 5px;
+            font-size: 12px;
+            line-height: 1.6;
+            pointer-events: none;
         }
         #sidebar {
+            flex: 0 0 320px;
             width: 320px;
             background: #34495e;
             padding: 20px;
@@ -123,6 +165,9 @@
         }
         .mode-toggle button {
             flex: 1;
+            min-width: 0;
+            padding: 10px 5px;
+            font-size: 13px;
         }
         .mode-toggle button.active {
             background: #27ae60;
@@ -190,10 +235,26 @@
 <body>
     <div id="container">
         <div id="canvas-container">
-            <canvas id="mapCanvas"></canvas>
+            <canvas id="mapCanvas" tabindex="0" aria-label="战斗地图编辑工作区"></canvas>
+            <div id="view-toolbar" aria-label="视图控制">
+                <button class="btn-primary" id="btnZoomOut" title="缩小视图">−</button>
+                <span id="zoomLevel">100%</span>
+                <button class="btn-primary" id="btnZoomIn" title="放大视图">＋</button>
+                <button class="btn-primary" id="btnZoomReset">100%</button>
+                <button class="btn-primary" id="btnFitBackground">适合背景</button>
+                <button class="btn-primary" id="btnFitAll">查看全部网格</button>
+            </div>
+            <div id="canvasHint">滚轮缩放 · 中键 / 右键 / 空格＋拖动平移视图 · “移动地图”调整配置偏移</div>
         </div>
         <div id="sidebar">
             <h1>🗺️ 六边形地图编辑器</h1>
+
+            <div class="section" id="resourceError" hidden>
+                <div class="section-title">格子图集加载</div>
+                <p id="resourceErrorMessage" style="font-size: 12px; line-height: 1.8;"></p>
+                <label for="fileAtlas" class="file-label">选择 Battle.plist 和 Battle.png</label>
+                <input type="file" id="fileAtlas" accept=".plist,.png" multiple>
+            </div>
 
             <div class="section">
                 <div class="section-title">📊 地图信息</div>
@@ -232,22 +293,34 @@
                 </div>
                 <div class="mode-toggle" style="margin-top: 8px;">
                     <button class="btn-primary" id="btnModeDeployment">布阵位置</button>
+                    <button class="btn-primary" id="btnModeMove">移动地图</button>
+                    <button class="btn-primary" id="btnModePan">平移视图</button>
                 </div>
             </div>
 
             <div class="section">
                 <div class="section-title">🔧 地图设置</div>
+                <div class="offset-label">网格列数 / 行数（1–200）:</div>
                 <div class="grid-size">
-                    <input type="number" id="inputCols" min="5" max="20" value="10" placeholder="列数">
-                    <input type="number" id="inputRows" min="5" max="20" value="10" placeholder="行数">
+                    <input type="number" id="inputCols" min="1" max="200" value="10" placeholder="列数" aria-label="网格列数">
+                    <input type="number" id="inputRows" min="1" max="200" value="10" placeholder="行数" aria-label="网格行数">
                 </div>
                 <button class="btn-warning" id="btnResize">调整网格大小</button>
 
                 <div class="offset-group">
+                    <div class="offset-label">每格宽度 / 高度（像素，统一应用）:</div>
+                    <div class="grid-size">
+                        <input type="number" id="inputHexWidth" min="1" max="1024" step="0.1" value="98" aria-label="格子宽度">
+                        <input type="number" id="inputHexHeight" min="1" max="1024" step="0.1" value="86" aria-label="格子高度">
+                    </div>
+                    <button class="btn-warning" id="btnApplyHexSize">应用格子尺寸</button>
+                </div>
+
+                <div class="offset-group">
                     <div class="offset-label">起始坐标偏移:</div>
                     <div class="grid-size">
-                        <input type="number" id="inputOffsetX" value="0" placeholder="X">
-                        <input type="number" id="inputOffsetY" value="0" placeholder="Y">
+                        <input type="number" id="inputOffsetX" step="any" value="0" placeholder="X" aria-label="地图X偏移">
+                        <input type="number" id="inputOffsetY" step="any" value="0" placeholder="Y" aria-label="地图Y偏移">
                     </div>
                     <button class="btn-warning" id="btnApplyOffset">应用偏移</button>
                 </div>
@@ -280,7 +353,11 @@
                     <p><strong>可移动模式:</strong> 绿色，可通行区域</p>
                     <p><strong>不可移动:</strong> 红色，障碍区域</p>
                     <p><strong>布阵位置:</strong> 蓝色+★，只能设置在可移动格子上</p>
-                    <p><strong>坐标系统:</strong> 屏幕中心为原点，r=0在底部</p>
+                    <p><strong>鼠标悬停:</strong> 黄色高亮格子</p>
+                    <p><strong>移动地图:</strong> 左键拖动所有格子，偏移会写入配置</p>
+                    <p><strong>平移视图:</strong> 左键拖动查看；中键、右键或空格＋拖动也可平移</p>
+                    <p><strong>缩放视图:</strong> 滚轮以鼠标位置缩放；“查看全部网格”可查看背景外的格子</p>
+                    <p><strong>坐标系统:</strong> 背景中心为原点，r=0在底部；视图操作不改变配置</p>
                 </div>
             </div>
         </div>
@@ -293,6 +370,20 @@
                 // Canvas相关
                 this.canvas = document.getElementById('mapCanvas');
                 this.ctx = this.canvas.getContext('2d');
+                this.canvasContainer = document.getElementById('canvas-container');
+
+                // 世界坐标始终以背景原图为参考；视图只负责查看，不写入配置。
+                this.worldWidth = 720;
+                this.worldHeight = 1280;
+                this.viewportWidth = 0;
+                this.viewportHeight = 0;
+                this.pixelRatio = 1;
+                this.viewScale = 1;
+                this.viewX = 0;
+                this.viewY = 0;
+                this.hasView = false;
+                this.dragState = null;
+                this.spacePan = false;
 
                 // 六边形尺寸（与游戏中保持一致）
                 this.HEX_WIDTH = 98;
@@ -306,7 +397,7 @@
                 this.offsetX = 0;
                 this.offsetY = 0;
 
-                // 编辑模式: 'select', 'walkable', 'unwalkable', 'deployment'
+                // 编辑模式: select / walkable / unwalkable / deployment / move / pan
                 this.editMode = 'select';
 
                 // 地图数据：存储选中的格子
@@ -314,7 +405,7 @@
 
                 // 资源
                 this.bgImage = null;
-                this.hexImage = null;
+                this.hexImages = {};
                 this.resourcesLoaded = false;
 
                 // 当前鼠标悬停的格子
@@ -324,21 +415,125 @@
             }
 
             async init() {
-                await this.loadResources();
-                this.setupCanvas();  // 资源加载后再设置画布大小
                 this.bindEvents();
                 this.updateStats();
-                this.render();
+                try {
+                    await this.loadResources();
+                } catch (error) {
+                    this.showResourceError(error);
+                }
+                this.worldWidth = this.bgImage?.width || 720;
+                this.worldHeight = this.bgImage?.height || 1280;
+                this.setupCanvas();
+                this.fitAll();
             }
 
             async loadResources() {
                 // 加载背景图片
                 this.bgImage = await this.loadImage('../assets/remote/Res/SingleImage/Battle/ui_battle_bg.jpg');
-                // 加载六边形图片
-                this.hexImage = await this.loadImage('ui_battle_select_frame.png');
+                // 直接读取游戏图集，重新打包后无需同步格子图片或裁剪坐标。
+                if (location.protocol === 'file:') {
+                    throw new Error('本地打开时，请从 assets/remote/Res/Atlas 同时选择 Battle.plist 和 Battle.png。通过 HTTP 打开时会自动加载。');
+                }
+                const atlasPath = '../assets/remote/Res/Atlas/Battle';
+                const response = await fetch(`${atlasPath}.plist`);
+                if (!response.ok) throw new Error(`加载 Battle.plist 失败：HTTP ${response.status}`);
+                const plistText = await response.text();
+                const texture = await this.loadImage(`${atlasPath}.png`);
+                this.hexImages = this.readBattleAtlas(plistText, texture);
                 this.resourcesLoaded = true;
                 console.log('资源加载完成');
                 console.log('背景图片尺寸:', this.bgImage.width, 'x', this.bgImage.height);
+            }
+
+            showResourceError(error) {
+                console.error('加载战斗地图资源失败:', error);
+                document.getElementById('resourceError').hidden = false;
+                document.getElementById('resourceErrorMessage').textContent =
+                    `${error.message || '资源加载失败'} 请使用 assets/remote/Res/Atlas 下的 Battle 图集。`;
+            }
+
+            async loadSelectedAtlas(event) {
+                const files = Array.from(event.target.files);
+                if (!files.length) return;
+                let textureUrl;
+                try {
+                    const plistFile = files.find(file => /^Battle\.plist$/i.test(file.name));
+                    const textureFile = files.find(file => /^Battle\.png$/i.test(file.name));
+                    if (!plistFile || !textureFile) throw new Error('请同时选择 Battle.plist 和 Battle.png 两个文件。');
+                    const plistText = await plistFile.text();
+                    textureUrl = URL.createObjectURL(textureFile);
+                    const texture = await this.loadImage(textureUrl);
+                    this.hexImages = this.readBattleAtlas(plistText, texture);
+                    this.resourcesLoaded = true;
+                    document.getElementById('resourceError').hidden = true;
+                    this.render();
+                } catch (error) {
+                    this.showResourceError(error);
+                } finally {
+                    if (textureUrl) URL.revokeObjectURL(textureUrl);
+                    event.target.value = '';
+                }
+            }
+
+            readBattleAtlas(plistText, texture) {
+                const xml = new DOMParser().parseFromString(plistText, 'application/xml');
+                if (xml.querySelector('parsererror')) throw new Error('Battle.plist XML 格式错误。');
+                // 只读取当前字典的直接子节点，避免匹配到其他帧中的同名字段。
+                const valueFor = (dict, key) => {
+                    if (!dict || dict.tagName !== 'dict') return null;
+                    for (const child of dict.children) {
+                        if (child.tagName === 'key' && child.textContent === key) return child.nextElementSibling;
+                    }
+                    return null;
+                };
+                const numbersFor = (dict, key, count) => {
+                    const value = valueFor(dict, key);
+                    const numbers = (value?.textContent.match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
+                    if (numbers.length !== count || !numbers.every(Number.isFinite)) {
+                        throw new Error(`Battle.plist 帧字段无效：${key}`);
+                    }
+                    return numbers;
+                };
+                const frames = valueFor(xml.documentElement.firstElementChild, 'frames');
+                const frameNames = {
+                    normal: 'ui_battle_select_frame.png',
+                    green: 'ui_battle_select_frame_green.png',
+                    red: 'ui_battle_select_frame_red.png',
+                    blue: 'ui_battle_select_frame_blue.png',
+                    yellow: 'ui_battle_select_frame_yellow.png'
+                };
+                const images = {};
+                for (const [color, name] of Object.entries(frameNames)) {
+                    const frame = valueFor(frames, name);
+                    if (!frame) throw new Error(`Battle 图集缺少格子资源：${name}`);
+                    const [x, y, w, h] = numbersFor(frame, 'textureRect', 4);
+                    const [sw, sh] = numbersFor(frame, 'spriteSourceSize', 2);
+                    const [ox, oy] = numbersFor(frame, 'spriteOffset', 2);
+                    const rotated = valueFor(frame, 'textureRotated')?.tagName === 'true';
+                    const packedWidth = rotated ? h : w;
+                    const packedHeight = rotated ? w : h;
+                    if (w <= 0 || h <= 0 || sw <= 0 || sh <= 0 || x < 0 || y < 0 ||
+                        x + packedWidth > texture.width || y + packedHeight > texture.height) {
+                        throw new Error(`Battle 图集帧尺寸或纹理不匹配：${name}`);
+                    }
+                    // 还原裁剪偏移和顺时针旋转打包，缓存后绘制时只需 drawImage。
+                    const image = document.createElement('canvas');
+                    image.width = sw;
+                    image.height = sh;
+                    const ctx = image.getContext('2d');
+                    const dx = (sw - w) / 2 + ox;
+                    const dy = (sh - h) / 2 - oy;
+                    if (rotated) {
+                        ctx.translate(dx, dy + h);
+                        ctx.rotate(-Math.PI / 2);
+                        ctx.drawImage(texture, x, y, h, w, 0, 0, h, w);
+                    } else {
+                        ctx.drawImage(texture, x, y, w, h, dx, dy, w, h);
+                    }
+                    images[color] = image;
+                }
+                return images;
             }
 
             loadImage(src) {
@@ -350,41 +545,219 @@
                     };
                     img.onerror = (e) => {
                         console.error('加载图片失败:', src, e);
-                        reject(e);
+                        reject(new Error(`加载图片失败：${src}`));
                     };
                     img.src = src;
                 });
             }
 
             setupCanvas() {
-                // 根据背景图片大小设置画布，确保能显示完整背景
-                if (this.bgImage) {
-                    this.canvas.width = this.bgImage.width;
-                    this.canvas.height = this.bgImage.height;
+                const width = this.canvasContainer.clientWidth;
+                const height = this.canvasContainer.clientHeight;
+                const ratio = window.devicePixelRatio || 1;
+                if (!width || !height || (width === this.viewportWidth && height === this.viewportHeight && ratio === this.pixelRatio)) return;
+                const center = this.screenToWorld(this.viewportWidth / 2, this.viewportHeight / 2);
+                this.viewportWidth = width;
+                this.viewportHeight = height;
+                this.pixelRatio = ratio;
+                this.canvas.width = Math.round(width * ratio);
+                this.canvas.height = Math.round(height * ratio);
+                if (this.hasView) {
+                    this.viewX = width / 2 - center.x * this.viewScale;
+                    this.viewY = height / 2 - center.y * this.viewScale;
+                    this.render();
                 } else {
-                    // 默认使用游戏设计分辨率
-                    this.canvas.width = 720;
-                    this.canvas.height = 1280;
+                    this.fitBackground();
                 }
             }
 
+            watchPixelRatio() {
+                // 切换显示器或系统缩放时，CSS 尺寸可能不变，仍需更新画布清晰度。
+                this.pixelRatioQuery = window.matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
+                this.pixelRatioQuery.addEventListener('change', () => {
+                    this.setupCanvas();
+                    this.watchPixelRatio();
+                }, {once: true});
+            }
+
+            screenToWorld(x, y) {
+                return {x: (x - this.viewX) / this.viewScale, y: (y - this.viewY) / this.viewScale};
+            }
+
+            eventToScreen(event) {
+                const rect = this.canvas.getBoundingClientRect();
+                return {
+                    x: (event.clientX - rect.left) * this.viewportWidth / rect.width,
+                    y: (event.clientY - rect.top) * this.viewportHeight / rect.height
+                };
+            }
+
+            eventToWorld(event) {
+                const pos = this.eventToScreen(event);
+                return this.screenToWorld(pos.x, pos.y);
+            }
+
+            setZoom(scale, anchor = {x: this.viewportWidth / 2, y: this.viewportHeight / 2}) {
+                if (!Number.isFinite(scale) || !this.viewportWidth) return;
+                const world = this.screenToWorld(anchor.x, anchor.y);
+                this.viewScale = Math.max(0.001, Math.min(8, scale));
+                this.viewX = anchor.x - world.x * this.viewScale;
+                this.viewY = anchor.y - world.y * this.viewScale;
+                this.hasView = true;
+                this.clearHover();
+                this.render();
+            }
+
+            fitBounds(bounds) {
+                if (!this.viewportWidth || !this.viewportHeight) return;
+                const scale = Math.min(Math.max(1, this.viewportWidth - 80) / (bounds.maxX - bounds.minX),
+                    Math.max(1, this.viewportHeight - 100) / (bounds.maxY - bounds.minY));
+                this.viewScale = Math.max(0.001, Math.min(8, scale));
+                this.viewX = this.viewportWidth / 2 - (bounds.minX + bounds.maxX) / 2 * this.viewScale;
+                this.viewY = this.viewportHeight / 2 - (bounds.minY + bounds.maxY) / 2 * this.viewScale;
+                this.hasView = true;
+                this.clearHover();
+                this.render();
+            }
+
+            fitBackground() {
+                this.fitBounds({minX: 0, minY: 0, maxX: this.worldWidth, maxY: this.worldHeight});
+            }
+
+            fitAll() {
+                const left = this.worldWidth / 2 + this.offsetX - this.HEX_WIDTH / 2;
+                const right = left + this.HEX_WIDTH * (this.gridCols + (this.gridRows > 1 ? 0.5 : 0));
+                const bottom = this.worldHeight / 2 - this.offsetY + this.HEX_HEIGHT / 2;
+                const top = bottom - this.HEX_HEIGHT - this.HEX_HEIGHT * 3 / 4 * (this.gridRows - 1);
+                this.fitBounds({minX: Math.min(0, left), minY: Math.min(0, top),
+                    maxX: Math.max(this.worldWidth, right), maxY: Math.max(this.worldHeight, bottom)});
+            }
+
+            clearHover() {
+                this.hoverCell = null;
+                document.getElementById('currentCoord').textContent = '未选中';
+                document.getElementById('currentStatus').textContent = '-';
+            }
+
+            updateCursor() {
+                const dragging = this.dragState && this.dragState.kind !== 'edit';
+                this.canvas.style.cursor = dragging ? 'grabbing' :
+                    (this.spacePan || this.editMode === 'move' || this.editMode === 'pan' ? 'grab' : 'crosshair');
+            }
+
+            beginPointer(event) {
+                if (this.dragState || ![0, 1, 2].includes(event.button)) return;
+                event.preventDefault();
+                this.canvas.focus({preventScroll: true});
+                const pos = this.eventToScreen(event);
+                const kind = event.button !== 0 || this.spacePan || this.editMode === 'pan' ? 'pan' :
+                    (this.editMode === 'move' ? 'move' : 'edit');
+                this.dragState = {pointerId: event.pointerId, kind, x: pos.x, y: pos.y, moved: false,
+                    viewX: this.viewX, viewY: this.viewY, offsetX: this.offsetX, offsetY: this.offsetY};
+                this.canvas.setPointerCapture(event.pointerId);
+                this.updateCursor();
+            }
+
+            movePointer(event) {
+                const drag = this.dragState;
+                if (!drag) {
+                    this.handleMouseMove(event);
+                    return;
+                }
+                if (drag.pointerId !== event.pointerId) return;
+                const pos = this.eventToScreen(event);
+                const dx = pos.x - drag.x;
+                const dy = pos.y - drag.y;
+                if (Math.hypot(dx, dy) > 3) drag.moved = true;
+                if (!drag.moved) return;
+                if (drag.kind === 'pan') {
+                    this.viewX = drag.viewX + dx;
+                    this.viewY = drag.viewY + dy;
+                } else if (drag.kind === 'move') {
+                    this.offsetX = Math.round(drag.offsetX + dx / this.viewScale);
+                    this.offsetY = Math.round(drag.offsetY - dy / this.viewScale);
+                    this.syncOffsetInputs();
+                }
+                this.clearHover();
+                this.render();
+            }
+
+            endPointer(event, cancelled = false) {
+                const drag = this.dragState;
+                if (!drag || drag.pointerId !== event.pointerId) return;
+                this.dragState = null;
+                if (this.canvas.hasPointerCapture(event.pointerId)) this.canvas.releasePointerCapture(event.pointerId);
+                this.updateCursor();
+                const pos = this.eventToScreen(event);
+                const inside = pos.x >= 0 && pos.x < this.viewportWidth && pos.y >= 0 && pos.y < this.viewportHeight;
+                if (!cancelled && inside && drag.kind === 'edit' && !drag.moved && this.resourcesLoaded) this.handleClick(event);
+                if (!cancelled && inside) this.handleMouseMove(event);
+                else { this.clearHover(); this.render(); }
+            }
+
             bindEvents() {
-                // Canvas点击事件
-                this.canvas.addEventListener('click', (e) => this.handleClick(e));
-                this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+                this.canvas.addEventListener('pointerdown', (e) => this.beginPointer(e));
+                this.canvas.addEventListener('pointermove', (e) => this.movePointer(e));
+                this.canvas.addEventListener('pointerup', (e) => this.endPointer(e));
+                this.canvas.addEventListener('pointercancel', (e) => this.endPointer(e, true));
+                this.canvas.addEventListener('lostpointercapture', () => {
+                    this.dragState = null;
+                    this.updateCursor();
+                });
+                this.canvas.addEventListener('pointerleave', () => {
+                    if (!this.dragState) { this.clearHover(); this.render(); }
+                });
+                this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+                this.canvas.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    if (this.dragState) return;
+                    const delta = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? this.viewportHeight : 1);
+                    this.setZoom(this.viewScale * Math.exp(-delta * 0.001), this.eventToScreen(e));
+                }, {passive: false});
+                window.addEventListener('keydown', (e) => {
+                    if (e.code !== 'Space' || (e.target instanceof Element && e.target.closest('input, textarea, select, button, [contenteditable]'))) return;
+                    e.preventDefault();
+                    this.spacePan = true;
+                    this.updateCursor();
+                });
+                window.addEventListener('keyup', (e) => {
+                    if (e.code === 'Space') { this.spacePan = false; this.updateCursor(); }
+                });
+                window.addEventListener('blur', () => {
+                    this.spacePan = false;
+                    if (this.dragState && this.canvas.hasPointerCapture(this.dragState.pointerId)) this.canvas.releasePointerCapture(this.dragState.pointerId);
+                    this.dragState = null;
+                    this.clearHover();
+                    this.updateCursor();
+                    this.render();
+                });
+                this.resizeObserver = new ResizeObserver(() => this.setupCanvas());
+                this.resizeObserver.observe(this.canvasContainer);
+                window.addEventListener('resize', () => this.setupCanvas());
+                this.watchPixelRatio();
+
+                document.getElementById('btnZoomOut').addEventListener('click', () => this.setZoom(this.viewScale / 1.2));
+                document.getElementById('btnZoomIn').addEventListener('click', () => this.setZoom(this.viewScale * 1.2));
+                document.getElementById('btnZoomReset').addEventListener('click', () => this.setZoom(1));
+                document.getElementById('btnFitBackground').addEventListener('click', () => this.fitBackground());
+                document.getElementById('btnFitAll').addEventListener('click', () => this.fitAll());
 
                 // 模式切换按钮
                 document.getElementById('btnModeSelect').addEventListener('click', () => this.setMode('select'));
                 document.getElementById('btnModeWalkable').addEventListener('click', () => this.setMode('walkable'));
                 document.getElementById('btnModeUnwalkable').addEventListener('click', () => this.setMode('unwalkable'));
                 document.getElementById('btnModeDeployment').addEventListener('click', () => this.setMode('deployment'));
+                document.getElementById('btnModeMove').addEventListener('click', () => this.setMode('move'));
+                document.getElementById('btnModePan').addEventListener('click', () => this.setMode('pan'));
 
                 // 功能按钮
                 document.getElementById('btnExport').addEventListener('click', () => this.exportMap());
                 document.getElementById('btnClear').addEventListener('click', () => this.clearMap());
                 document.getElementById('btnResize').addEventListener('click', () => this.resizeGrid());
                 document.getElementById('btnApplyOffset').addEventListener('click', () => this.applyOffset());
+                document.getElementById('btnApplyHexSize').addEventListener('click', () => this.applyHexSize());
                 document.getElementById('fileImport').addEventListener('change', (e) => this.importMap(e));
+                document.getElementById('fileAtlas').addEventListener('change', (e) => this.loadSelectedAtlas(e));
             }
 
             setMode(mode) {
@@ -395,26 +768,15 @@
                     btn.classList.remove('active');
                 });
 
-                if (mode === 'select') {
-                    document.getElementById('btnModeSelect').classList.add('active');
-                } else if (mode === 'walkable') {
-                    document.getElementById('btnModeWalkable').classList.add('active');
-                } else if (mode === 'unwalkable') {
-                    document.getElementById('btnModeUnwalkable').classList.add('active');
-                } else if (mode === 'deployment') {
-                    document.getElementById('btnModeDeployment').classList.add('active');
-                }
+                const buttons = {select: 'btnModeSelect', walkable: 'btnModeWalkable', unwalkable: 'btnModeUnwalkable',
+                    deployment: 'btnModeDeployment', move: 'btnModeMove', pan: 'btnModePan'};
+                document.getElementById(buttons[mode]).classList.add('active');
+                this.updateCursor();
             }
 
             handleClick(e) {
-                const rect = this.canvas.getBoundingClientRect();
-                const scaleX = this.canvas.width / rect.width;
-                const scaleY = this.canvas.height / rect.height;
-                const canvasX = (e.clientX - rect.left) * scaleX;
-                const canvasY = (e.clientY - rect.top) * scaleY;
-
-                const coord = this.pixelToHex(canvasX, canvasY);
-                console.log('点击位置:', canvasX, canvasY, '转换坐标:', coord);
+                const pos = this.eventToWorld(e);
+                const coord = this.pixelToHex(pos.x, pos.y);
 
                 if (!coord || !this.isInGrid(coord.q, coord.r)) {
                     console.log('坐标超出网格范围');
@@ -458,13 +820,8 @@
             }
 
             handleMouseMove(e) {
-                const rect = this.canvas.getBoundingClientRect();
-                const scaleX = this.canvas.width / rect.width;
-                const scaleY = this.canvas.height / rect.height;
-                const canvasX = (e.clientX - rect.left) * scaleX;
-                const canvasY = (e.clientY - rect.top) * scaleY;
-
-                const coord = this.pixelToHex(canvasX, canvasY);
+                const pos = this.eventToWorld(e);
+                const coord = this.pixelToHex(pos.x, pos.y);
 
                 if (!coord || !this.isInGrid(coord.q, coord.r)) {
                     this.hoverCell = null;
@@ -499,11 +856,10 @@
                 return q >= 0 && q < this.gridCols && r >= 0 && r < this.gridRows;
             }
 
-            // 像素坐标转六边形坐标（Cocos坐标系：屏幕中心为原点，Y轴向上）
+            // 世界像素坐标转六边形坐标（Cocos坐标系：背景中心为原点，Y轴向上）
             pixelToHex(x, y) {
-                // 转换为Cocos坐标系（屏幕中心为原点）
-                const cocosX = x - this.canvas.width / 2;
-                const cocosY = this.canvas.height / 2 - y;
+                const cocosX = x - this.worldWidth / 2;
+                const cocosY = this.worldHeight / 2 - y;
 
                 // 应用偏移量
                 const adjustedX = cocosX - this.offsetX;
@@ -519,57 +875,70 @@
                 return {q, r};
             }
 
-            // 六边形坐标转像素坐标（Cocos坐标系：屏幕中心为原点，Y轴向上）
+            // 六边形坐标转世界像素坐标（不包含视图变换）
             hexToPixel(q, r) {
                 // 计算六边形在Cocos坐标系中的位置
                 const cocosX = this.HEX_WIDTH * q + (r % 2) * (this.HEX_WIDTH / 2) + this.offsetX;
                 const cocosY = (this.HEX_HEIGHT * 3 / 4) * r + this.offsetY;
 
                 // 转换为Canvas坐标系（左上角为原点）
-                const x = cocosX + this.canvas.width / 2;
-                const y = this.canvas.height / 2 - cocosY;
+                const x = cocosX + this.worldWidth / 2;
+                const y = this.worldHeight / 2 - cocosY;
 
                 return {x, y};
             }
 
             render() {
-                if (!this.resourcesLoaded) {
-                    console.log('等待资源加载...');
-                    return;
-                }
-
                 // 清空画布
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                const zoom = this.viewScale * 100;
+                document.getElementById('zoomLevel').textContent = `${zoom < 10 ? zoom.toFixed(1) : Math.round(zoom)}%`;
+                this.ctx.save();
+                this.ctx.setTransform(this.pixelRatio * this.viewScale, 0, 0, this.pixelRatio * this.viewScale,
+                    this.pixelRatio * this.viewX, this.pixelRatio * this.viewY);
 
                 // 绘制背景（完整显示）
                 if (this.bgImage) {
                     this.ctx.drawImage(this.bgImage, 0, 0);
                 }
+                this.ctx.strokeStyle = '#95a5a6';
+                this.ctx.lineWidth = 1 / this.viewScale;
+                this.ctx.strokeRect(0, 0, this.worldWidth, this.worldHeight);
+                if (!this.resourcesLoaded) { this.ctx.restore(); return; }
+                const min = this.screenToWorld(0, 0);
+                const max = this.screenToWorld(this.viewportWidth, this.viewportHeight);
+                const visible = (pos) => pos.x + this.HEX_WIDTH / 2 >= min.x && pos.x - this.HEX_WIDTH / 2 <= max.x &&
+                    pos.y + this.HEX_HEIGHT / 2 >= min.y && pos.y - this.HEX_HEIGHT / 2 <= max.y;
 
                 // 绘制所有可能的网格（半透明，用于辅助）
-                this.ctx.save();
-                this.ctx.globalAlpha = 0.2;
                 for (let q = 0; q < this.gridCols; q++) {
                     for (let r = 0; r < this.gridRows; r++) {
+                        if (this.mapData.has(`${q},${r}`)) continue;
                         const pos = this.hexToPixel(q, r);
-                        this.drawHexImage(pos.x, pos.y, null, 0.2);
+                        if (!visible(pos)) continue;
+                        const hovered = this.hoverCell?.q === q && this.hoverCell?.r === r;
+                        this.drawHexImage(pos.x, pos.y, hovered ? 'yellow' : 'normal', hovered ? 1 : 0.2);
                     }
                 }
-                this.ctx.restore();
 
                 // 绘制已选中的格子
                 this.ctx.save();
                 this.mapData.forEach((cell) => {
                     const pos = this.hexToPixel(cell.q, cell.r);
-                    let tint = cell.walkable ? 'rgba(39, 174, 96, 0.6)' : 'rgba(231, 76, 60, 0.6)';
+                    if (!visible(pos)) return;
+                    let color = cell.walkable ? 'green' : 'red';
 
                     // 如果是布阵位置，使用蓝色
                     if (cell.isDeployment) {
-                        tint = 'rgba(52, 152, 219, 0.7)';
+                        color = 'blue';
                     }
 
                     // 绘制六边形
-                    this.drawHexImage(pos.x, pos.y, tint, 1.0);
+                    this.drawHexImage(pos.x, pos.y, color);
+                    if (this.hoverCell?.q === cell.q && this.hoverCell?.r === cell.r) {
+                        this.drawHexImage(pos.x, pos.y, 'yellow', 0.6);
+                    }
 
                     // 绘制坐标文字
                     this.ctx.fillStyle = 'white';
@@ -592,18 +961,12 @@
                     }
                 });
                 this.ctx.restore();
-
-                // 绘制悬停高亮
-                if (this.hoverCell && this.isInGrid(this.hoverCell.q, this.hoverCell.r)) {
-                    const pos = this.hexToPixel(this.hoverCell.q, this.hoverCell.r);
-                    this.ctx.strokeStyle = '#f39c12';
-                    this.ctx.lineWidth = 3;
-                    this.drawHexOutline(pos.x, pos.y);
-                }
+                this.ctx.restore();
             }
 
-            drawHexImage(x, y, tintColor, alpha = 1.0) {
-                if (!this.hexImage) return;
+            drawHexImage(x, y, color = 'normal', alpha = 1.0) {
+                const image = this.hexImages[color];
+                if (!image) return;
 
                 this.ctx.save();
                 this.ctx.globalAlpha = alpha;
@@ -611,32 +974,9 @@
                 // 绘制六边形图片
                 const drawX = x - this.HEX_WIDTH / 2;
                 const drawY = y - this.HEX_HEIGHT / 2;
-                this.ctx.drawImage(this.hexImage, drawX, drawY, this.HEX_WIDTH, this.HEX_HEIGHT);
-
-                // 如果有颜色叠加，绘制半透明颜色层
-                if (tintColor) {
-                    this.ctx.fillStyle = tintColor;
-                    this.ctx.fillRect(drawX, drawY, this.HEX_WIDTH, this.HEX_HEIGHT);
-                }
+                this.ctx.drawImage(image, drawX, drawY, this.HEX_WIDTH, this.HEX_HEIGHT);
 
                 this.ctx.restore();
-            }
-
-            drawHexOutline(x, y) {
-                const size = this.HEX_HEIGHT / 2;
-                this.ctx.beginPath();
-                for (let i = 0; i < 6; i++) {
-                    const angle = Math.PI / 180 * (60 * i + 30);
-                    const hx = x + size * Math.cos(angle);
-                    const hy = y + size * Math.sin(angle);
-                    if (i === 0) {
-                        this.ctx.moveTo(hx, hy);
-                    } else {
-                        this.ctx.lineTo(hx, hy);
-                    }
-                }
-                this.ctx.closePath();
-                this.ctx.stroke();
             }
 
             updateStats() {
@@ -690,6 +1030,15 @@
                 reader.onload = (event) => {
                     try {
                         const mapConfig = JSON.parse(event.target.result);
+                        if (!Number.isInteger(mapConfig.width) || !Number.isInteger(mapConfig.height) ||
+                            mapConfig.width < 1 || mapConfig.width > 200 || mapConfig.height < 1 || mapConfig.height > 200 ||
+                            !Array.isArray(mapConfig.cells)) throw new Error('网格行列数必须是 1–200 的整数，并包含 cells 数组。');
+
+                        // 与游戏一致：坐标计算及格子显示尺寸均以地图配置为准。
+                        this.HEX_WIDTH = Number.isFinite(mapConfig.hexWidth) && mapConfig.hexWidth > 0 ? mapConfig.hexWidth : 98;
+                        this.HEX_HEIGHT = Number.isFinite(mapConfig.hexHeight) && mapConfig.hexHeight > 0 ? mapConfig.hexHeight : 86;
+                        document.getElementById('inputHexWidth').value = this.HEX_WIDTH;
+                        document.getElementById('inputHexHeight').value = this.HEX_HEIGHT;
 
                         // 恢复网格大小
                         this.gridCols = mapConfig.width;
@@ -698,10 +1047,9 @@
                         document.getElementById('inputRows').value = this.gridRows;
 
                         // 恢复偏移量
-                        this.offsetX = mapConfig.offsetX || 0;
-                        this.offsetY = mapConfig.offsetY || 0;
-                        document.getElementById('inputOffsetX').value = this.offsetX;
-                        document.getElementById('inputOffsetY').value = this.offsetY;
+                        this.offsetX = Number.isFinite(mapConfig.offsetX) ? mapConfig.offsetX : 0;
+                        this.offsetY = Number.isFinite(mapConfig.offsetY) ? mapConfig.offsetY : 0;
+                        this.syncOffsetInputs();
 
                         // 恢复地图数据
                         this.mapData.clear();
@@ -711,10 +1059,12 @@
                         });
 
                         this.updateStats();
-                        this.render();
+                        this.fitAll();
                         alert('地图配置已导入！');
                     } catch (error) {
                         alert('导入失败：' + error.message);
+                    } finally {
+                        e.target.value = '';
                     }
                 };
                 reader.readAsText(file);
@@ -729,11 +1079,11 @@
             }
 
             resizeGrid() {
-                const cols = parseInt(document.getElementById('inputCols').value);
-                const rows = parseInt(document.getElementById('inputRows').value);
+                const cols = Number(document.getElementById('inputCols').value);
+                const rows = Number(document.getElementById('inputRows').value);
 
-                if (cols < 5 || cols > 20 || rows < 5 || rows > 20) {
-                    alert('网格大小必须在 5-20 之间！');
+                if (!Number.isInteger(cols) || !Number.isInteger(rows) || cols < 1 || cols > 200 || rows < 1 || rows > 200) {
+                    alert('网格行列数必须是 1–200 的整数！');
                     return;
                 }
 
@@ -750,17 +1100,38 @@
                 toRemove.forEach(key => this.mapData.delete(key));
 
                 this.updateStats();
-                this.render();
+                this.fitAll();
+            }
+
+            applyHexSize() {
+                const width = Number(document.getElementById('inputHexWidth').value);
+                const height = Number(document.getElementById('inputHexHeight').value);
+                if (!Number.isFinite(width) || !Number.isFinite(height) || width < 1 || width > 1024 || height < 1 || height > 1024) {
+                    alert('格子宽高必须在 1–1024 像素之间！');
+                    return;
+                }
+                this.HEX_WIDTH = width;
+                this.HEX_HEIGHT = height;
+                this.fitAll();
+            }
+
+            syncOffsetInputs() {
+                document.getElementById('inputOffsetX').value = this.offsetX;
+                document.getElementById('inputOffsetY').value = this.offsetY;
             }
 
             applyOffset() {
-                const offsetX = parseInt(document.getElementById('inputOffsetX').value) || 0;
-                const offsetY = parseInt(document.getElementById('inputOffsetY').value) || 0;
+                const offsetX = Number(document.getElementById('inputOffsetX').value);
+                const offsetY = Number(document.getElementById('inputOffsetY').value);
+                if (!Number.isFinite(offsetX) || !Number.isFinite(offsetY)) {
+                    alert('地图偏移必须是有效数字！');
+                    return;
+                }
 
                 this.offsetX = offsetX;
                 this.offsetY = offsetY;
 
-                this.render();
+                this.fitAll();
             }
         }
 

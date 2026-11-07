@@ -1,0 +1,643 @@
+[
+    {
+        "id": 1,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_head_frame"
+    },
+    {
+        "id": 11,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_gray"
+    },
+    {
+        "id": 12,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_green"
+    },
+    {
+        "id": 13,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_blue"
+    },
+    {
+        "id": 14,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_purple"
+    },
+    {
+        "id": 15,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_gold"
+    },
+    {
+        "id": 16,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_red"
+    },
+    {
+        "id": 17,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_rai"
+    },
+    {
+        "id": 21,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_frame_gray"
+    },
+    {
+        "id": 22,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_frame_green"
+    },
+    {
+        "id": 23,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_frame_blue"
+    },
+    {
+        "id": 24,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_frame_purple"
+    },
+    {
+        "id": 25,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_frame_gold"
+    },
+    {
+        "id": 26,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_frame_red"
+    },
+    {
+        "id": 27,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_frame_rai"
+    },
+    {
+        "id": 31,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_detail_quality_tag_r"
+    },
+    {
+        "id": 32,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_detail_quality_tag_sr"
+    },
+    {
+        "id": 33,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_detail_quality_tag_ssr"
+    },
+    {
+        "id": 34,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_detail_quality_tag_sssr"
+    },
+    {
+        "id": 35,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_detail_quality_tag_ur"
+    },
+    {
+        "id": 36,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_detail_quality_tag_sp"
+    },
+    {
+        "id": 37,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_detail_quality_tag_utr"
+    },
+    {
+        "id": 41,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_quality_star_purple"
+    },
+    {
+        "id": 42,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_quality_star_gold"
+    },
+    {
+        "id": 43,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_quality_star_red"
+    },
+    {
+        "id": 44,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_quality_star_rai"
+    },
+    {
+        "id": 51,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_tag_faction_hall"
+    },
+    {
+        "id": 52,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_tag_faction_tomb"
+    },
+    {
+        "id": 53,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_tag_faction_dungeon"
+    },
+    {
+        "id": 54,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_tag_faction_hall"
+    },
+    {
+        "id": 55,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_hero_tag_faction_all"
+    },
+    {
+        "id": 61,
+        "res_path": "Res/SingleImage/HeroDetail",
+        "res_name": "ui_role_detail_scene_blue"
+    },
+    {
+        "id": 62,
+        "res_path": "Res/SingleImage/HeroDetail",
+        "res_name": "ui_role_detail_scene_pur"
+    },
+    {
+        "id": 63,
+        "res_path": "Res/SingleImage/HeroDetail",
+        "res_name": "ui_role_detail_scene_green"
+    },
+    {
+        "id": 64,
+        "res_path": "Res/SingleImage/HeroDetail",
+        "res_name": "ui_role_detail_scene_red"
+    },
+    {
+        "id": 71,
+        "res_path": "Res/Atlas/HeroDetail",
+        "res_name": "ui_hero_detail_camp_banner_icon_hall"
+    },
+    {
+        "id": 72,
+        "res_path": "Res/Atlas/HeroDetail",
+        "res_name": "ui_hero_detail_camp_banner_icon_tomb"
+    },
+    {
+        "id": 73,
+        "res_path": "Res/Atlas/HeroDetail",
+        "res_name": "ui_hero_detail_camp_banner_icon_dungeon"
+    },
+    {
+        "id": 74,
+        "res_path": "Res/Atlas/HeroDetail",
+        "res_name": "ui_hero_detail_camp_banner_icon_shenji"
+    },
+    {
+        "id": 81,
+        "res_path": "Res/SingleImage/MainCity",
+        "res_name": "ui_haven_city_bg"
+    },
+    {
+        "id": 82,
+        "res_path": "Res/SingleImage/MainCity",
+        "res_name": "ui_necro_city_bg"
+    },
+    {
+        "id": 83,
+        "res_path": "Res/SingleImage/MainCity",
+        "res_name": "ui_dungeon_city_bg"
+    },
+    {
+        "id": 84,
+        "res_path": "Res/SingleImage/MainCity",
+        "res_name": "ui_shenji_city_bg"
+    },
+    {
+        "id": 91,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_haven_main_func_icon_hero"
+    },
+    {
+        "id": 92,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_necro_main_func_icon_hero"
+    },
+    {
+        "id": 93,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_dungeon_main_func_icon_hero"
+    },
+    {
+        "id": 94,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_shenji_main_func_icon_hero"
+    },
+    {
+        "id": 101,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_haven_main_func_icon_soldier"
+    },
+    {
+        "id": 102,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_necro_main_func_icon_soldier"
+    },
+    {
+        "id": 103,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_dungeon_main_func_icon_soldier"
+    },
+    {
+        "id": 104,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_shenji_main_func_icon_soldier"
+    },
+    {
+        "id": 111,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_haven_main_func_icon_city"
+    },
+    {
+        "id": 112,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_necro_main_func_icon_city"
+    },
+    {
+        "id": 113,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_dungeon_main_func_icon_city"
+    },
+    {
+        "id": 114,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_shenji_main_func_icon_city"
+    },
+    {
+        "id": 121,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_haven_main_func_icon_map"
+    },
+    {
+        "id": 122,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_necro_main_func_icon_map"
+    },
+    {
+        "id": 123,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_dungeon_main_func_icon_map"
+    },
+    {
+        "id": 124,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_shenji_main_func_icon_map"
+    },
+    {
+        "id": 131,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_haven_main_func_icon_trial"
+    },
+    {
+        "id": 132,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_necro_main_func_icon_trial"
+    },
+    {
+        "id": 133,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_dungeon_main_func_icon_trial"
+    },
+    {
+        "id": 134,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_shenji_main_func_icon_trial"
+    },
+    {
+        "id": 141,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_activity_common_bg"
+    },
+    {
+        "id": 142,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_func_common_bg"
+    },
+    {
+        "id": 143,
+        "res_path": "Res/Atlas/MainCity",
+        "res_name": "ui_icon_gem"
+    },
+    {
+        "id": 144,
+        "res_path": "Res/Atlas/Wild",
+        "res_name": "ui_icon_wild_map_bag"
+    },
+    {
+        "id": 151,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_role_icon_atk"
+    },
+    {
+        "id": 152,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_role_icon_def"
+    },
+    {
+        "id": 153,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_role_icon_intel"
+    },
+    {
+        "id": 154,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_role_icon_lead"
+    },
+    {
+        "id": 155,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_role_icon_lv"
+    },
+    {
+        "id": 161,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_item_rarity_frame_blue"
+    },
+    {
+        "id": 162,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_item_rarity_frame_gray"
+    },
+    {
+        "id": 163,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_item_rarity_frame_blue"
+    },
+    {
+        "id": 164,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_item_rarity_frame_purple"
+    },
+    {
+        "id": 165,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_item_rarity_frame_gold"
+    },
+    {
+        "id": 166,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_item_rarity_frame_red"
+    },
+    {
+        "id": 167,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_item_rarity_frame_rai"
+    },
+    {
+        "id": 171,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_icon_hero_kni_attr_attack"
+    },
+    {
+        "id": 172,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_icon_hero_kni_attr_def"
+    },
+    {
+        "id": 173,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_icon_hero_kni_attr_firstatk"
+    },
+    {
+        "id": 174,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_icon_hero_kni_attr_hp"
+    },
+    {
+        "id": 100001,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_diamond"
+    },
+    {
+        "id": 100002,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_gold"
+    },
+    {
+        "id": 100003
+    },
+    {
+        "id": 100004
+    },
+    {
+        "id": 100005
+    },
+    {
+        "id": 100006
+    },
+    {
+        "id": 100007
+    },
+    {
+        "id": 100008
+    },
+    {
+        "id": 100009
+    },
+    {
+        "id": 100010
+    },
+    {
+        "id": 100011
+    },
+    {
+        "id": 100012
+    },
+    {
+        "id": 100013
+    },
+    {
+        "id": 100014
+    },
+    {
+        "id": 100015
+    },
+    {
+        "id": 100016
+    },
+    {
+        "id": 100017
+    },
+    {
+        "id": 100018
+    },
+    {
+        "id": 100019
+    },
+    {
+        "id": 110001,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_head"
+    },
+    {
+        "id": 110002,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_armor"
+    },
+    {
+        "id": 110003,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_weapon"
+    },
+    {
+        "id": 110004,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_boots"
+    },
+    {
+        "id": 110005,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_head"
+    },
+    {
+        "id": 110006,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_armor"
+    },
+    {
+        "id": 110007,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_weapon"
+    },
+    {
+        "id": 110008,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_boots"
+    },
+    {
+        "id": 110101,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_stone"
+    },
+    {
+        "id": 110102,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "empty_head"
+    },
+    {
+        "id": 110103,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "empty_armor"
+    },
+    {
+        "id": 110104,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "empty_weapon"
+    },
+    {
+        "id": 110105,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "empty_boots"
+    },
+    {
+        "id": 110106,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_lock"
+    },
+    {
+        "id": 110107,
+        "res_path": "Res/SingleImage/Equip",
+        "res_name": "equip_suit"
+    },
+    {
+        "id": 201001,
+        "res_path": "Res/SingleImage/Icon",
+        "res_name": "ui_role_action_avatar_1"
+    },
+    {
+        "id": 201002,
+        "res_path": "Res/SingleImage/Icon",
+        "res_name": "ui_role_action_avatar_2"
+    },
+    {
+        "id": 201003,
+        "res_path": "Res/SingleImage/Icon",
+        "res_name": "ui_role_action_avatar_3"
+    },
+    {
+        "id": 201004,
+        "res_path": "Res/SingleImage/Icon",
+        "res_name": "ui_role_action_avatar_4"
+    },
+    {
+        "id": 202001,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_gray"
+    },
+    {
+        "id": 202002,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_green"
+    },
+    {
+        "id": 202003,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_blue"
+    },
+    {
+        "id": 202004,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_purple"
+    },
+    {
+        "id": 211001,
+        "res_path": "Res/SingleImage/Icon",
+        "res_name": "ui_role_action_avatar_1"
+    },
+    {
+        "id": 211002,
+        "res_path": "Res/SingleImage/Icon",
+        "res_name": "ui_role_action_avatar_2"
+    },
+    {
+        "id": 211003,
+        "res_path": "Res/SingleImage/Icon",
+        "res_name": "ui_role_action_avatar_3"
+    },
+    {
+        "id": 211004,
+        "res_path": "Res/SingleImage/Icon",
+        "res_name": "ui_role_action_avatar_4"
+    },
+    {
+        "id": 212001,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_gray"
+    },
+    {
+        "id": 212002,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_green"
+    },
+    {
+        "id": 212003,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_blue"
+    },
+    {
+        "id": 212004,
+        "res_path": "Res/Atlas/CommonUI",
+        "res_name": "ui_common_cell_quality_purple"
+    },
+    {
+        "id": 300001,
+        "res_path": "Res/SingleImage/CardSkill",
+        "res_name": "ui_battle_card_skill_base_blue"
+    },
+    {
+        "id": 300002,
+        "res_path": "Res/SingleImage/CardSkill",
+        "res_name": "ui_battle_card_skill_base_green"
+    }
+]

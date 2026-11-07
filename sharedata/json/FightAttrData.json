@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "attr_id": "base_atk"
+    },
+    {
+        "id": 2,
+        "attr_id": "base_def"
+    },
+    {
+        "id": 3,
+        "attr_id": "base_hp"
+    },
+    {
+        "id": 4,
+        "attr_id": "base_intelligence"
+    },
+    {
+        "id": 5,
+        "attr_id": "base_command"
+    },
+    {
+        "id": 6,
+        "attr_id": "base_speed"
+    }
+]

@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1,
+        "map_type": 9999,
+        "scene": 1,
+        "monster_infos": 10001010,
+        "random_units_list": 1001
+    },
+    {
+        "id": 1000101,
+        "map_type": 1,
+        "stage": 101,
+        "scene": 2001,
+        "monster_infos": 10001010,
+        "random_units_list": 1001
+    },
+    {
+        "id": 1000102,
+        "map_type": 1,
+        "stage": 102,
+        "scene": 2002,
+        "monster_infos": 10001020,
+        "random_units_list": 1001
+    }
+]

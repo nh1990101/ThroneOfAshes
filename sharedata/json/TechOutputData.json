@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1001,
+        "tech_level_id": 1001,
+        "product_item": 1002,
+        "output_bonus_rate": 0.01
+    },
+    {
+        "id": 1002,
+        "tech_level_id": 1002,
+        "product_item": 1002,
+        "output_bonus_rate": 0.02
+    },
+    {
+        "id": 1003,
+        "tech_level_id": 1003,
+        "product_item": 1002,
+        "output_bonus_rate": 0.03
+    },
+    {
+        "id": 2001,
+        "tech_level_id": 2001,
+        "product_item": 1003,
+        "output_bonus_rate": 0.01
+    },
+    {
+        "id": 2002,
+        "tech_level_id": 2002,
+        "product_item": 1003,
+        "output_bonus_rate": 0.02
+    },
+    {
+        "id": 2003,
+        "tech_level_id": 2003,
+        "product_item": 1003,
+        "output_bonus_rate": 0.03
+    }
+]

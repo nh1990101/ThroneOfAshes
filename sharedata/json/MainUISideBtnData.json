@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "btn_name": 100446,
+        "btn_icon": 143,
+        "btn_bg": 141,
+        "navigate": "FirstRecharge",
+        "sort": 1,
+        "is_left": true
+    },
+    {
+        "id": 2,
+        "btn_name": 100390,
+        "btn_icon": 144,
+        "btn_bg": 142,
+        "navigate": "Bag",
+        "sort": 1,
+        "is_left": false
+    }
+]

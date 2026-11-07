@@ -1,0 +1,609 @@
+[
+    {
+        "id": 1,
+        "interaction_type": "SelectEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/",
+        "finish_effect": [
+            2,
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 2,
+        "interaction_type": "TransactionEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/",
+        "finish_effect": [
+            2,
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1,
+        "desc": 100180
+    },
+    {
+        "id": 3,
+        "interaction_type": "SpecialEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/",
+        "finish_effect": [
+            2,
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 4,
+        "interaction_type": "BattleEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/",
+        "finish_effect": [
+            2,
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "title_desc": 100162,
+        "relive_time": 1,
+        "desc": 100007
+    },
+    {
+        "id": 5,
+        "interaction_type": "SpecialEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/",
+        "finish_effect": [
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 1001,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/gold_coin_pile_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1002,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/wood_pile_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1003,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/ore_pile_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1004,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/gem_pile_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1005,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/crystal_pile_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1006,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/mercury_pile_02",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1007,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/alchemical_dust_pile_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1008,
+        "interaction_type": "SelectEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/treasure_chest_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1009,
+        "interaction_type": "SelectEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/windmill_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1010,
+        "interaction_type": "SelectEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/abandoned_wagon_01",
+        "finish_effect": [
+            1,
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 1011,
+        "interaction_type": "SelectEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/lost_library_02",
+        "finish_effect": [
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_cd": 86400,
+        "relive_time": 1
+    },
+    {
+        "id": 2001,
+        "interaction_type": "BattleEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObjectAnimation/1001",
+        "finish_effect": [
+            1
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 2002,
+        "interaction_type": "BattleEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObjectAnimation/1002",
+        "finish_effect": [
+            1
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 3001,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/gold_mine_01",
+        "finish_effect": [
+            2
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 3005,
+        "interaction_type": "BattleEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/raider_camp_01",
+        "finish_effect": [
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "title_desc": 100162,
+        "relive_time": 1,
+        "desc": 100007
+    },
+    {
+        "id": 3006,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/thrusting_sword_01",
+        "finish_effect": [
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 3007,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/shield_monument_01",
+        "finish_effect": [
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 3008,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/wisdom_garden_01",
+        "finish_effect": [
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 3009,
+        "interaction_type": "AutoTriggerData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/dominion_monastery_01",
+        "finish_effect": [
+            3
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "relive_time": 1
+    },
+    {
+        "id": 3010,
+        "interaction_type": "TransactionEventsData",
+        "area": [
+            1,
+            1
+        ],
+        "offset_pos": [
+            0,
+            0
+        ],
+        "is_walk": true,
+        "is_flip": true,
+        "show_url": "Res/Map/MapObject/Image/mercenary_camp_01",
+        "finish_effect": [
+            1
+        ],
+        "flag_pos": [
+            0,
+            0
+        ],
+        "title_desc": 100154,
+        "relive_time": 9999,
+        "desc": 100180
+    }
+]

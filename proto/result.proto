@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+
+option java_outer_classname = "ResultProto";
+
+message Result {
+
+  int32 code =1;//返回码(0代表成功,其它错误游戏逻辑具体定义)
+  
+  google.protobuf.Any content = 2; //返回的具体数据,可以不进行设置
+}

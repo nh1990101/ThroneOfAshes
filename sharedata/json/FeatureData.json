@@ -1,0 +1,43 @@
+[
+    {
+        "id": "Box"
+    },
+    {
+        "id": "EquipDecompose"
+    },
+    {
+        "id": "Council",
+        "create_time": 0,
+        "lock_desc": 100069
+    },
+    {
+        "id": "Barracks",
+        "build_lim": 1001,
+        "lock_desc": 100065
+    },
+    {
+        "id": "MagicTower",
+        "build_lim": 1001,
+        "lock_desc": 100068
+    },
+    {
+        "id": "Tavern",
+        "build_lim": 1001,
+        "lock_desc": 100066
+    },
+    {
+        "id": "TavernDraw",
+        "build_lim": 4001,
+        "lock_desc": 100070
+    },
+    {
+        "id": "MarketDaily",
+        "build_lim": 5001,
+        "lock_desc": 100067
+    },
+    {
+        "id": "MarketResource",
+        "build_lim": 5002,
+        "lock_desc": 100071
+    }
+]

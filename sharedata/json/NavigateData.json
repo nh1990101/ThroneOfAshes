@@ -1,0 +1,20 @@
+[
+    {
+        "id": "TavernDraw",
+        "feature": "TavernDraw",
+        "nav_data": [
+            "OpenUI",
+            "HeroDrawWin"
+        ]
+    },
+    {
+        "id": "Bag",
+        "nav_data": [
+            "OpenUI",
+            "BagWin"
+        ]
+    },
+    {
+        "id": "FirstRecharge"
+    }
+]

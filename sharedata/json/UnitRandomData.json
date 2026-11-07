@@ -1,0 +1,135 @@
+[
+    {
+        "id": 100101,
+        "group_id": 1001,
+        "group_key": "示例候选A",
+        "soldier_lv_coef": 1,
+        "soldier_hp_coef": 0.6,
+        "soldier_atk_coef": 0.6,
+        "soldier_def_coef": 0.6,
+        "unit_attr": [
+            110010,
+            110020,
+            120010,
+            120020
+        ],
+        "weight": [
+            25,
+            25,
+            25,
+            25
+        ],
+        "count_min": 4,
+        "count_max": 6,
+        "coordinates": [
+            7,
+            13,
+            20,
+            26,
+            33,
+            39,
+            46,
+            52,
+            59
+        ]
+    },
+    {
+        "id": 100102,
+        "group_id": 1001,
+        "soldier_lv_coef": 1,
+        "soldier_hp_coef": 0.8,
+        "soldier_atk_coef": 0.8,
+        "soldier_def_coef": 0.8,
+        "unit_attr": [
+            110010,
+            110020,
+            120010,
+            120020
+        ],
+        "weight": [
+            25,
+            25,
+            25,
+            25
+        ],
+        "count_min": 2,
+        "count_max": 3,
+        "coordinates": [
+            7,
+            13,
+            20,
+            26,
+            33,
+            39,
+            46,
+            52,
+            59
+        ]
+    },
+    {
+        "id": 100103,
+        "group_id": 1001,
+        "soldier_lv_coef": 1,
+        "soldier_hp_coef": 1,
+        "soldier_atk_coef": 1,
+        "soldier_def_coef": 1,
+        "unit_attr": [
+            110010,
+            110020,
+            120010,
+            120020
+        ],
+        "weight": [
+            25,
+            25,
+            25,
+            25
+        ],
+        "count_min": 3,
+        "count_max": 5,
+        "coordinates": [
+            7,
+            13,
+            20,
+            26,
+            33,
+            39,
+            46,
+            52,
+            59
+        ]
+    },
+    {
+        "id": 100104,
+        "group_id": 1001,
+        "soldier_lv_coef": 1,
+        "soldier_hp_coef": 1.2,
+        "soldier_atk_coef": 1.2,
+        "soldier_def_coef": 1.2,
+        "unit_attr": [
+            110010,
+            110020,
+            120010,
+            120020
+        ],
+        "weight": [
+            25,
+            25,
+            25,
+            25
+        ],
+        "count_min": 1,
+        "count_max": 2,
+        "coordinates": [
+            7,
+            13,
+            20,
+            26,
+            33,
+            39,
+            46,
+            52,
+            59
+        ]
+    }
+]

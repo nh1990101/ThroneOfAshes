@@ -1,0 +1,418 @@
+[
+    {
+        "id": 1001,
+        "unit_id": 110010,
+        "unlock_build_level": 3001,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 5,
+        "faction_type": 1,
+        "sort_order": 1
+    },
+    {
+        "id": 1002,
+        "unit_id": 110020,
+        "unlock_build_level": 3003,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 10,
+        "faction_type": 1,
+        "sort_order": 2
+    },
+    {
+        "id": 1003,
+        "unit_id": 110030,
+        "unlock_build_level": 3006,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 15,
+        "faction_type": 1,
+        "sort_order": 3
+    },
+    {
+        "id": 1004,
+        "unit_id": 110040,
+        "unlock_build_level": 3010,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 20,
+        "faction_type": 1,
+        "sort_order": 4
+    },
+    {
+        "id": 1005,
+        "unit_id": 110050,
+        "unlock_build_level": 3015,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 25,
+        "faction_type": 1,
+        "sort_order": 5
+    },
+    {
+        "id": 1006,
+        "unit_id": 110060,
+        "unlock_build_level": 3020,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 30,
+        "faction_type": 1,
+        "sort_order": 6
+    },
+    {
+        "id": 1007,
+        "unit_id": 110070,
+        "unlock_build_level": 3025,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 60,
+        "faction_type": 1,
+        "sort_order": 7
+    },
+    {
+        "id": 2001,
+        "unit_id": 120010,
+        "unlock_build_level": 3001,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 5,
+        "faction_type": 2,
+        "sort_order": 1
+    },
+    {
+        "id": 2002,
+        "unit_id": 120020,
+        "unlock_build_level": 3003,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 10,
+        "faction_type": 2,
+        "sort_order": 2
+    },
+    {
+        "id": 2003,
+        "unit_id": 120030,
+        "unlock_build_level": 3006,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 15,
+        "faction_type": 2,
+        "sort_order": 3
+    },
+    {
+        "id": 2004,
+        "unit_id": 120040,
+        "unlock_build_level": 3010,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 20,
+        "faction_type": 2,
+        "sort_order": 4
+    },
+    {
+        "id": 2005,
+        "unit_id": 120050,
+        "unlock_build_level": 3015,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 25,
+        "faction_type": 2,
+        "sort_order": 5
+    },
+    {
+        "id": 2006,
+        "unit_id": 120060,
+        "unlock_build_level": 3020,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 30,
+        "faction_type": 2,
+        "sort_order": 6
+    },
+    {
+        "id": 2007,
+        "unit_id": 120070,
+        "unlock_build_level": 3025,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 60,
+        "faction_type": 2,
+        "sort_order": 7
+    },
+    {
+        "id": 3001,
+        "unit_id": 130010,
+        "unlock_build_level": 3001,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 5,
+        "faction_type": 3,
+        "sort_order": 1
+    },
+    {
+        "id": 3002,
+        "unit_id": 130020,
+        "unlock_build_level": 3003,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 10,
+        "faction_type": 3,
+        "sort_order": 2
+    },
+    {
+        "id": 3003,
+        "unit_id": 130030,
+        "unlock_build_level": 3006,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 15,
+        "faction_type": 3,
+        "sort_order": 3
+    },
+    {
+        "id": 3004,
+        "unit_id": 130040,
+        "unlock_build_level": 3010,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 20,
+        "faction_type": 3,
+        "sort_order": 4
+    },
+    {
+        "id": 3005,
+        "unit_id": 130050,
+        "unlock_build_level": 3015,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 25,
+        "faction_type": 3,
+        "sort_order": 5
+    },
+    {
+        "id": 3006,
+        "unit_id": 130060,
+        "unlock_build_level": 3020,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 30,
+        "faction_type": 3,
+        "sort_order": 6
+    },
+    {
+        "id": 3007,
+        "unit_id": 130070,
+        "unlock_build_level": 3025,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 60,
+        "faction_type": 3,
+        "sort_order": 7
+    },
+    {
+        "id": 4001,
+        "unit_id": 140010,
+        "unlock_build_level": 3001,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 5,
+        "faction_type": 4,
+        "sort_order": 1
+    },
+    {
+        "id": 4002,
+        "unit_id": 140020,
+        "unlock_build_level": 3003,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 10,
+        "faction_type": 4,
+        "sort_order": 2
+    },
+    {
+        "id": 4003,
+        "unit_id": 140030,
+        "unlock_build_level": 3006,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 15,
+        "faction_type": 4,
+        "sort_order": 3
+    },
+    {
+        "id": 4004,
+        "unit_id": 140040,
+        "unlock_build_level": 3010,
+        "need_item": [
+            1002
+        ],
+        "item_count": [
+            10
+        ],
+        "recruit_time": 20,
+        "faction_type": 4,
+        "sort_order": 4
+    },
+    {
+        "id": 4005,
+        "unit_id": 140050,
+        "unlock_build_level": 3015,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 25,
+        "faction_type": 4,
+        "sort_order": 5
+    },
+    {
+        "id": 4006,
+        "unit_id": 140060,
+        "unlock_build_level": 3020,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 30,
+        "faction_type": 4,
+        "sort_order": 6
+    },
+    {
+        "id": 4007,
+        "unit_id": 140070,
+        "unlock_build_level": 3025,
+        "need_item": [
+            1002,
+            1003
+        ],
+        "item_count": [
+            20,
+            5
+        ],
+        "recruit_time": 60,
+        "faction_type": 4,
+        "sort_order": 7
+    }
+]

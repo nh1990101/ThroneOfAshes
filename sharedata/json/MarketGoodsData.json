@@ -1,0 +1,108 @@
+[
+    {
+        "id": "临时商品_1001_1",
+        "group_id": 1001,
+        "group_key": "临时每日经验池",
+        "market_type_id": "1",
+        "market_level": 5001,
+        "sell_item": [
+            1009,
+            100
+        ],
+        "cost_item": 1002,
+        "base_price": 100,
+        "price_rate": 1,
+        "limit_times": 1,
+        "weight": 100,
+        "is_close": false,
+        "is_free": false
+    },
+    {
+        "id": "临时商品_1001_2",
+        "group_id": 1001,
+        "market_type_id": "1",
+        "market_level": 5001,
+        "sell_item": [
+            1010,
+            100
+        ],
+        "cost_item": 1002,
+        "base_price": 100,
+        "price_rate": 1,
+        "limit_times": 1,
+        "weight": 100,
+        "is_close": false,
+        "is_free": false
+    },
+    {
+        "id": "临时商品_1002_1",
+        "group_id": 1002,
+        "group_key": "临时每日材料池",
+        "market_type_id": "1",
+        "market_level": 5001,
+        "sell_item": [
+            1011,
+            5
+        ],
+        "cost_item": 1001,
+        "base_price": 50,
+        "price_rate": 1,
+        "limit_times": 1,
+        "weight": 100,
+        "is_close": false,
+        "is_free": false
+    },
+    {
+        "id": "临时商品_1002_2",
+        "group_id": 1002,
+        "market_type_id": "1",
+        "market_level": 5001,
+        "sell_item": [
+            20006,
+            1
+        ],
+        "cost_item": 1001,
+        "base_price": 200,
+        "price_rate": 1,
+        "limit_times": 1,
+        "weight": 100,
+        "is_close": false,
+        "is_free": false
+    },
+    {
+        "id": "临时商品_2001_1",
+        "group_id": 2001,
+        "group_key": "临时资源木材池",
+        "market_type_id": "2",
+        "market_level": 5002,
+        "sell_item": [
+            1003,
+            100
+        ],
+        "cost_item": 1002,
+        "base_price": 200,
+        "price_rate": 1,
+        "limit_times": 1,
+        "weight": 100,
+        "is_close": false,
+        "is_free": false
+    },
+    {
+        "id": "临时商品_2002_1",
+        "group_id": 2002,
+        "group_key": "临时资源矿石池",
+        "market_type_id": "2",
+        "market_level": 5002,
+        "sell_item": [
+            1004,
+            100
+        ],
+        "cost_item": 1002,
+        "base_price": 200,
+        "price_rate": 1,
+        "limit_times": 1,
+        "weight": 100,
+        "is_close": false,
+        "is_free": false
+    }
+]

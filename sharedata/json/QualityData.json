@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "name": 100129,
+        "quality_frame": 11
+    },
+    {
+        "id": 2,
+        "name": 100132,
+        "quality_frame": 12
+    },
+    {
+        "id": 3,
+        "name": 100128,
+        "quality_frame": 13
+    },
+    {
+        "id": 4,
+        "name": 100131,
+        "quality_frame": 14
+    },
+    {
+        "id": 5,
+        "name": 100133,
+        "quality_frame": 15
+    },
+    {
+        "id": 6,
+        "name": 100127,
+        "quality_frame": 16
+    },
+    {
+        "id": 7,
+        "name": 100130,
+        "quality_frame": 17
+    }
+]

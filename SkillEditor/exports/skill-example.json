@@ -1,0 +1,157 @@
+{
+  "format": "RPGCore.SkillPresentation",
+  "schemaVersion": 1,
+  "skillId": "example",
+  "name": "近战多段攻击 · 操作示例",
+  "durationMs": 3000,
+  "settings": {
+    "defaultFps": 10,
+    "effectFps": 24,
+    "previewDamage": 1000,
+    "targetFlip": "x",
+    "collision": "ignore"
+  },
+  "scene": {
+    "cols": 7,
+    "rows": 7,
+    "hexWidth": 98,
+    "hexHeight": 86,
+    "units": [
+      {
+        "id": "unit_5f74f8fb",
+        "unitId": 110010,
+        "q": 2,
+        "r": 3,
+        "role": "caster",
+        "scale": 1
+      },
+      {
+        "id": "unit_3ca92534",
+        "unitId": 110020,
+        "q": 4,
+        "r": 3,
+        "role": "target",
+        "scale": 1
+      }
+    ]
+  },
+  "resourceMappings": {
+    "110010": "1001",
+    "110020": "1002"
+  },
+  "tracks": [
+    {
+      "id": "track_441ead21",
+      "name": "施法者 · 攻击",
+      "type": "caster",
+      "enabled": true,
+      "startMs": 300,
+      "binding": null,
+      "params": {
+        "unitInstanceId": "unit_5f74f8fb",
+        "unitId": null,
+        "action": "attack",
+        "fps": 10,
+        "loop": false
+      }
+    },
+    {
+      "id": "track_011551ee",
+      "name": "受击者 · 受击",
+      "type": "target",
+      "enabled": true,
+      "startMs": 0,
+      "binding": {
+        "trackId": "track_441ead21",
+        "frame": 3,
+        "offsetMs": 0
+      },
+      "params": {
+        "unitInstanceId": "unit_3ca92534",
+        "unitId": null,
+        "action": "hit",
+        "fps": 10,
+        "loop": false
+      }
+    },
+    {
+      "id": "track_468fabf9",
+      "name": "第一段伤害",
+      "type": "damage",
+      "enabled": true,
+      "startMs": 0,
+      "binding": {
+        "trackId": "track_441ead21",
+        "frame": 3,
+        "offsetMs": 0
+      },
+      "params": {
+        "share": null,
+        "unitInstanceId": ""
+      }
+    },
+    {
+      "id": "track_d5bbbbea",
+      "name": "第二段伤害",
+      "type": "damage",
+      "enabled": true,
+      "startMs": 950,
+      "binding": null,
+      "params": {
+        "share": null,
+        "unitInstanceId": ""
+      }
+    },
+    {
+      "id": "track_bc64ba82",
+      "name": "受击者 · 击退",
+      "type": "move",
+      "enabled": true,
+      "startMs": 1000,
+      "binding": null,
+      "params": {
+        "unitInstanceId": "unit_3ca92534",
+        "cell": {
+          "q": 0,
+          "r": 0
+        },
+        "direction": 0,
+        "steps": 1,
+        "durationMs": 0
+      }
+    }
+  ],
+  "resolved": {
+    "durationMs": 3000,
+    "damagePercentTotal": 100,
+    "nodes": [
+      {
+        "trackId": "track_441ead21",
+        "startMs": 300,
+        "durationMs": 500
+      },
+      {
+        "trackId": "track_011551ee",
+        "startMs": 500,
+        "durationMs": 200
+      },
+      {
+        "trackId": "track_468fabf9",
+        "startMs": 500,
+        "durationMs": 0,
+        "damagePercent": 50
+      },
+      {
+        "trackId": "track_d5bbbbea",
+        "startMs": 950,
+        "durationMs": 0,
+        "damagePercent": 50
+      },
+      {
+        "trackId": "track_bc64ba82",
+        "startMs": 1000,
+        "durationMs": 0
+      }
+    ]
+  }
+}

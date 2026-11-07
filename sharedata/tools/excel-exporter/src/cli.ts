@@ -1,5 +1,6 @@
 import path from 'node:path';
 import process from 'node:process';
+import { RunCollectLang } from './collect-lang.js';
 import { ConfigExportAggregateError, ConfigExportError } from './errors.js';
 import { ExportExcelConfigs } from './exporter.js';
 import type { ExportProgressEvent } from './model.js';
@@ -8,6 +9,7 @@ interface CliOptions {
     inputDirectory: string;
     outputZipPath: string;
     typesOutputDirectory: string;
+    jsonOutputDirectory: string;
     checkOnly: boolean;
 }
 
@@ -19,6 +21,7 @@ async function Main(): Promise<void> {
         console.log(`${action}：${result.workbookCount} 个工作簿，${result.tableCount} 张表，${result.rowCount} 行数据。`);
         if (!options.checkOnly) {
             console.log(path.relative(process.cwd(), result.outputFiles[0]));
+            console.log(path.relative(process.cwd(), options.jsonOutputDirectory) + '（' + result.tableCount + ' 个 JSON 文件）');
             console.log(path.relative(process.cwd(), options.typesOutputDirectory) + '（' + result.tableCount + ' 个接口文件）');
         }
     } catch (_error: unknown) {
@@ -69,6 +72,7 @@ function ParseArguments(_args: string[]): CliOptions {
     let inputDirectory = path.resolve('sharedata/excel');
     let outputZipPath = path.resolve('assets/resources/ConfigForClient.zip');
     let typesOutputDirectory = path.resolve('assets/script/Config/Typings');
+    let jsonOutputDirectory = path.resolve('sharedata/json');
     let checkOnly = false;
 
     for (let index = 0; index < _args.length; index += 1) {
@@ -77,7 +81,7 @@ function ParseArguments(_args: string[]): CliOptions {
             checkOnly = true;
             continue;
         }
-        if (argument === '--input' || argument === '--output-zip' || argument === '--types-output') {
+        if (argument === '--input' || argument === '--output-zip' || argument === '--types-output' || argument === '--json-output') {
             const value = _args[index + 1];
             if (value === undefined || value.startsWith('--')) {
                 throw new ConfigExportError(`${argument} 缺少路径参数。`);
@@ -86,6 +90,8 @@ function ParseArguments(_args: string[]): CliOptions {
                 inputDirectory = path.resolve(value);
             } else if (argument === '--output-zip') {
                 outputZipPath = path.resolve(value);
+            } else if (argument === '--json-output') {
+                jsonOutputDirectory = path.resolve(value);
             } else {
                 typesOutputDirectory = path.resolve(value);
             }
@@ -95,7 +101,18 @@ function ParseArguments(_args: string[]): CliOptions {
         throw new ConfigExportError(`未知参数：${argument}`);
     }
 
-    return { inputDirectory, outputZipPath, typesOutputDirectory, checkOnly };
+    return { inputDirectory, outputZipPath, typesOutputDirectory, jsonOutputDirectory, checkOnly };
 }
 
-void Main();
+if (process.argv.includes('--collect-lang')) {
+    RunCollectLang().catch((_error: unknown) => {
+        const message = _error instanceof Error ? _error.message : String(_error);
+        console.log('');
+        console.log('='.repeat(72));
+        console.log(_error instanceof ConfigExportError || _error instanceof ConfigExportAggregateError ? message : `未处理错误：${message}`);
+        console.log('='.repeat(72));
+        process.exitCode = 1;
+    });
+} else {
+    void Main();
+}
